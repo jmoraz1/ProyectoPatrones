@@ -17,4 +17,9 @@ public class CasillaQuerubin extends Casilla {
         return new CasillaQuerubin(this.getNumero(), this.getFicha());
 
     }
+
+    @Override
+    public String accion() {
+        return "Te voy a adelantar 11 espacios! :3";
+    }
 }

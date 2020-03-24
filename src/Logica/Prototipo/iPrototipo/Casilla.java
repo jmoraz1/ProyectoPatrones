@@ -32,4 +32,6 @@ public abstract class Casilla {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    public abstract String accion();
 }

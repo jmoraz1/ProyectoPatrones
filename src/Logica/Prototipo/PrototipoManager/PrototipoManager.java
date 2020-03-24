@@ -1,5 +1,6 @@
 package Logica.Prototipo.PrototipoManager;
 
+import Logica.Adaptador.Adaptadores.CasillaStoneAdapter;
 import Logica.Prototipo.Prototipo.*;
 import Logica.Prototipo.iPrototipo.Casilla;
 
@@ -12,7 +13,7 @@ public class PrototipoManager {
     private CasillaZorvan zorvan = new CasillaZorvan(0,"ninguna" );
     private CasillaDiablito diablito = new CasillaDiablito(0,"ninguna" );
     private CasillaQuerubin querubin = new CasillaQuerubin(0,"ninguna" );
-    private CasillaStone stone = new CasillaStone(0,"ninguna" );
+    private CasillaStoneAdapter stone = new CasillaStoneAdapter(0,"ninguna" );
 
     ArrayList<Casilla> casillas=new ArrayList<Casilla>();
 

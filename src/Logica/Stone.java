@@ -26,10 +26,27 @@ public class Stone {
         return elementosStone;
     }
 
+    public int getVida() {
+        return vida;
+    }
 
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
 
+    public ArrayList<String> getElementos() {
+        return elementos;
+    }
 
+    public void setElementos(ArrayList<String> elementos) {
+        this.elementos = elementos;
+    }
 
-
-
+    public String mostrarElementosYVida() {
+        String estado="Vida: "+getVida();
+        for (int i = 0; i < elementos.size(); i++){
+            estado+=elementos.get(i);
+        }
+        return estado;
+    }
 }

@@ -15,4 +15,9 @@ public class CasillaNormal extends Casilla {
         return new CasillaNormal(this.getNumero(), this.getFicha());
 
     }
+
+    @Override
+    public String accion() {
+        return "Puede descansar aqui.";
+    }
 }

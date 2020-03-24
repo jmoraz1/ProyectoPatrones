@@ -15,4 +15,9 @@ public class CasillaZorvan extends Casilla {
         return new CasillaZorvan(this.getNumero(), this.getFicha());
 
     }
+
+    @Override
+    public String accion() {
+        return "Has ganado el juego! :v";
+    }
 }

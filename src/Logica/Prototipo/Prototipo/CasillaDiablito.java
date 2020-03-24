@@ -16,4 +16,8 @@ public class CasillaDiablito extends Casilla {
         return new CasillaDiablito(this.getNumero(), this.getFicha());
 
     }
+
+    public String accion() {
+        return "Te voy a atrasar 10 espacios! >:)";
+    }
 }
