@@ -13,8 +13,8 @@ public class CasillaQuerubin extends Casilla {
 
 
     @Override
-    public CasillaStone clone() {
-        return new CasillaStone(this.getNumero(), this.getFicha());
+    public CasillaQuerubin clone() {
+        return new CasillaQuerubin(this.getNumero(), this.getFicha());
 
     }
 }

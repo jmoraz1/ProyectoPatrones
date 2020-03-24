@@ -6,14 +6,13 @@ public class CasillaZorvan extends Casilla {
     public CasillaZorvan(int numero, String ficha) {
         this.setNumero(numero);
         this.setFicha("aca va el objeto ficha");
-        this.setTipo("Diablito");
+        this.setTipo("Zorvan");
 
     }
 
-
     @Override
-    public CasillaDiablito clone() {
-        return new CasillaDiablito(this.getNumero(), this.getFicha());
+    public CasillaZorvan clone() {
+        return new CasillaZorvan(this.getNumero(), this.getFicha());
 
     }
 }
