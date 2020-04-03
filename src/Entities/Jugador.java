@@ -2,20 +2,20 @@ package Entities;
 
 public class Jugador {
     public String nombre;
-    public String ficha;
+    public Ficha ficha;
     public int ganes;
     public int perdidas;
     public int jugadas;
 
     public Jugador() {
         this.nombre = "";
-        this.ficha = "";
+        this.ficha = null;
         this.ganes = 0;
         this.perdidas = 0;
         this.jugadas = 0;
     }
 
-    public Jugador(String nombre, String ficha, int ganes, int perdidas, int jugadas) {
+    public Jugador(String nombre, Ficha ficha, int ganes, int perdidas, int jugadas) {
         this.nombre = nombre;
         this.ficha = ficha;
         this.ganes = ganes;
@@ -31,11 +31,11 @@ public class Jugador {
         this.nombre = nombre;
     }
 
-    public String getFicha() {
+    public Ficha getFicha() {
         return ficha;
     }
 
-    public void setFicha(String ficha) {
+    public void setFicha(Ficha ficha) {
         this.ficha = ficha;
     }
 
