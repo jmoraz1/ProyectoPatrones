@@ -2,8 +2,11 @@ package Patterns.Adapter;
 
 import Entities.Casilla;
 import Entities.Stone;
+import Patterns.Visitor.IPersonaje;
+import Patterns.Visitor.IVisitor;
+import Patterns.Visitor.RecibirAtaque;
 
-public class CasillaStoneAdapter extends Casilla {
+public class CasillaStoneAdapter extends Casilla implements IPersonaje {
     public Stone stone;
 
     public CasillaStoneAdapter(int numero, String ficha) {
@@ -35,4 +38,13 @@ public class CasillaStoneAdapter extends Casilla {
     public String accion() {
         return stone.mostrarElementosYVida();
     }
+
+    @Override
+    public void accept( IVisitor visitor, int amount){
+        if( visitor.getClass().equals( RecibirAtaque.class ) )
+
+            visitor.visit(this, amount);
+    }
+
+
 }
