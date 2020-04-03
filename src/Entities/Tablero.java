@@ -1,6 +1,6 @@
 package Entities;
 
-import Patterns.Observer.Interfaces.Observador;
+import Interfaces.Observador;
 import Patterns.Prototype.Manager;
 
 import java.io.Serializable;

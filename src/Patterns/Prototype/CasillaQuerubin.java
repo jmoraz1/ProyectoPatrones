@@ -1,11 +1,6 @@
 package Patterns.Prototype;
 
 import Entities.Casilla;
-import Patterns.Observer.Interfaces.Observador;
-import Patterns.Observer.Interfaces.Sujeto;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CasillaQuerubin extends Casilla {
 

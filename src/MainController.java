@@ -1,4 +1,5 @@
 import Entities.Casilla;
+import Entities.Ficha;
 import Entities.Jugador;
 import Entities.Tablero;
 import Patterns.Adapter.CasillaStoneAdapter;
@@ -26,7 +27,21 @@ public class MainController {
             cont++;
         }
         partida = new Tablero(arrJugadores);
+        asignarFichas(arrJugadores);
         return partida;
+    }
+
+    private void asignarFichas(Jugador[] arrJugadores) {
+        for (int i = 0; i < arrJugadores.length; i++) {
+            Ficha tmpFicha;
+            String tipo;
+            int valor = (int) Math.floor(Math.random()*6+1);
+            switch (valor){
+                case 1:
+                  //Por terminar
+
+            }
+        }
     }
 
     //Arreglar la generación para asegurarnos que no se repita las casillas y que ninguna se posicione en la posición 0

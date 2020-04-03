@@ -1,9 +1,7 @@
 package Patterns.Prototype;
 
 import Entities.Casilla;
-import Entities.Ficha;
-import Patterns.Observer.Interfaces.Observador;
-import Patterns.Observer.Interfaces.Sujeto;
+import Interfaces.Observador;
 
 import java.util.ArrayList;
 import java.util.List;

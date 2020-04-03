@@ -1,4 +1,4 @@
-package Patterns.Visitor;
+package Interfaces;
 
 import Entities.Casilla;
 

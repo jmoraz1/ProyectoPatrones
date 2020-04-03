@@ -1,7 +1,7 @@
 package Entities;
 
-import Patterns.Observer.Interfaces.Observador;
-import Patterns.Observer.Interfaces.Sujeto;
+import Interfaces.Observador;
+import Interfaces.Sujeto;
 
 import java.util.ArrayList;
 import java.util.List;

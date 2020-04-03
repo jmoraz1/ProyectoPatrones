@@ -1,4 +1,4 @@
-package Patterns.Observer.Interfaces;
+package Interfaces;
 
 import java.io.Serializable;
 

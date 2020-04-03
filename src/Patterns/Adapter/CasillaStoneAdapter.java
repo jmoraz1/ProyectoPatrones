@@ -2,14 +2,9 @@ package Patterns.Adapter;
 
 import Entities.Casilla;
 import Entities.Stone;
-import Patterns.Observer.Interfaces.Observador;
-import Patterns.Observer.Interfaces.Sujeto;
-import Patterns.Visitor.IPersonaje;
-import Patterns.Visitor.IVisitor;
+import Interfaces.IPersonaje;
+import Interfaces.IVisitor;
 import Patterns.Visitor.RecibirAtaque;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CasillaStoneAdapter extends Casilla implements IPersonaje {
     public Stone stone;

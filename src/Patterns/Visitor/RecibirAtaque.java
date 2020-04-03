@@ -1,10 +1,8 @@
 package Patterns.Visitor;
 
 import Entities.Casilla;
-import Entities.Stone;
+import Interfaces.IVisitor;
 import Patterns.Adapter.CasillaStoneAdapter;
-
-import java.util.List;
 
 public class RecibirAtaque implements IVisitor {
 
