@@ -2,16 +2,20 @@ package Patterns.Adapter;
 
 import Entities.Casilla;
 import Entities.Stone;
+import Patterns.Observer.Interfaces.Observador;
+import Patterns.Observer.Interfaces.Sujeto;
 import Patterns.Visitor.IPersonaje;
 import Patterns.Visitor.IVisitor;
 import Patterns.Visitor.RecibirAtaque;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CasillaStoneAdapter extends Casilla implements IPersonaje {
     public Stone stone;
 
-    public CasillaStoneAdapter(int numero, String ficha) {
+    public CasillaStoneAdapter(int numero) {
         this.setNumero(numero);
-        this.setFicha("aca va el objeto ficha");
         this.setTipo("Stone");
         this.setStone();
     }
@@ -31,7 +35,7 @@ public class CasillaStoneAdapter extends Casilla implements IPersonaje {
 
     @Override
     public Casilla clone() {
-        return new CasillaStoneAdapter(this.getNumero(), this.getFicha());
+        return new CasillaStoneAdapter(this.getNumero());
     }
 
     @Override

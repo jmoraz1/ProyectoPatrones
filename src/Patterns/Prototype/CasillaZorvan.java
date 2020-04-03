@@ -1,18 +1,23 @@
 package Patterns.Prototype;
 
 import Entities.Casilla;
+import Patterns.Observer.Interfaces.Observador;
+import Patterns.Observer.Interfaces.Sujeto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CasillaZorvan extends Casilla {
-    public CasillaZorvan(int numero, String ficha) {
+
+    public CasillaZorvan(int numero) {
         this.setNumero(numero);
-        this.setFicha("aca va el objeto ficha");
         this.setTipo("Zorvan");
 
     }
 
     @Override
     public CasillaZorvan clone() {
-        return new CasillaZorvan(this.getNumero(), this.getFicha());
+        return new CasillaZorvan(this.getNumero());
 
     }
 

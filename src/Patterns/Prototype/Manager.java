@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Manager {
-    private CasillaNormal normal = new CasillaNormal(0,"ninguna" );
-    private CasillaZorvan zorvan = new CasillaZorvan(0,"ninguna" );
-    private CasillaDiablillo diablito = new CasillaDiablillo(0,"ninguna" );
-    private CasillaQuerubin querubin = new CasillaQuerubin(0,"ninguna" );
-    private CasillaStoneAdapter stone = new CasillaStoneAdapter(0,"ninguna" );
+    private CasillaNormal normal = new CasillaNormal(0);
+    private CasillaZorvan zorvan = new CasillaZorvan(0 );
+    private CasillaDiablillo diablito = new CasillaDiablillo(0 );
+    private CasillaQuerubin querubin = new CasillaQuerubin(0);
+    private CasillaStoneAdapter stone = new CasillaStoneAdapter(0 );
 
     ArrayList<Casilla> casillas=new ArrayList<Casilla>();
 

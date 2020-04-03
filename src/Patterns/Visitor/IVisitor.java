@@ -1,12 +1,11 @@
 package Patterns.Visitor;
 
-import Patterns.Adapter.CasillaStoneAdapter;
+import Entities.Casilla;
 
-import java.util.List;
 
 public interface IVisitor {
 
-    public void visit( CasillaStoneAdapter stone , int amount);
+    public void visit(Casilla casilla , int amount);
 
 
 }

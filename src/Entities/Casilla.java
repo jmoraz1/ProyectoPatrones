@@ -1,9 +1,17 @@
 package Entities;
 
-public abstract class Casilla {
+import Patterns.Observer.Interfaces.Observador;
+import Patterns.Observer.Interfaces.Sujeto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Casilla implements Sujeto {
     int numero;
-    String ficha;
+    List<Ficha> fichas = new ArrayList<Ficha>();
     String tipo;
+    public abstract String accion();
+    private List<Observador> observers = new ArrayList<Observador>();
 
 
 
@@ -17,12 +25,13 @@ public abstract class Casilla {
         this.numero = numero;
     }
 
-    public String getFicha() {
-        return ficha;
+    public List<Ficha> getFichas() {
+        return fichas;
     }
 
-    public void setFicha(String ficha) {
-        this.ficha = ficha;
+    public void setFicha(Ficha ficha) {
+        this.fichas.add(ficha);
+        notifyObservers();
     }
 
     public String getTipo() {
@@ -33,5 +42,23 @@ public abstract class Casilla {
         this.tipo = tipo;
     }
 
-    public abstract String accion();
+
+
+    @Override
+    public void addObserver(Observador o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observador o) {
+
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observador o : observers){
+            o.update(this.tipo);
+        }
+    }
+
 }

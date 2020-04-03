@@ -3,16 +3,16 @@ package Patterns.Prototype;
 import Entities.Casilla;
 
 public class CasillaNormal extends Casilla {
-    public CasillaNormal(int numero, String ficha) {
+    public CasillaNormal(int numero) {
         this.setNumero(numero);
-        this.setFicha("aca va el objeto ficha");
+
         this.setTipo("Normal");
 
     }
 
     @Override
     public CasillaNormal clone() {
-        return new CasillaNormal(this.getNumero(), this.getFicha());
+        return new CasillaNormal(this.getNumero());
 
     }
 

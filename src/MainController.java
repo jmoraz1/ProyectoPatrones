@@ -4,7 +4,7 @@ import Entities.Tablero;
 import Patterns.Adapter.CasillaStoneAdapter;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -87,7 +87,6 @@ public class MainController {
     public Jugador obtenerTurno(){
         return partida.siguienteTurno();
     }
-
 
 
 }
