@@ -71,50 +71,78 @@ public class seleccionarJugadoresController implements Initializable {
     }
 
     public void iniciarPartida(ActionEvent event) throws IOException{
-
+        boolean validarNombreDiferente = true;
         if(validarCampos()){
 
             if(!txtFieldP4.isDisable()){
-                String nombreP1 = txtFieldP1.getText();
-                control.agregarJugadores(nombreP1);
-                String nombreP2 = txtFieldP2.getText();
-                control.agregarJugadores(nombreP2);
-                String nombreP3 = txtFieldP3.getText();
-                control.agregarJugadores(nombreP3);
-                String nombreP4 = txtFieldP4.getText();
-                control.agregarJugadores(nombreP4);
+                if(txtFieldP1.getText() != txtFieldP2.getText()&&
+                        txtFieldP1.getText() != txtFieldP3.getText()&&
+                        txtFieldP1.getText() != txtFieldP4.getText()&&
+                        txtFieldP2.getText() != txtFieldP3.getText()&&
+                        txtFieldP2.getText() != txtFieldP4.getText()&&
+                        txtFieldP3.getText() != txtFieldP4.getText()){
+                    String nombreP1 = txtFieldP1.getText();
+                    control.agregarJugadores(nombreP1);
+                    String nombreP2 = txtFieldP2.getText();
+                    control.agregarJugadores(nombreP2);
+                    String nombreP3 = txtFieldP3.getText();
+                    control.agregarJugadores(nombreP3);
+                    String nombreP4 = txtFieldP4.getText();
+                    control.agregarJugadores(nombreP4);
+
+                }else{
+                    validarNombreDiferente = false;
+                }
+
             }else if(txtFieldP4.isDisable() && !txtFieldP3.isDisable()){
-                String nombreP1 = txtFieldP1.getText();
-                control.agregarJugadores(nombreP1);
-                String nombreP2 = txtFieldP2.getText();
-                control.agregarJugadores(nombreP2);
-                String nombreP3 = txtFieldP3.getText();
-                control.agregarJugadores(nombreP3);
+                if(txtFieldP1.getText() != txtFieldP2.getText()&&
+                                txtFieldP1.getText() != txtFieldP3.getText()&&
+                                txtFieldP2.getText() != txtFieldP3.getText()){
+                    String nombreP1 = txtFieldP1.getText();
+                    control.agregarJugadores(nombreP1);
+                    String nombreP2 = txtFieldP2.getText();
+                    control.agregarJugadores(nombreP2);
+                    String nombreP3 = txtFieldP3.getText();
+                    control.agregarJugadores(nombreP3);
+                }else{
+                    validarNombreDiferente = false;
+                }
+
             }else if(txtFieldP3.isDisable() && !txtFieldP2.isDisable()){
-                String nombreP1 = txtFieldP1.getText();
-                control.agregarJugadores(nombreP1);
-                String nombreP2 = txtFieldP2.getText();
-                control.agregarJugadores(nombreP2);
+                if(txtFieldP1.getText() != txtFieldP2.getText()){
+                    String nombreP1 = txtFieldP1.getText();
+                    control.agregarJugadores(nombreP1);
+                    String nombreP2 = txtFieldP2.getText();
+                    control.agregarJugadores(nombreP2);
+                }else{
+                    validarNombreDiferente = false;
+                }
+
             }else{
                 String nombreP1 = txtFieldP1.getText();
                 control.agregarJugadores(nombreP1);
             }
 
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/tableroPartida.fxml"));
+            if(validarNombreDiferente){
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/fxml/tableroPartida.fxml"));
 
-            loader.load();
-            tableroPartidaController controller = loader.<tableroPartidaController>getController();
-            controller.controladorTablero = control;
-            Parent root = loader.getRoot();
-            Platform.runLater(() -> root.requestFocus());
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Laberinto de Zorvan");
-            stage.setResizable(false);
-            stage.show();
-            ((Node) (event.getSource())).getScene().getWindow().hide();
+                loader.load();
+                tableroPartidaController controller = loader.<tableroPartidaController>getController();
+                controller.controladorTablero = control;
+                Parent root = loader.getRoot();
+                Platform.runLater(() -> root.requestFocus());
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Laberinto de Zorvan");
+                stage.setResizable(false);
+                stage.show();
+                ((Node) (event.getSource())).getScene().getWindow().hide();
+            }else{
+                nombresIguales();
+            }
+
 
         }else{
             camposVacios();
@@ -147,6 +175,15 @@ public class seleccionarJugadoresController implements Initializable {
         alert.setTitle("Error");
         alert.setHeaderText("Existen campos sin rellenar.");
         alert.setContentText("Revise los campos que hacen falta.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    public void nombresIguales() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Nombres iguales");
+        alert.setContentText("Revise que los nombres de los jugadores se han distintos.");
         alert.showAndWait();
     }
 
