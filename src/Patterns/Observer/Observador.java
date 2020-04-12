@@ -1,7 +1,7 @@
-package Interfaces;
+package Patterns.Observer;
 
 import java.io.Serializable;
 
 public interface Observador {
-    void update(Serializable value);
+    String update(String value);
 }
