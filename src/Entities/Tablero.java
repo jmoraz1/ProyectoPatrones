@@ -1,9 +1,8 @@
 package Entities;
 
-import Interfaces.Observador;
+import Patterns.Observer.Observador;
 import Patterns.Prototype.Manager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -47,8 +46,8 @@ public class Tablero implements Observador {
     }
 
     @Override
-    public void update(Serializable value) {
-        System.out.println("Se asigno una ficha a una casilla tipo"+value);
+    public String update(String value) {
+        return value;
     }
 
     private void observarCasillas(){
