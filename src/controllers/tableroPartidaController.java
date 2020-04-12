@@ -1,4 +1,5 @@
 package controllers;
+import MainController.MainController;
 import clasesUI.EjeXYCasilla;
 import clasesUI.ElementoTabla;
 import javafx.animation.KeyFrame;
@@ -27,6 +28,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class tableroPartidaController implements Initializable {
+
+    public MainController mc = new MainController();
 
     public ArrayList<ElementoTabla> arregloInfoElementos = new ArrayList<>();
 

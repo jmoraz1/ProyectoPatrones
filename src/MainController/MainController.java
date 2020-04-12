@@ -1,3 +1,5 @@
+package MainController;
+
 import Entities.Casilla;
 import Entities.Ficha;
 import Entities.Jugador;
@@ -13,9 +15,9 @@ public class MainController {
 
     public static Tablero partida;
 
-   /* public static void main(String[] args) {
+   public static void main(String[] args) {
 
-    }*/
+    }
 
 
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
