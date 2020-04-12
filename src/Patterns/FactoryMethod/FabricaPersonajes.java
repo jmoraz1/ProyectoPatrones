@@ -6,10 +6,17 @@ import Interfaces.IMetodoFabrica;
 
 public class FabricaPersonajes implements IMetodoFabrica {
     @Override
-    public Personaje crearPersonaje(String Elemento) {
+    public Personaje crearPersonaje(double opcion) {
         Personaje tmpPersonaje;
         Elemento tmpElemento;
-        switch (Elemento){
+
+
+
+        if(opcion>0 && opcion<17){
+            tmpElemento= new Elemento("Fuego");
+        }
+
+        /*switch (Elemento){
             case "Fuego":
                 tmpElemento=new Elemento(Elemento);
                 break;
@@ -31,6 +38,7 @@ public class FabricaPersonajes implements IMetodoFabrica {
                 break;
 
         }
+        */
         return tmpPersonaje= new Personaje(tmpElemento);
     }
 }
