@@ -5,6 +5,8 @@ import Entities.Ficha;
 import Entities.Jugador;
 import Entities.Tablero;
 import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.Decorator.Ataque;
+import Patterns.Decorator.Decorador;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
 //import org.jetbrains.annotations.NotNull;
@@ -125,8 +127,10 @@ public class MainController {
         casillas.get(nuevaPosicion).setFicha(ficha);
     }
 
-    public  int obtenerAtaque(){
-        return partida.obtenerTipoAtaque();
+    public  String obtenerAtaque(){
+        int res =  partida.obtenerTipoAtaque();
+        Ataque tmpAtaque = new Ataque(res);
+        return tmpAtaque.gatInfoDecorada();
     }
 
     /*Por hacer En caso de que el jugador este bajo un ataque de poder especial y no pueda tirar necesito que me indique
