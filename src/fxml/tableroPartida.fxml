@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPaneTablero" prefHeight="650.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.tableroPartidaController">
+
+   <children>
+      <ImageView fitHeight="704.0" fitWidth="1305.0">
+         <image>
+            <Image url="@../imgs/ejemploFINAL-01.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblP3" layoutX="714.0" layoutY="601.0" prefHeight="47.0" prefWidth="163.0" text="P3:">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#edd202" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label fx:id="lblP1" layoutX="219.0" layoutY="601.0" prefHeight="47.0" prefWidth="196.0" text="P1:">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#edd202" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label fx:id="lblP4" layoutX="948.0" layoutY="601.0" prefHeight="47.0" prefWidth="163.0" text="P4:">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#edd202" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label fx:id="lblP2" layoutX="459.0" layoutY="601.0" prefHeight="47.0" prefWidth="204.0" text="P2:">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#edd202" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button id="btnSalir" alignment="CENTER" contentDisplay="CENTER" layoutX="1192.0" layoutY="281.0" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #ffffff;" text="Salir" textFill="#090909">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="72.0" layoutX="452.0" layoutY="38.0" opacity="0.62" stroke="BLACK" strokeType="INSIDE" width="407.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="#979d9f" />
+                  <Stop color="#efeee7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+      <Circle fill="#54c5db" layoutX="481.0" layoutY="96.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#16cc40" layoutX="642.0" layoutY="96.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#cc2716" layoutX="774.0" layoutY="96.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button id="btnSalir" fx:id="btnInfoElementos" alignment="CENTER" contentDisplay="CENTER" layoutX="1137.0" layoutY="140.0" mnemonicParsing="false" onAction="#infoElementos" style="-fx-background-color: #ffffff;" text="Información" textFill="#090909">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <Label layoutX="552.0" layoutY="30.0" prefHeight="40.0" prefWidth="234.0" text="Casillas especiales">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#3a3615" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="492.0" layoutY="71.0" prefHeight="40.0" prefWidth="71.0" text="Querubin">
+         <font>
+            <Font name="Matura MT Script Capitals" size="14.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#6e6b22" offset="0.007662835249042145" />
+                  <Stop color="#3a3615" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="654.0" layoutY="71.0" prefHeight="40.0" prefWidth="71.0" text="Stone">
+         <font>
+            <Font name="Matura MT Script Capitals" size="14.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#6e6b22" offset="0.007662835249042145" />
+                  <Stop color="#3a3615" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="786.0" layoutY="71.0" prefHeight="40.0" prefWidth="71.0" text="Diablillo">
+         <font>
+            <Font name="Matura MT Script Capitals" size="14.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#6e6b22" offset="0.007662835249042145" />
+                  <Stop color="#3a3615" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <ImageView fx:id="imgP4" fitHeight="60.0" fitWidth="60.0" layoutX="889.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/FICHAS-03.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgP1" fitHeight="60.0" fitWidth="60.0" layoutX="159.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/FICHAS-02.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgP3" fitHeight="60.0" fitWidth="60.0" layoutX="654.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/FICHAS-05.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgP2" fitHeight="60.0" fitWidth="60.0" layoutX="406.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/FICHAS-04.png" />
+         </image>
+      </ImageView>
+      <Button id="btnSalir" fx:id="btnTirarDado" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="296.0" mnemonicParsing="false" onAction="#tirarDado" prefHeight="40.0" prefWidth="87.0" style="-fx-background-color: #ffffff;" text="Tirar" textFill="#090909">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <TextField fx:id="txtJugadorEnTurno" layoutX="15.0" layoutY="144.0" prefHeight="25.0" prefWidth="108.0" />
+      <Label fx:id="lblDado" layoutX="41.0" layoutY="211.0" />
+      <ImageView fx:id="imgViewDado" fitHeight="80.0" fitWidth="71.0" layoutX="34.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image fx:id="imgDelImageViewDado" url="@../imgs/dadoUno.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblJuega" layoutX="26.0" layoutY="81.0" prefHeight="47.0" prefWidth="87.0" text="Juega">
+         <font>
+            <Font name="Matura MT Script Capitals" size="25.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#96941f" offset="0.007662835249042145" />
+                  <Stop color="#edd202" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button id="btnSalir" fx:id="btnIniciarTodoTablero" alignment="CENTER" contentDisplay="CENTER" layoutX="1119.0" layoutY="211.0" mnemonicParsing="false" onAction="#iniciarTodoTablero" prefHeight="49.0" prefWidth="146.0" style="-fx-background-color: #ffffff;" text="Iniciar fichas" textFill="#090909">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <Button id="btnSalir" fx:id="btnTirarDadoAtaque" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="296.0" mnemonicParsing="false" onAction="#tirarDadoAtaque" prefHeight="40.0" prefWidth="87.0" style="-fx-background-color: #ffffff;" text="Tirar" textFill="#090909">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <ImageView fx:id="imgViewDadoAtaque" fitHeight="80.0" fitWidth="71.0" layoutX="34.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image fx:id="imgDelImageViewDadoAtaque" url="@../imgs/dadoUno.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="flechaIniciarPartida" fitHeight="34.0" fitWidth="71.0" layoutX="1077.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/flechaAmarilla.gif" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="flechaTirarDado" fitHeight="34.0" fitWidth="71.0" layoutX="123.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../imgs/flechaAmarilla.gif" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

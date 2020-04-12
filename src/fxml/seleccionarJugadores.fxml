@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="488.0" prefWidth="644.0" style="-fx-background-color: #191970;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.seleccionarJugadoresController">
+   <children>
+      <ImageView fitHeight="488.0" fitWidth="657.0">
+         <image>
+            <Image url="@../imgs/querubin.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="131.0" layoutY="-10.0" prefHeight="97.0" prefWidth="428.0" text="Seleccionar jugadores">
+         <font>
+            <Font name="Matura MT Script Capitals" size="41.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8952380952380952" endY="1.0">
+               <stops>
+                  <Stop color="#413969" />
+                  <Stop color="#525149" offset="0.007662835249042145" />
+                  <Stop color="#232011" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button id="btnSalir" alignment="CENTER" contentDisplay="CENTER" layoutX="551.0" layoutY="425.0" mnemonicParsing="false" onAction="#salir" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="Salir">s
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
+      </Button>
+      <Button id="btnRegresar" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="425.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="Regresar" onAction="#regresar">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button id="btnP1vsPC" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="135.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="P1 vs PC" onAction="#p1">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Button>
+      <Button id="btnP1vsP2" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="197.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="P1 vs P2" onAction="#p2">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Button>
+      <Button id="btnP1vsP2vsP3" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="261.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="P1 vs P2 vs P3" onAction="#p3">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Button>
+      <Button id="btnP1vsP2vsP3vsP4" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="324.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="P1 vs P2 vs P3 vs P4" onAction="#p4">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Button>
+      <Line endX="500.33331298828125" layoutX="122.0" layoutY="406.0" startX="-100.0" stroke="#96941f" />
+      <TextField fx:id="txtFieldP1" disable="true" layoutX="359.0" layoutY="140.0" prefHeight="39.0" prefWidth="264.0" promptText="P1 digite su nombre" />
+      <TextField fx:id="txtFieldP2" disable="true" layoutX="359.0" layoutY="202.0" prefHeight="39.0" prefWidth="264.0" promptText="P2 digite su nombre" />
+      <TextField fx:id="txtFieldP3" disable="true" layoutX="359.0" layoutY="266.0" prefHeight="39.0" prefWidth="264.0" promptText="P3 digite su nombre" />
+      <TextField fx:id="txtFieldP4" disable="true" layoutX="359.0" layoutY="329.0" prefHeight="39.0" prefWidth="264.0" promptText="P4 digite su nombre" />
+      <Label layoutX="413.0" layoutY="87.0" prefHeight="32.0" prefWidth="138.0" text="Nombre o Alias" textFill="#0d0d0d">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="329.0" layoutY="144.0" prefHeight="32.0" prefWidth="31.0" text="P1" textFill="#fdfcfc">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="329.0" layoutY="206.0" prefHeight="32.0" prefWidth="31.0" text="P2" textFill="#fdfcfc">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="622.0" layoutY="270.0" prefHeight="32.0" prefWidth="31.0" text="P3" textFill="#fdfcfc">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="626.0" layoutY="333.0" prefHeight="32.0" prefWidth="31.0" text="P4" textFill="#fdfcfc">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+      <Line endX="500.33331298828125" layoutX="121.0" layoutY="76.0" startX="-100.0" stroke="#96941f" />
+      <Button id="btnIniciar" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="425.0" mnemonicParsing="false" style="-fx-background-color: #96941f; -fx-background-image: url = ..\imgs\WhatsApp Image 2020-02-26 at 8.23.10 PM.jpeg;" text="Iniciar" onAction="#iniciarPartida">
+         <font>
+            <Font name="Matura MT Script Capitals" size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+      </Button>
+      <Label layoutX="9.0" layoutY="87.0" prefHeight="32.0" prefWidth="177.0" text="Seleccione modalidad" textFill="#0d0d0d">
+         <font>
+            <Font name="Matura MT Script Capitals" size="17.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
