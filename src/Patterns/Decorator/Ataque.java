@@ -12,7 +12,7 @@ public class Ataque extends Decorador {
             case 2:
                 return "Tu girada ha resultado en atacan dos personajes de la triada";
             case 3:
-                return "Tu girada ha resultado en ataca un personaje de la triada";
+                return "Tu girada ha resultado en ataca tres personaje de la triada";
             case 4:
                 return "Tu girada ha resultado en ataca solo un personaje y puede activar un poder especial de cualquiera";
             case 5:
