@@ -75,12 +75,12 @@ public class seleccionarJugadoresController implements Initializable {
         if(validarCampos()){
 
             if(!txtFieldP4.isDisable()){
-                if(txtFieldP1.getText() != txtFieldP2.getText()&&
-                        txtFieldP1.getText() != txtFieldP3.getText()&&
-                        txtFieldP1.getText() != txtFieldP4.getText()&&
-                        txtFieldP2.getText() != txtFieldP3.getText()&&
-                        txtFieldP2.getText() != txtFieldP4.getText()&&
-                        txtFieldP3.getText() != txtFieldP4.getText()){
+                if(!txtFieldP1.getText().equals(txtFieldP2.getText()) &&
+                        !txtFieldP1.getText().equals(txtFieldP3.getText())&&
+                        !txtFieldP1.getText().equals(txtFieldP4.getText())&&
+                        !txtFieldP2.getText().equals(txtFieldP3.getText())&&
+                        !txtFieldP2.getText().equals(txtFieldP4.getText())&&
+                        !txtFieldP3.getText().equals(txtFieldP4.getText())){
                     String nombreP1 = txtFieldP1.getText();
                     control.agregarJugadores(nombreP1);
                     String nombreP2 = txtFieldP2.getText();
@@ -95,9 +95,9 @@ public class seleccionarJugadoresController implements Initializable {
                 }
 
             }else if(txtFieldP4.isDisable() && !txtFieldP3.isDisable()){
-                if(txtFieldP1.getText() != txtFieldP2.getText()&&
-                                txtFieldP1.getText() != txtFieldP3.getText()&&
-                                txtFieldP2.getText() != txtFieldP3.getText()){
+                if(!txtFieldP1.getText().equals(txtFieldP2.getText())&&
+                                !txtFieldP1.getText().equals(txtFieldP3.getText())&&
+                                !txtFieldP2.getText().equals(txtFieldP3.getText())){
                     String nombreP1 = txtFieldP1.getText();
                     control.agregarJugadores(nombreP1);
                     String nombreP2 = txtFieldP2.getText();
@@ -109,7 +109,7 @@ public class seleccionarJugadoresController implements Initializable {
                 }
 
             }else if(txtFieldP3.isDisable() && !txtFieldP2.isDisable()){
-                if(txtFieldP1.getText() != txtFieldP2.getText()){
+                if(!txtFieldP1.getText().equals(txtFieldP2.getText())){
                     String nombreP1 = txtFieldP1.getText();
                     control.agregarJugadores(nombreP1);
                     String nombreP2 = txtFieldP2.getText();
@@ -141,6 +141,18 @@ public class seleccionarJugadoresController implements Initializable {
                 ((Node) (event.getSource())).getScene().getWindow().hide();
             }else{
                 nombresIguales();
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/fxml/seleccionarJugadores.fxml"));
+                loader.load();
+                Parent root = loader.getRoot();
+                Platform.runLater(() -> root.requestFocus());
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Laberinto de Zorvan");
+                stage.setResizable(false);
+                stage.show();
+                ((Node) (event.getSource())).getScene().getWindow().hide();
             }
 
 

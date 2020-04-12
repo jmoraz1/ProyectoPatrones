@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+
 public class tableroPartidaController implements Initializable {
 
     public ArrayList<ElementoTabla> arregloInfoElementos = new ArrayList<>();
@@ -39,6 +40,7 @@ public class tableroPartidaController implements Initializable {
     public int valorDadoAtaque= 0;
 
     public ControladorPrueba controladorTablero;
+
 
     @FXML
     private Image imgDelImageViewDado;
