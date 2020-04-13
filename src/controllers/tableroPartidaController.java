@@ -1,4 +1,7 @@
 package controllers;
+import Entities.Casilla;
+import Entities.Jugador;
+import Entities.Tablero;
 import MainController.MainController;
 import clasesUI.EjeXYCasilla;
 import clasesUI.ElementoTabla;
@@ -45,6 +48,7 @@ public class tableroPartidaController implements Initializable {
     public ControladorPrueba controladorTablero;
 
 
+
     @FXML
     private Image imgDelImageViewDado;
     @FXML
@@ -84,6 +88,8 @@ public class tableroPartidaController implements Initializable {
     @FXML
     private Button btnIniciarTodoTablero;
 
+    private static Tablero partida;
+    private static Jugador jugadorTurno;
     private ImageView fichaP1 = new ImageView();
     private ImageView fichaP2 = new ImageView();
     private ImageView fichaP3 = new ImageView();
@@ -96,13 +102,17 @@ public class tableroPartidaController implements Initializable {
         btnTirarDadoAtaque.setVisible(false);
         flechaTirarDado.setVisible(false);
         iniciarValoresCoordenadas();
-        colocarCasillasEspeciales();
+
 
 
     }
 
     public void iniciarTodoTablero(ActionEvent event) throws IOException{
         colocarNombres();
+        partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
+        colocarCasillasEspeciales();
+        txtJugadorEnTurno.setText(mc.obtenerTurno().getNombre());
+        jugadorTurno  = partida.turno;
         flechaIniciarPartida.setVisible(false);
         flechaTirarDado.setVisible(true);
         btnIniciarTodoTablero.setDisable(true);
@@ -202,10 +212,22 @@ public class tableroPartidaController implements Initializable {
     }
 
     public void colocarCasillasEspeciales(){
+        int[] posicionesDiablillos = mc.obtenerDiablillos();
+        int[] posicionesStones = mc.obtenerQuerubines();
+        int[] posicionesQuerubines = mc.obtenerStones();
 
-        anchorPaneTablero.getChildren().add(circleDiablillo(5));
-        anchorPaneTablero.getChildren().add(circleStone(10));
-        anchorPaneTablero.getChildren().add(circleQuerubin(54));
+        for (int i = 0; i < posicionesDiablillos.length; i++){
+            anchorPaneTablero.getChildren().add(circleDiablillo(posicionesDiablillos[i]));
+        }
+
+        for (int i = 0; i < posicionesStones.length; i++){
+            anchorPaneTablero.getChildren().add(circleStone(posicionesStones[i]));
+        }
+
+        for (int i = 0; i < posicionesQuerubines.length; i++){
+            anchorPaneTablero.getChildren().add(circleQuerubin(posicionesQuerubines[i]));
+        }
+
     }
 
     public Circle circleQuerubin(int posicion){
