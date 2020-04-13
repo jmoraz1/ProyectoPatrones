@@ -212,20 +212,20 @@ public class tableroPartidaController implements Initializable {
     }
 
     public void colocarCasillasEspeciales(){
-        int[] posicionesDiablillos = mc.obtenerDiablillos();
-        int[] posicionesStones = mc.obtenerQuerubines();
-        int[] posicionesQuerubines = mc.obtenerStones();
+        ArrayList<Integer> posicionesDiablillos = mc.obtenerDiablillos();
+        ArrayList<Integer> posicionesStones = mc.obtenerQuerubines();
+        ArrayList<Integer> posicionesQuerubines = mc.obtenerStones();
 
-        for (int i = 0; i < posicionesDiablillos.length; i++){
-            anchorPaneTablero.getChildren().add(circleDiablillo(posicionesDiablillos[i]));
+        for (int i = 0; i < posicionesDiablillos.size(); i++){
+            anchorPaneTablero.getChildren().add(circleDiablillo(posicionesDiablillos.get(i)));
         }
 
-        for (int i = 0; i < posicionesStones.length; i++){
-            anchorPaneTablero.getChildren().add(circleStone(posicionesStones[i]));
+        for (int i = 0; i < posicionesStones.size(); i++){
+            anchorPaneTablero.getChildren().add(circleStone(posicionesStones.get(i)));
         }
 
-        for (int i = 0; i < posicionesQuerubines.length; i++){
-            anchorPaneTablero.getChildren().add(circleQuerubin(posicionesQuerubines[i]));
+        for (int i = 0; i < posicionesQuerubines.size(); i++){
+            anchorPaneTablero.getChildren().add(circleQuerubin(posicionesQuerubines.get(i)));
         }
 
     }
