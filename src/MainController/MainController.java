@@ -90,9 +90,49 @@ public class MainController {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
         int nuevaPosicion=posicionActual+resulDado;
+        int cantidadMoviemiento=0;
+        if(nuevaPosicion>99){
+            cantidadMoviemiento=99;
+            moverFicha(posicionActual,cantidadMoviemiento,fichaActiva);
+        }else{
+            if(nuevaPosicion<0){
+                nuevaPosicion=0;
+                moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+            }else{
+                moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+            }
+        }
+
+
+        return nuevaPosicion+1;
+    }
+
+    public int movimientoQuerubin(){
+        Ficha fichaActiva=partida.turno.getFicha();
+        int posicionActual=obtenerPosicionJugador(fichaActiva);
+        int nuevaPosicion=posicionActual+11;
         moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
-        return nuevaPosicion;
+        return nuevaPosicion+1;
+    }
+
+    public int movimientoDiablito(){
+        Ficha fichaActiva=partida.turno.getFicha();
+        int posicionActual=obtenerPosicionJugador(fichaActiva);
+        int nuevaPosicion=posicionActual-10;
+        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+
+        return nuevaPosicion+1;
+    }
+
+    public int movimientoZorvan(int casillasExtra){
+        Ficha fichaActiva=partida.turno.getFicha();
+        int posicionActual=obtenerPosicionJugador(fichaActiva);
+
+        int nuevaPosicion=99-casillasExtra;
+        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+
+        return nuevaPosicion+1;
     }
 
     private int obtenerPosicionJugador(Ficha fichaActiva) {
