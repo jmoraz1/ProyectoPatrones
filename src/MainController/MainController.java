@@ -1,5 +1,8 @@
+package MainController;
+
 import Entities.*;
 import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.Decorator.Ataque;
 import Patterns.FactoryMethod.FabricaPersonajes;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
@@ -109,11 +112,49 @@ public class MainController {
     }
 
     public  int obtenerMovimiento(){
-        return partida.obtenerNumeroMovimiento();
+        int resulDado=partida.obtenerNumeroMovimiento();
+        Ficha fichaActiva=partida.turno.getFicha();
+        int posicionActual=obtenerPosicionJugador(fichaActiva);
+        int nuevaPosicion=posicionActual+resulDado;
+        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+
+        return nuevaPosicion;
     }
 
-    public  int obtenerAtaque(){
-        return partida.obtenerTipoAtaque();
+    private int obtenerPosicionJugador(Ficha fichaActiva) {
+        int index=0;
+        ArrayList<Casilla> casillas=partida.casillas;
+        for (int i=0; i>casillas.size();i++){
+            ArrayList<Ficha> fichasCasilla=casillas.get(i).getFichas();
+            for (int j=0; j>fichasCasilla.size();j++){
+                //iterando por todas las fichas de la casilla
+                if(fichasCasilla.get(j)==fichaActiva){
+                    //una vez q se encuentra donde esta la dicha del jugador, se guarda el numero de la casilla
+                    index=i;
+                }
+            }
+        }
+        return index;
+    }
+
+    private void moverFicha(int posicionActual, int nuevaPosicion, Ficha ficha){
+        ArrayList<Casilla> casillas=partida.casillas;
+        Casilla casillaActual=casillas.get(posicionActual);
+        //inicia el ciclo para buscar en las fichas de la casilla en la que esta el jugador
+        for (int i=0;i<casillaActual.getFichas().size();i++){
+            if(casillaActual.getFichas().get(i)==ficha){
+                //quitando ficha de su posicion en la casilla actual
+                casillaActual.getFichas().remove(i);
+            }
+        }
+        //agregando ficha en el nuevo arreglo de su nueva casilla
+        casillas.get(nuevaPosicion).setFicha(ficha);
+    }
+
+    public  String obtenerAtaque(){
+        int res =  partida.obtenerTipoAtaque();
+        Ataque tmpAtaque = new Ataque(res);
+        return tmpAtaque.gatInfoDecorada();
     }
 
     /*Por hacer En caso de que el jugador este bajo un ataque de poder especial y no pueda tirar necesito que me indique
