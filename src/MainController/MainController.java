@@ -74,37 +74,37 @@ public class MainController {
 
     //Arreglar la generación para asegurarnos que no se repita las casillas y que ninguna se posicione en la posición 0
 
-    public  int[] obtenerDiablillos(){
-        int[] posicioDiblillos = new int[15];
+    public  ArrayList<Integer> obtenerDiablillos(){
+        ArrayList<Integer>posicioDiblillos = new ArrayList<>();
         int contador = 0;
 
         for (Casilla dato:partida.casillas) {
             if ((dato instanceof CasillaDiablillo) == true){
-                posicioDiblillos[contador]=partida.casillas.indexOf(dato);
+                posicioDiblillos.add(partida.casillas.indexOf(dato));
             }
             contador= contador++;
         }
         return posicioDiblillos;
     }
 
-    public  int[] obtenerStones(){
-        int[] posicionStone = new int[10];
+    public  ArrayList<Integer> obtenerStones(){
+        ArrayList<Integer> posicionStone = new ArrayList<>();
         int contador = 0;
         for (Casilla dato:partida.casillas) {
             if ((dato instanceof CasillaStoneAdapter) == true){
-                posicionStone[contador]=partida.casillas.indexOf(dato);
+                posicionStone.add(partida.casillas.indexOf(dato));
             }
             contador= contador++;
         }
         return posicionStone;
     }
 
-    public  int[] obtenerQuerubines(){
-        int[] posicioQueribunes = new int[15];
+    public  ArrayList<Integer> obtenerQuerubines(){
+        ArrayList<Integer> posicioQueribunes = new ArrayList<>();
         int contador = 0;
         for (Casilla dato:partida.casillas) {
             if ((dato instanceof CasillaQuerubin) == true){
-                posicioQueribunes[contador]=partida.casillas.indexOf(dato);
+                posicioQueribunes.add(partida.casillas.indexOf(dato));
             }
             contador= contador++;
         }
