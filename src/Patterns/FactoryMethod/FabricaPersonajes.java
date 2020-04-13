@@ -9,6 +9,7 @@ public class FabricaPersonajes implements IMetodoFabrica {
     public Personaje crearPersonaje(String Elemento) {
         Personaje tmpPersonaje;
         Elemento tmpElemento;
+
         switch (Elemento){
             case "Fuego":
                 tmpElemento=new Elemento(Elemento);
