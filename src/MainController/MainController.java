@@ -112,7 +112,10 @@ public class MainController {
     }
 
     public  int obtenerMovimiento(){
-        int resulDado=partida.obtenerNumeroMovimiento();
+        return partida.obtenerNumeroMovimiento();
+    }
+
+    public int obtenerNuevaPosicionFicha(int resulDado){
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
         int nuevaPosicion=posicionActual+resulDado;
@@ -128,10 +131,10 @@ public class MainController {
                 moverFicha(posicionActual,nuevaPosicion,fichaActiva);
             }
         }
-
-
         return nuevaPosicion+1;
     }
+
+
 
     public int movimientoQuerubin(){
         Ficha fichaActiva=partida.turno.getFicha();
