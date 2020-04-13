@@ -38,7 +38,6 @@ public class Manager {
             lista+="\n";
         }
         return lista;
-
     }
 
     private ArrayList<Casilla> incluirStones(ArrayList<Casilla> casillas) {
