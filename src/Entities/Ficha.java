@@ -1,5 +1,7 @@
 package Entities;
 
+import java.util.Arrays;
+
 public class Ficha {
     Personaje[] personajes = new Personaje[3];
 
@@ -15,7 +17,13 @@ public class Ficha {
         this.personajes = personajes;
     }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ficha)) return false;
+        Ficha ficha = (Ficha) o;
+        return Arrays.equals(getPersonajes(), ficha.getPersonajes());
+    }
 }
 
 

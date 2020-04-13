@@ -10,7 +10,7 @@ public class DadoAtaque implements IGirable {
     private static DadoAtaque instance;
     int[] ataques;
 
-    private DadoAtaque() {
+    protected DadoAtaque() {
         this.ataques = new int[]{1,2,3,4,5,6};
     }
 
