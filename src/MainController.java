@@ -1,8 +1,6 @@
-import Entities.Casilla;
-import Entities.Ficha;
-import Entities.Jugador;
-import Entities.Tablero;
+import Entities.*;
 import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.FactoryMethod.FabricaPersonajes;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
 //import org.jetbrains.annotations.NotNull;
@@ -32,15 +30,42 @@ public class MainController {
     }
 
     private void asignarFichas(Jugador[] arrJugadores) {
-        for (int i = 0; i < arrJugadores.length; i++) {
-            Ficha tmpFicha;
-            String tipo;
-            int valor = (int) Math.floor(Math.random()*6+1);
-            switch (valor){
-                case 1:
-                  //Por terminar
+        for (int i = 0; i < arrJugadores.length; i++) { // esto lo hace por cada jugador
+            FabricaPersonajes Personaje1; // esto representa
+            FabricaPersonajes Personaje2; // esto representa
+            FabricaPersonajes Personaje3; // esto representa
+            Personaje [] arr_Personajes = new Personaje [3];
+            int valor1 = 0; // Valor 1, 2 y 3 representa un elemento
+            int valor2 = 0;
+            int valor3 = 0;
+            do {
+                valor1 = (int) Math.floor(Math.random() * 6 + 1); // Valor 1, 2 y 3 representa un elemento.
+                valor2 = (int) Math.floor(Math.random() * 6 + 1);
+                valor3 = (int) Math.floor(Math.random() * 6 + 1);
 
-            }
+            } while((valor1 == valor2) && ( valor2 == valor3) && ( valor3 == valor1)); // Busca 3 elementos diferentes
+
+            arr_Personajes [0] = asignarElemento(valor1); // Asigna los personajes al array
+            arr_Personajes [1] = asignarElemento(valor1);
+            arr_Personajes [2] = asignarElemento(valor1);
+        }
+    }
+    private Personaje asignarElemento(int tipo_elemento) {
+        FabricaPersonajes personaje = new FabricaPersonajes();
+        switch (tipo_elemento){
+            case 1:
+                return personaje.crearPersonaje("Fuego");
+            case 2:
+                return personaje.crearPersonaje("Agua");
+            case 3:
+                return personaje.crearPersonaje("Planta");
+            case 4:
+                return personaje.crearPersonaje("Electrico");
+            case 5:
+                return personaje.crearPersonaje("Roca");
+            default:
+                //en este caso sería Hielo
+                return personaje.crearPersonaje("Hielo");
         }
     }
 
@@ -49,6 +74,7 @@ public class MainController {
     public  int[] obtenerDiablillos(){
         int[] posicioDiblillos = new int[15];
         int contador = 0;
+
         for (Casilla dato:partida.casillas) {
             if ((dato instanceof CasillaDiablillo) == true){
                 posicioDiblillos[contador]=partida.casillas.indexOf(dato);
