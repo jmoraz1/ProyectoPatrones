@@ -8,9 +8,10 @@ public class ControladorPrueba {
 
     public ArrayList<String> nombreJugadores = new ArrayList<String>();
     public ArrayList<Jugador> arregloJugadores = new ArrayList<>();
+    public String adminClave = "admin";
 
     public ControladorPrueba(){
-
+        adminClave = "admin";
     }
 
     public void agregarJugadores(String nombre){

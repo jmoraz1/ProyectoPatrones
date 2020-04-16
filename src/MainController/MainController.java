@@ -27,8 +27,8 @@ public class MainController {
             arrJugadores[cont]= dato;
             cont++;
         }
-        partida = new Tablero(arrJugadores);
         asignarFichas(arrJugadores);
+        partida = new Tablero(arrJugadores);
         return partida;
     }
 
@@ -148,7 +148,10 @@ public class MainController {
     public int movimientoDiablito(){
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
-        int nuevaPosicion=posicionActual-10;
+        int nuevaPosicion = 0;
+        if(posicionActual > 9){
+            nuevaPosicion = posicionActual-10;
+        }
         moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
         return nuevaPosicion;
@@ -167,13 +170,13 @@ public class MainController {
     public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
         ArrayList<Casilla> casillas=partida.casillas;
-        for (int i=0; i>casillas.size();i++){
+        for (int i=0; i<casillas.size();i++){
             ArrayList<Ficha> fichasCasilla=casillas.get(i).getFichas();
-            for (int j=0; j>fichasCasilla.size();j++){
+            for (int j=0; j<fichasCasilla.size();j++){
                 //iterando por todas las fichas de la casilla
                 if(fichasCasilla.get(j)==fichaActiva){
                     //una vez q se encuentra donde esta la dicha del jugador, se guarda el numero de la casilla
-                    index=i;
+                    return index=i;
                 }
             }
         }

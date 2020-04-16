@@ -121,6 +121,7 @@ public class seleccionarJugadoresController implements Initializable {
             }else{
                 String nombreP1 = txtFieldP1.getText();
                 control.agregarJugadores(nombreP1);
+                control.agregarJugadores("Computadora");
             }
 
             if(validarNombreDiferente){

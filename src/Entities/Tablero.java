@@ -20,10 +20,10 @@ public class Tablero implements Observador {
 
     public Tablero(Jugador[] jugadores) {
         this.casillas =manager.generarCasillas() ;
-        this.turno = jugadores[numTurno];
         this.dadoMovimiento = DadoMovimiento.getInstance();
         this.dadoAtaque = DadoAtaque.getInstance();
         this.jugadores = jugadores;
+        this.turno = jugadores[numTurno];
         observarCasillas();
 
     }
@@ -33,7 +33,7 @@ public class Tablero implements Observador {
             numTurno=0;
             turno= jugadores[numTurno];
         }else {
-            numTurno=numTurno++;
+            numTurno++;
             turno = jugadores[numTurno];
         }
         return turno;

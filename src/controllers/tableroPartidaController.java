@@ -101,10 +101,14 @@ public class tableroPartidaController implements Initializable {
     private ImageView fichaP2 = new ImageView();
     private ImageView fichaP3 = new ImageView();
     private ImageView fichaP4 = new ImageView();
+    private int numFicha = 1;
+    private int cantidadJugadores = 0;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         imgViewDado.setVisible(true);
         btnTirarDado.setVisible(true);
+        btnTirarDado.setDisable(true);
         imgViewDadoAtaque.setVisible(false);
         btnTirarDadoAtaque.setVisible(false);
         flechaTirarDado.setVisible(false);
@@ -114,9 +118,12 @@ public class tableroPartidaController implements Initializable {
 
     public void iniciarTodoTablero(ActionEvent event) throws IOException{
         colocarNombres();
+        //controladorTablero.admin
+        btnTirarDado.setDisable(false);
         partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
+        cantidadJugadores = controladorTablero.arregloJugadores.size();
         colocarCasillasEspeciales();
-        txtJugadorEnTurno.setText(mc.obtenerTurno().getNombre());
+        txtJugadorEnTurno.setText(controladorTablero.arregloJugadores.get(0).getNombre());
         jugadorTurno  = partida.turno;
         jugadoresPartida = partida.jugadores;
         flechaIniciarPartida.setVisible(false);
@@ -125,51 +132,125 @@ public class tableroPartidaController implements Initializable {
 
     }
 
+    public void cambiarTurno(){
+        jugadorTurno  = mc.obtenerTurno();
+        txtJugadorEnTurno.setText(jugadorTurno.getNombre());
+        switch (numFicha){
+            case 1:
+                numFicha = 2;
+                break;
+            case 2:
+                if(cantidadJugadores == 2){
+                    numFicha = 1;
+                }else{
+                    numFicha = 3;
+                }
+                break;
+            case 3:
+                if(cantidadJugadores == 3){
+                    numFicha = 1;
+                }else{
+                    numFicha = 4;
+                }
+                break;
+            case 4:
+                numFicha = 1;
+                break;
+            default:
+                break;
+        }
+
+    }
+
     public void gestionarTurno(ActionEvent event) throws IOException{
-        //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO VER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
-
+        //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO V
+        // ER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
         int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
-        int resultadoDadoMovimiento = tirarDado();
+
+        Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
+        imgViewDado.setImage(imgDadoGirandoNumero);
+        String urlImgDadoNumerico= "";
+        int resultadoDadoMovimiento = mc.obtenerMovimiento();
+        switch (resultadoDadoMovimiento){
+            case 1:
+                urlImgDadoNumerico = "/imgs/dadoUno.jpg";
+                break;
+            case 2:
+                urlImgDadoNumerico = "/imgs/dadoDos.jpg";
+                break;
+            case 3:
+                urlImgDadoNumerico = "/imgs/dadoTres.jpg";
+                break;
+            case 4:
+                urlImgDadoNumerico = "/imgs/dadoCuatro.jpg";
+                break;
+            case 5:
+                urlImgDadoNumerico = "/imgs/dadoCinco.jpg";
+                break;
+            case 6:
+                urlImgDadoNumerico = "/imgs/dadoSeis.jpg";
+                break;
+        }
+        Image imgDadoNum = new Image(urlImgDadoNumerico);
+        Timeline timeline =
+                new Timeline(new KeyFrame(Duration.millis(1000), e -> imgViewDado.setImage(imgDadoNum)));
+        timeline.play();
+        dialogoMoverse(resultadoDadoMovimiento);
+
         int jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
-        int nuevaPosicion = 1;
+
         // realizar movimiento inicial
-        fichaP1.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
-        fichaP1.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
+        ImageView fichaJugadorIv = null;
+        switch (numFicha){
+            case 1:
+                fichaJugadorIv = fichaP1;
+                break;
+            case 2:
+                fichaJugadorIv = fichaP2;
+                break;
+            case 3:
+                fichaJugadorIv = fichaP3;
+                break;
+            case 4:
+                fichaJugadorIv = fichaP4;
+                break;
+        }
+        fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
+        fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
 
+        int i = 0;
         for(Casilla c : partida.casillas){
-
-            if(c instanceof CasillaDiablillo && c.getNumero() == jugadorNuevaPosicion){
+            int nuevaPosicion = 1;
+            if(c instanceof CasillaDiablillo && (i == jugadorNuevaPosicion)){
                         dialogoDiablillo();
                         nuevaPosicion = mc.movimientoDiablito();
-                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-            }else if(c instanceof CasillaQuerubin && c.getNumero() == jugadorNuevaPosicion){
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+
+            }else if(c instanceof CasillaQuerubin && (i == jugadorNuevaPosicion)){
                         dialogoQuerubin();
                         nuevaPosicion = mc.movimientoQuerubin();
-                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-            }else if(c instanceof CasillaStoneAdapter && c.getNumero() == jugadorNuevaPosicion){
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+
+            }else if(c instanceof CasillaStoneAdapter && (i == jugadorNuevaPosicion)){
                         dialogoStone();
 
             }else if(c instanceof CasillaZorvan && c.getNumero()+1 > 100){
                 dialogoZorvan();
                         int casillasExtras = jugadorNuevaPosicion - 100;
                         nuevaPosicion = mc.movimientoZorvan(casillasExtras);
-                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-
-            }else{
-
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
             }
-
+            i++;
         }
         //realizar movimiento final
 
         //Debo setear nuevo jugador en turno
-        txtJugadorEnTurno.setText(mc.obtenerTurno().getNombre());
-        jugadorTurno  = partida.turno;
 
 
+        cambiarTurno();
     }
 
     public void iniciarValoresCoordenadas(){
@@ -266,9 +347,10 @@ public class tableroPartidaController implements Initializable {
     }
 
     public void colocarCasillasEspeciales(){
+
         ArrayList<Integer> posicionesDiablillos = mc.obtenerDiablillos();
-        ArrayList<Integer> posicionesStones = mc.obtenerQuerubines();
-        ArrayList<Integer> posicionesQuerubines = mc.obtenerStones();
+        ArrayList<Integer> posicionesStones = mc.obtenerStones();
+        ArrayList<Integer> posicionesQuerubines = mc.obtenerQuerubines();
 
         for (int i = 0; i < posicionesDiablillos.size(); i++){
             anchorPaneTablero.getChildren().add(circleDiablillo(posicionesDiablillos.get(i)));
@@ -287,8 +369,8 @@ public class tableroPartidaController implements Initializable {
     public Circle circleQuerubin(int posicion){
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(84, 197, 219));
-        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion-1).getLayoutY());
-        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion-1).getLayoutX());
+        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion).getLayoutY());
+        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion).getLayoutX());
         cQuerubin.setRadius(9.0);
         cQuerubin.setStroke(Color.BLACK);
         cQuerubin.setStrokeType(StrokeType.valueOf("INSIDE"));
@@ -299,8 +381,8 @@ public class tableroPartidaController implements Initializable {
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(204, 39, 22));
         cQuerubin.setRadius(9.0);
-        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion-1).getLayoutY());
-        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion-1).getLayoutX());
+        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion).getLayoutY());
+        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion).getLayoutX());
         cQuerubin.setStroke(Color.BLACK);
         cQuerubin.setStrokeType(StrokeType.valueOf("INSIDE"));
         return cQuerubin;
@@ -310,8 +392,8 @@ public class tableroPartidaController implements Initializable {
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(22, 204, 64));
         cQuerubin.setRadius(9.0);
-        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion-1).getLayoutY());
-        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion-1).getLayoutX());
+        cQuerubin.setLayoutY(coordenadasCasilla.get(posicion).getLayoutY());
+        cQuerubin.setLayoutX(coordenadasCasilla.get(posicion).getLayoutX());
         cQuerubin.setStroke(Color.BLACK);
         cQuerubin.setStrokeType(StrokeType.valueOf("INSIDE"));
         return cQuerubin;
@@ -676,4 +758,19 @@ public class tableroPartidaController implements Initializable {
 
         alert.showAndWait();
     }
+
+    public void dialogoMoverse(int resultadoDado) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Información");
+        GridPane gP = new GridPane();
+        Text txt = new Text("Avanza: " + resultadoDado +" casillas.");
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+        gP.add(txt, 0,0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(100, 100);
+        alert.showAndWait();
+    }
+
 }
