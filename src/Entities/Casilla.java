@@ -3,6 +3,7 @@ package Entities;
 import Patterns.Observer.Observador;
 import Patterns.Observer.Sujeto;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public abstract class Casilla implements Sujeto {
         return fichas;
     }
 
-    public void setFicha(Ficha ficha) {
+    public void setFicha(Ficha ficha) throws IOException {
         this.fichas.add(ficha);
         notifyObservers();
     }
@@ -50,7 +51,7 @@ public abstract class Casilla implements Sujeto {
     }
 
     @Override
-    public void notifyObservers() {
+    public void notifyObservers() throws IOException {
         for(Observador o : observers){
             o.update(this.tipo);
         }

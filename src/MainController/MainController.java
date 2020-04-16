@@ -8,6 +8,7 @@ import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
 //import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainController {
@@ -20,7 +21,7 @@ public class MainController {
 
 
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
-    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores){
+    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores) throws IOException {
         Jugador[] arrJugadores= new Jugador[jugadores.size()];
         int cont = 0;
         for (Jugador dato: jugadores) {
@@ -119,20 +120,18 @@ public class MainController {
         return partida.obtenerNumeroMovimiento();
     }
 
-    public int obtenerNuevaPosicionFicha(int resulDado){
+    public int obtenerNuevaPosicionFicha(int resulDado) throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
         int nuevaPosicion=posicionActual+resulDado;
         int cantidadMoviemiento=0;
         if(nuevaPosicion>99){
-            cantidadMoviemiento=99;
-            moverFicha(posicionActual,cantidadMoviemiento,fichaActiva);
+            nuevaPosicion=99;
+//            moverFicha(posicionActual,cantidadMoviemiento,fichaActiva);
         }else{
             if(nuevaPosicion<0){
                 nuevaPosicion=0;
-                moverFicha(posicionActual,nuevaPosicion,fichaActiva);
-            }else{
-                moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+//                moverFicha(posicionActual,nuevaPosicion,fichaActiva);
             }
         }
         return nuevaPosicion;
@@ -140,36 +139,36 @@ public class MainController {
 
 
 
-    public int movimientoQuerubin(){
+    public int movimientoQuerubin() throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
         int nuevaPosicion=posicionActual+11;
-        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+//        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
         return nuevaPosicion;
     }
 
-    public int movimientoDiablito(){
+    public int movimientoDiablito() throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
         int nuevaPosicion = 0;
         if(posicionActual > 9){
             nuevaPosicion = posicionActual-10;
         }
-        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
+//        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
         return nuevaPosicion;
     }
 
-    public int movimientoZorvan(int casillasExtra){
+    public int movimientoZorvan(int casillasExtra) throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
 
         int nuevaPosicion=99-casillasExtra;
-        moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
         return nuevaPosicion;
     }
+
 
     public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
@@ -187,7 +186,7 @@ public class MainController {
         return index;
     }
 
-    private void moverFicha(int posicionActual, int nuevaPosicion, Ficha ficha){
+    public void moverFicha(int posicionActual, int nuevaPosicion, Ficha ficha) throws IOException {
         ArrayList<Casilla> casillas=partida.casillas;
         Casilla casillaActual=casillas.get(posicionActual);
         //inicia el ciclo para buscar en las fichas de la casilla en la que esta el jugador
@@ -201,6 +200,11 @@ public class MainController {
         casillas.get(nuevaPosicion).setFicha(ficha);
     }
 
+    public Ficha obtenerFicha(){
+        return partida.turno.getFicha();
+
+
+    }
     public  String obtenerAtaque(){
         int res =  partida.obtenerTipoAtaque();
         Ataque tmpAtaque = new Ataque(res);

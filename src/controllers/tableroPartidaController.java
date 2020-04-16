@@ -5,6 +5,7 @@ import Entities.Jugador;
 import Entities.Tablero;
 import MainController.MainController;
 import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.Observer.Observador;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaNormal;
 import Patterns.Prototype.CasillaQuerubin;
@@ -37,7 +38,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 
-public class tableroPartidaController implements Initializable {
+public class tableroPartidaController implements Initializable,Observador  {
 
     public MainController mc = new MainController();
 
@@ -103,6 +104,7 @@ public class tableroPartidaController implements Initializable {
     private ImageView fichaP4 = new ImageView();
     private int numFicha = 1;
     private int cantidadJugadores = 0;
+    private int jugadorNuevaPosicion;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,6 +124,8 @@ public class tableroPartidaController implements Initializable {
         btnTirarDado.setDisable(false);
         partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
         cantidadJugadores = controladorTablero.arregloJugadores.size();
+        //añadiendo este controller como observador de las casillas
+        partida.observarCasillas(this);
         colocarCasillasEspeciales();
         txtJugadorEnTurno.setText(controladorTablero.arregloJugadores.get(0).getNombre());
         jugadorTurno  = partida.turno;
@@ -197,9 +201,7 @@ public class tableroPartidaController implements Initializable {
         timeline.play();
         dialogoMoverse(resultadoDadoMovimiento);
 
-        int jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
-
-        // realizar movimiento inicial
+        jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
         ImageView fichaJugadorIv = null;
         switch (numFicha){
             case 1:
@@ -218,38 +220,11 @@ public class tableroPartidaController implements Initializable {
         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
 
-        int i = 0;
-        for(Casilla c : partida.casillas){
-            int nuevaPosicion = 1;
-            if(c instanceof CasillaDiablillo && (i == jugadorNuevaPosicion)){
-                        dialogoDiablillo();
-                        nuevaPosicion = mc.movimientoDiablito();
-                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-
-            }else if(c instanceof CasillaQuerubin && (i == jugadorNuevaPosicion)){
-                        dialogoQuerubin();
-                        nuevaPosicion = mc.movimientoQuerubin();
-                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-
-            }else if(c instanceof CasillaStoneAdapter && (i == jugadorNuevaPosicion)){
-                        dialogoStone();
-
-            }else if(c instanceof CasillaZorvan && c.getNumero()+1 > 100){
-                dialogoZorvan();
-                        int casillasExtras = jugadorNuevaPosicion - 100;
-                        nuevaPosicion = mc.movimientoZorvan(casillasExtras);
-                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-            }
-            i++;
-        }
-        //realizar movimiento final
-
-        //Debo setear nuevo jugador en turno
-
-
+        Ficha fichaActiva=mc.obtenerFicha();
+        posicionActual=mc.obtenerPosicionJugador(fichaActiva);
+        mc.moverFicha(posicionActual,jugadorNuevaPosicion,fichaActiva);
+         //Debo setear nuevo jugador en turno
+        
         cambiarTurno();
     }
 
@@ -773,4 +748,62 @@ public class tableroPartidaController implements Initializable {
         alert.showAndWait();
     }
 
+    @Override
+    public String update(String value) throws IOException {
+        value=value;
+
+        if(!value.equals("Normal")){
+            ImageView fichaJugadorIv = null;
+            int nuevaPosicion=0;
+            switch (numFicha){
+                case 1:
+                    fichaJugadorIv = fichaP1;
+                    break;
+                case 2:
+                    fichaJugadorIv = fichaP2;
+                    break;
+                case 3:
+                    fichaJugadorIv = fichaP3;
+                    break;
+                case 4:
+                    fichaJugadorIv = fichaP4;
+                    break;
+            }
+            if(value.equals("Diablito")){
+                dialogoDiablillo();
+                nuevaPosicion = mc.movimientoDiablito();
+                Ficha ficha=mc.obtenerFicha();
+                int posicionActual=mc.obtenerPosicionJugador(ficha);
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+
+            }else if(value.equals("Querubin")){
+                dialogoQuerubin();
+                nuevaPosicion = mc.movimientoQuerubin();
+                Ficha ficha=mc.obtenerFicha();
+                int posicionActual=mc.obtenerPosicionJugador(ficha);
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+
+            }else if(value.equals("Stone")){
+                dialogoStone();
+
+            }else if(value.equals("Zorvan")){
+                dialogoZorvan();
+                int casillasExtras = jugadorNuevaPosicion - 100;
+                nuevaPosicion = mc.movimientoZorvan(casillasExtras);
+                Ficha ficha=mc.obtenerFicha();
+                int posicionActual=mc.obtenerPosicionJugador(ficha);
+                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+            }
+
+        }
+
+
+        return null;
+    }
 }

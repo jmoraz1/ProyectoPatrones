@@ -3,12 +3,13 @@ package Entities;
 import Patterns.Observer.Observador;
 import Patterns.Prototype.Manager;
 import Patterns.Singleton.DadoMovimiento;
+import controllers.tableroPartidaController;
 
 import java.util.ArrayList;
 
 
 
-public class Tablero implements Observador {
+public class Tablero  {
 
     static Manager manager= new Manager();
     static int numTurno=0;
@@ -25,7 +26,6 @@ public class Tablero implements Observador {
         this.dadoAtaque = DadoAtaque.getInstance();
         this.jugadores = jugadores;
         this.turno = jugadores[numTurno];
-        observarCasillas();
 
     }
 
@@ -46,15 +46,10 @@ public class Tablero implements Observador {
         return dadoMovimiento.girar();
     }
 
-    @Override
-    public String update(String value) {
-        return value;
-    }
-
-    private void observarCasillas(){
+    public void observarCasillas(tableroPartidaController o){
         //Subscribir el tablero a las casillas
         for (Casilla casilla :casillas){
-            casilla.addObserver(this);
+            casilla.addObserver(o);
         }
 
     }
