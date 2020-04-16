@@ -6,6 +6,7 @@ import Patterns.Decorator.Ataque;
 import Patterns.FactoryMethod.FabricaPersonajes;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
+import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 //import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -21,7 +22,8 @@ public class MainController {
 
 
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
-    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores) throws IOException {
+    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores, String psw) throws IOException {
+        if (psw== "admin"){
         Jugador[] arrJugadores= new Jugador[jugadores.size()];
         int cont = 0;
         for (Jugador dato: jugadores) {
@@ -34,6 +36,11 @@ public class MainController {
             partida.casillas.get(0).setFicha(arrJugadores[i].getFicha());
         }
         return partida;
+        }else{
+            Tablero tmp= null;
+            return tmp;
+        }
+
     }
 
     private void asignarFichas(Jugador[] arrJugadores) {

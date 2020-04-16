@@ -120,9 +120,8 @@ public class tableroPartidaController implements Initializable,Observador  {
 
     public void iniciarTodoTablero(ActionEvent event) throws IOException{
         colocarNombres();
-        //controladorTablero.admin
         btnTirarDado.setDisable(false);
-        partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
+        partida = mc.NuevaPartida(controladorTablero.arregloJugadores, "admin");
         cantidadJugadores = controladorTablero.arregloJugadores.size();
         //añadiendo este controller como observador de las casillas
         partida.observarCasillas(this);
