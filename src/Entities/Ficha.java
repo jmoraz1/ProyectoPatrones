@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Ficha {
     Personaje[] personajes = new Personaje[3];
 
-    public Ficha(Personaje[] personajes, String color) {
+    public Ficha(Personaje[] personajes) {
         this.personajes = personajes;
     }
 

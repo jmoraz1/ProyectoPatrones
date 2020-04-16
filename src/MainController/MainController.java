@@ -29,6 +29,9 @@ public class MainController {
         }
         asignarFichas(arrJugadores);
         partida = new Tablero(arrJugadores);
+        for(int i = 0; i<arrJugadores.length; i++){
+            partida.casillas.get(0).setFicha(arrJugadores[i].getFicha());
+        }
         return partida;
     }
 
@@ -46,12 +49,12 @@ public class MainController {
                 valor2 = (int) Math.floor(Math.random() * 6 + 1);
                 valor3 = (int) Math.floor(Math.random() * 6 + 1);
 
-            } while((valor1 == valor2) && ( valor2 == valor3) && ( valor3 == valor1)); // Busca 3 elementos diferentes
+            } while((valor1 == valor2) || ( valor2 == valor3) || ( valor3 == valor1)); // Busca 3 elementos diferentes
 
             arr_Personajes [0] = asignarElemento(valor1); // Asigna los personajes al array
-            arr_Personajes [1] = asignarElemento(valor1);
-            arr_Personajes [2] = asignarElemento(valor1);
-            arrJugadores [i].ficha.setPersonajes(arr_Personajes);
+            arr_Personajes [1] = asignarElemento(valor2);
+            arr_Personajes [2] = asignarElemento(valor3);
+            arrJugadores[i].setFicha(new Ficha(arr_Personajes));
         }
     }
     private Personaje asignarElemento(int tipo_elemento) {
