@@ -2,6 +2,7 @@ package Entities;
 
 import Patterns.Observer.Observador;
 import Patterns.Prototype.Manager;
+import Patterns.Singleton.DadoMovimiento;
 
 import java.util.ArrayList;
 

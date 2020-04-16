@@ -51,6 +51,7 @@ public class MainController {
             arr_Personajes [0] = asignarElemento(valor1); // Asigna los personajes al array
             arr_Personajes [1] = asignarElemento(valor1);
             arr_Personajes [2] = asignarElemento(valor1);
+            arrJugadores [i].ficha.setPersonajes(arr_Personajes);
         }
     }
     private Personaje asignarElemento(int tipo_elemento) {
@@ -216,5 +217,7 @@ public class MainController {
         return partida.siguienteTurno();
     }
 
+    public void Ataque () {
 
+    }
 }
