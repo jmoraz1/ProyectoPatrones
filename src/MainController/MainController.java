@@ -131,7 +131,7 @@ public class MainController {
                 moverFicha(posicionActual,nuevaPosicion,fichaActiva);
             }
         }
-        return nuevaPosicion+1;
+        return nuevaPosicion;
     }
 
 
@@ -142,7 +142,7 @@ public class MainController {
         int nuevaPosicion=posicionActual+11;
         moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
-        return nuevaPosicion+1;
+        return nuevaPosicion;
     }
 
     public int movimientoDiablito(){
@@ -151,7 +151,7 @@ public class MainController {
         int nuevaPosicion=posicionActual-10;
         moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
-        return nuevaPosicion+1;
+        return nuevaPosicion;
     }
 
     public int movimientoZorvan(int casillasExtra){
@@ -161,10 +161,10 @@ public class MainController {
         int nuevaPosicion=99-casillasExtra;
         moverFicha(posicionActual,nuevaPosicion,fichaActiva);
 
-        return nuevaPosicion+1;
+        return nuevaPosicion;
     }
 
-    private int obtenerPosicionJugador(Ficha fichaActiva) {
+    public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
         ArrayList<Casilla> casillas=partida.casillas;
         for (int i=0; i>casillas.size();i++){

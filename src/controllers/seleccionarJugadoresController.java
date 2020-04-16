@@ -163,16 +163,22 @@ public class seleccionarJugadoresController implements Initializable {
 
     public void p1(ActionEvent event) throws IOException{
         txtFieldP1.setDisable(false);
+        txtFieldP2.setDisable(true);
+        txtFieldP3.setDisable(true);
+        txtFieldP4.setDisable(true);
 
     }
     public void p2(ActionEvent event) throws IOException{
         txtFieldP1.setDisable(false);
         txtFieldP2.setDisable(false);
+        txtFieldP3.setDisable(true);
+        txtFieldP4.setDisable(true);
     }
     public void p3(ActionEvent event) throws IOException{
         txtFieldP1.setDisable(false);
         txtFieldP2.setDisable(false);
         txtFieldP3.setDisable(false);
+        txtFieldP4.setDisable(true);
     }
     public void p4(ActionEvent event) throws IOException{
         txtFieldP1.setDisable(false);

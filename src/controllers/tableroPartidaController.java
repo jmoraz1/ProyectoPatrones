@@ -1,8 +1,14 @@
 package controllers;
 import Entities.Casilla;
+import Entities.Ficha;
 import Entities.Jugador;
 import Entities.Tablero;
 import MainController.MainController;
+import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.Prototype.CasillaDiablillo;
+import Patterns.Prototype.CasillaNormal;
+import Patterns.Prototype.CasillaQuerubin;
+import Patterns.Prototype.CasillaZorvan;
 import clasesUI.EjeXYCasilla;
 import clasesUI.ElementoTabla;
 import javafx.animation.KeyFrame;
@@ -90,6 +96,7 @@ public class tableroPartidaController implements Initializable {
 
     private static Tablero partida;
     private static Jugador jugadorTurno;
+    private static Jugador[] jugadoresPartida;
     private ImageView fichaP1 = new ImageView();
     private ImageView fichaP2 = new ImageView();
     private ImageView fichaP3 = new ImageView();
@@ -102,9 +109,7 @@ public class tableroPartidaController implements Initializable {
         btnTirarDadoAtaque.setVisible(false);
         flechaTirarDado.setVisible(false);
         iniciarValoresCoordenadas();
-
-
-
+        txtJugadorEnTurno.setDisable(true);
     }
 
     public void iniciarTodoTablero(ActionEvent event) throws IOException{
@@ -113,9 +118,58 @@ public class tableroPartidaController implements Initializable {
         colocarCasillasEspeciales();
         txtJugadorEnTurno.setText(mc.obtenerTurno().getNombre());
         jugadorTurno  = partida.turno;
+        jugadoresPartida = partida.jugadores;
         flechaIniciarPartida.setVisible(false);
         flechaTirarDado.setVisible(true);
         btnIniciarTodoTablero.setDisable(true);
+
+    }
+
+    public void gestionarTurno(ActionEvent event) throws IOException{
+        //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO VER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
+
+        int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
+        int resultadoDadoMovimiento = tirarDado();
+        int jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
+        int nuevaPosicion = 1;
+        // realizar movimiento inicial
+        fichaP1.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
+        fichaP1.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
+
+        for(Casilla c : partida.casillas){
+
+            if(c instanceof CasillaDiablillo && c.getNumero() == jugadorNuevaPosicion){
+                        dialogoDiablillo();
+                        nuevaPosicion = mc.movimientoDiablito();
+                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+            }else if(c instanceof CasillaQuerubin && c.getNumero() == jugadorNuevaPosicion){
+                        dialogoQuerubin();
+                        nuevaPosicion = mc.movimientoQuerubin();
+                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+            }else if(c instanceof CasillaStoneAdapter && c.getNumero() == jugadorNuevaPosicion){
+                        dialogoStone();
+
+            }else if(c instanceof CasillaZorvan && c.getNumero()+1 > 100){
+                dialogoZorvan();
+                        int casillasExtras = jugadorNuevaPosicion - 100;
+                        nuevaPosicion = mc.movimientoZorvan(casillasExtras);
+                fichaP1.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                fichaP1.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+
+            }else{
+
+            }
+
+        }
+        //realizar movimiento final
+
+        //Debo setear nuevo jugador en turno
+        txtJugadorEnTurno.setText(mc.obtenerTurno().getNombre());
+        jugadorTurno  = partida.turno;
+
+
     }
 
     public void iniciarValoresCoordenadas(){
@@ -363,12 +417,11 @@ public class tableroPartidaController implements Initializable {
         }
     }
 
-    public void tirarDado(ActionEvent event) throws IOException {
+    public int tirarDado() throws IOException {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDado.setImage(imgDadoGirandoNumero);
-
         String urlImgDadoNumerico= "";
-        int valorDadoMovimeinto = (int) Math.floor(Math.random()*6+1);
+        int valorDadoMovimeinto = mc.obtenerMovimiento();
         switch (valorDadoMovimeinto){
             case 1:
                 urlImgDadoNumerico = "/imgs/dadoUno.jpg";
@@ -393,6 +446,8 @@ public class tableroPartidaController implements Initializable {
         Timeline timeline =
                 new Timeline(new KeyFrame(Duration.millis(2000), e -> imgViewDado.setImage(imgDadoNum)));
         timeline.play();
+
+        return valorDadoMovimeinto;
 
     }
 
@@ -517,7 +572,7 @@ public class tableroPartidaController implements Initializable {
         alert.showAndWait();
     }
 
-    public void dialogoZorvan(ActionEvent event) throws IOException {
+    public void dialogoZorvan() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
 
@@ -543,7 +598,7 @@ public class tableroPartidaController implements Initializable {
         alert.showAndWait();
     }
 
-    public void diaglogoDiablillo(ActionEvent event) throws IOException {
+    public void dialogoDiablillo() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
 
@@ -570,7 +625,7 @@ public class tableroPartidaController implements Initializable {
         alert.showAndWait();
     }
 
-    public void dialogoQuerubin(ActionEvent event) throws IOException {
+    public void dialogoQuerubin() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
 
@@ -596,7 +651,7 @@ public class tableroPartidaController implements Initializable {
         alert.showAndWait();
     }
 
-    public void dialogoStone(ActionEvent event) throws IOException {
+    public void dialogoStone() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
 

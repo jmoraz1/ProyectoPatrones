@@ -182,7 +182,9 @@
             <Image url="@../imgs/FICHAS-04.png" />
          </image>
       </ImageView>
-      <Button id="btnSalir" fx:id="btnTirarDado" alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="296.0" mnemonicParsing="false" onAction="#tirarDado" prefHeight="40.0" prefWidth="87.0" style="-fx-background-color: #ffffff;" text="Tirar" textFill="#090909">
+      <Button id="btnTirarDado" fx:id="btnTirarDado" alignment="CENTER" contentDisplay="CENTER"
+              layoutX="26.0" layoutY="296.0" mnemonicParsing="false" onAction="#gestionarTurno"
+              prefHeight="40.0" prefWidth="87.0" style="-fx-background-color: #ffffff;" text="Tirar" textFill="#090909">
          <font>
             <Font name="Matura MT Script Capitals" size="19.0" />
          </font>
