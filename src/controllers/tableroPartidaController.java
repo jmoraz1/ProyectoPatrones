@@ -224,7 +224,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         posicionActual=mc.obtenerPosicionJugador(fichaActiva);
         mc.moverFicha(posicionActual,jugadorNuevaPosicion,fichaActiva);
          //Debo setear nuevo jugador en turno
-        
+
         cambiarTurno();
     }
 
@@ -690,7 +690,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         Text txt = new Text("Querubin: " +
                 "\n-¡Bienvenido guerrero!" +
                 "\nVeo que eres digno." +
-                "\nHas de avanzar 10 casillas.");
+                "\nHas de avanzar 11 casillas.");
         txt.setFont(Font.font("Matura MT Script Capitals", 20));
         txt.setFill(Color.rgb(58,54,21));
         gP.add(txt, 0,0);
@@ -749,7 +749,7 @@ public class tableroPartidaController implements Initializable,Observador  {
     }
 
     @Override
-    public String update(String value) throws IOException {
+    public void update(String value) throws IOException {
         value=value;
 
         if(!value.equals("Normal")){
@@ -789,7 +789,8 @@ public class tableroPartidaController implements Initializable,Observador  {
 
             }else if(value.equals("Stone")){
                 dialogoStone();
-
+                mc.obtenerTurno().setInabilitado(true);
+                //para validar si el jugador no puede moverse hasta matar al stone
             }else if(value.equals("Zorvan")){
                 dialogoZorvan();
                 int casillasExtras = jugadorNuevaPosicion - 100;
@@ -802,8 +803,5 @@ public class tableroPartidaController implements Initializable,Observador  {
             }
 
         }
-
-
-        return null;
     }
 }

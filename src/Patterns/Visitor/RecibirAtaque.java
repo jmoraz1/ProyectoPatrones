@@ -15,7 +15,7 @@ public class RecibirAtaque implements IVisitor {
             casillaStone.getStone().setVida(vidaStone-amount);
 
         }
-        //este es el metodo que se tiene q llama cuando se ataca un stone
+        //este es el metodo que se tiene q llamar cuando se ataca un stone
 
     }
 
