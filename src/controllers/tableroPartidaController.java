@@ -16,7 +16,10 @@ import clasesUI.ElementoTabla;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -39,23 +42,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 
-public class tableroPartidaController implements Initializable,Observador  {
-
-    public MainController mc;
-
-    public ArrayList<ElementoTabla> arregloInfoElementos = new ArrayList<>();
-
-    public ArrayList<EjeXYCasilla> coordenadasCasilla = new ArrayList<EjeXYCasilla>();
-
-    public ArrayList<EjeXYCasilla> coordenadasCasillaFicha = new ArrayList<EjeXYCasilla>();
-
-    public int valorDadoMovimeinto = 0;
-
-    public int valorDadoAtaque= 0;
-
-    public ControladorPrueba controladorTablero;
-
-
+public class tableroPartidaController implements Initializable,Observador {
 
     @FXML
     private Image imgDelImageViewDado;
@@ -95,7 +82,18 @@ public class tableroPartidaController implements Initializable,Observador  {
     private ImageView flechaIniciarPartida;
     @FXML
     private Button btnIniciarTodoTablero;
+    public MainController mc;
 
+    public ArrayList<ElementoTabla> arregloInfoElementos = new ArrayList<>();
+
+    public ArrayList<EjeXYCasilla> coordenadasCasilla = new ArrayList<EjeXYCasilla>();
+
+    public ArrayList<EjeXYCasilla> coordenadasCasillaFicha = new ArrayList<EjeXYCasilla>();
+
+    public int valorDadoMovimeinto = 0;
+    private int valorDadoAtaque = 1;
+
+    public ControladorPrueba controladorTablero;
     private static Tablero partida;
     private static Jugador jugadorTurno;
     private static Jugador[] jugadoresPartida;
@@ -107,9 +105,20 @@ public class tableroPartidaController implements Initializable,Observador  {
     private int cantidadJugadores = 0;
     private int jugadorNuevaPosicion;
 
+    //Checkbox para dado de ataque
+    private CheckBox cb1Elemento;
+    private CheckBox cb2Elemento;
+    private CheckBox cb3Elemento;
+    private boolean validacionCBElementos = false;
+    //Checkbox para poder especial
+    private CheckBox cb1Ataque;
+    private CheckBox cb2Ataque;
+    private CheckBox cb3Ataque;
+    private boolean validacionCBPoderes = false;
+
     public tableroPartidaController() throws IOException {
-        MainControllerProxy proxy= new MainControllerProxy();
-        mc=proxy.obtenerMainController("admin");
+        MainControllerProxy proxy = new MainControllerProxy();
+        mc = proxy.obtenerMainController("admin");
     }
 
     @Override
@@ -122,65 +131,59 @@ public class tableroPartidaController implements Initializable,Observador  {
         flechaTirarDado.setVisible(false);
         iniciarValoresCoordenadas();
         txtJugadorEnTurno.setDisable(true);
+
     }
 
-    public void iniciarTodoTablero(ActionEvent event) throws IOException{
+    public void iniciarTodoTablero(ActionEvent event) throws IOException {
+        //coloca nombres visualmente en la parte inferior de pantalla
         colocarNombres();
+        //inactiva dado
         btnTirarDado.setDisable(false);
+        //crea partida
         partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
+        //indica cuántos jugadores hay
         cantidadJugadores = controladorTablero.arregloJugadores.size();
         //añadiendo este controller como observador de las casillas
         partida.observarCasillas(this);
+        //Coloca las casillas especiales en el tablero
         colocarCasillasEspeciales();
+        //Coloca en el input el nombre del jugador en truno
         txtJugadorEnTurno.setText(controladorTablero.arregloJugadores.get(0).getNombre());
-        jugadorTurno  = partida.turno;
+        //Establece el jugador en turno
+        jugadorTurno = partida.turno;
         jugadoresPartida = partida.jugadores;
+        //quita la flecha que indica que botón presionar al inicio
         flechaIniciarPartida.setVisible(false);
+        // coloca la flecha que indica que se debe tirar dado
         flechaTirarDado.setVisible(true);
+        //deshabilita el botón de iniciar tablero
         btnIniciarTodoTablero.setDisable(true);
-
     }
 
-    public void cambiarTurno(){
-        jugadorTurno  = mc.obtenerTurno();
+    public void cambiarTurno() {
+        //cambia el turno del jugador y coloca en el input el nombre del jugador en turno
+        jugadorTurno = mc.obtenerTurno();
         txtJugadorEnTurno.setText(jugadorTurno.getNombre());
-        switch (numFicha){
-            case 1:
-                numFicha = 2;
-                break;
-            case 2:
-                if(cantidadJugadores == 2){
-                    numFicha = 1;
-                }else{
-                    numFicha = 3;
-                }
-                break;
-            case 3:
-                if(cantidadJugadores == 3){
-                    numFicha = 1;
-                }else{
-                    numFicha = 4;
-                }
-                break;
-            case 4:
-                numFicha = 1;
-                break;
-            default:
-                break;
+        if (numFicha == controladorTablero.arregloJugadores.size()) {
+            numFicha = 1;
+        } else {
+            numFicha++;
         }
-
     }
 
-    public void gestionarTurno(ActionEvent event) throws IOException{
+    public void gestionarTurno(ActionEvent event) throws IOException {
         //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO V
         // ER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
-        int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
 
+        int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
+        //Pone el dado a "girar"
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDado.setImage(imgDadoGirandoNumero);
-        String urlImgDadoNumerico= "";
+        String urlImgDadoNumerico = "";
+        //se genera el valor del dado de movimiento
         int resultadoDadoMovimiento = mc.obtenerMovimiento();
-        switch (resultadoDadoMovimiento){
+        //Según el resultado coloca la imagen del dado que coincide con su número
+        switch (resultadoDadoMovimiento) {
             case 1:
                 urlImgDadoNumerico = "/imgs/dadoUno.jpg";
                 break;
@@ -201,14 +204,15 @@ public class tableroPartidaController implements Initializable,Observador  {
                 break;
         }
         Image imgDadoNum = new Image(urlImgDadoNumerico);
+        //permite que la imagen se muestre por un tiempo haciendo ver que está girando
         Timeline timeline =
                 new Timeline(new KeyFrame(Duration.millis(1000), e -> imgViewDado.setImage(imgDadoNum)));
         timeline.play();
+        //indica al usuario que debe moverse
         dialogoMoverse(resultadoDadoMovimiento);
-
         jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
         ImageView fichaJugadorIv = null;
-        switch (numFicha){
+        switch (numFicha) {
             case 1:
                 fichaJugadorIv = fichaP1;
                 break;
@@ -225,128 +229,212 @@ public class tableroPartidaController implements Initializable,Observador  {
         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
 
-        Ficha fichaActiva=mc.obtenerFicha();
-        posicionActual=mc.obtenerPosicionJugador(fichaActiva);
-        mc.moverFicha(posicionActual,jugadorNuevaPosicion,fichaActiva);
-         //Debo setear nuevo jugador en turno
+        Ficha fichaActiva = mc.obtenerFicha();
+        posicionActual = mc.obtenerPosicionJugador(fichaActiva);
+        mc.moverFicha(posicionActual, jugadorNuevaPosicion, fichaActiva);
+        //Debo setear nuevo jugador en turno
 
         cambiarTurno();
     }
 
-    public void iniciarValoresCoordenadas(){
+    public void iniciarValoresCoordenadas() {
         double ejeX = 0;
         double ejeY = 0;
         double ejeYF = 0;
-        for(int i = 1; i <= 100; i++){
-         if(i == 1){
-             EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 183, 165);
-             EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 183, 142);
-             coordenadasCasilla.add(ejeCasilla);
-             coordenadasCasillaFicha.add(ejeCasillaF);
-         }else if( i == 100){
-             EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 1130, 555);
-             coordenadasCasilla.add(ejeCasilla);
-             EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1130, 530);
-             coordenadasCasillaFicha.add(ejeCasillaF);
-         }else{
+        for (int i = 1; i <= 100; i++) {
+            if (i == 1) {
+                EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 183, 165);
+                EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 183, 142);
+                coordenadasCasilla.add(ejeCasilla);
+                coordenadasCasillaFicha.add(ejeCasillaF);
+            } else if (i == 100) {
+                EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 1130, 555);
+                coordenadasCasilla.add(ejeCasilla);
+                EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1130, 530);
+                coordenadasCasillaFicha.add(ejeCasillaF);
+            } else {
 
-             if( i>= 2 && i<= 15){
-                 ejeY = 165;
-                 ejeYF = 142;
-             }else if(i >= 16 && i <= 29){
-                 ejeY = 230;
-                 ejeYF = 206;
-             }else if(i >= 30 && i <= 43){
-                 ejeY = 295;
-                 ejeYF = 274;
-             }else if(i >= 44 && i <= 57){
-                 ejeY = 360;
-                 ejeYF = 338;
-             }else if(i >= 58 && i <= 71){
-                 ejeY = 425;
-                 ejeYF = 401;
-             }else if(i >= 72 && i <=85){
-                 ejeY = 490;
-                 ejeYF = 472;
-             }else if(i >= 86 && i <= 99){
-                 ejeY = 555;
-                 ejeYF = 530;
-             }
-                 switch (i){
-                     case 2: case 29: case 30: case 57: case 58: case 72: case 86:
-                         ejeX = 258;
-                         break;
-                     case 3: case 28: case 31: case 56: case 59: case 73: case 87:
-                         ejeX = 318;
-                         break;
-                     case 4: case 27: case 32: case 55: case 60: case 74: case 88:
-                         ejeX = 378;
-                         break;
-                     case 5: case 26: case 33: case 54: case 61: case 75: case 89:
-                         ejeX = 436;
-                         break;
-                     case 6: case 25: case 34: case 53: case 62: case 76: case 90:
-                         ejeX = 499;
-                         break;
-                     case 7: case 24: case 35: case 52: case 63: case 77: case 91:
-                         ejeX = 557;
-                         break;
-                     case 8: case 23: case 36: case 51: case 64: case 78: case 92:
-                         ejeX = 615;
-                         break;
-                     case 9: case 22: case 37: case 50: case 65: case 79: case 93:
-                         ejeX = 678;
+                if (i >= 2 && i <= 15) {
+                    ejeY = 165;
+                    ejeYF = 142;
+                } else if (i >= 16 && i <= 29) {
+                    ejeY = 230;
+                    ejeYF = 206;
+                } else if (i >= 30 && i <= 43) {
+                    ejeY = 295;
+                    ejeYF = 274;
+                } else if (i >= 44 && i <= 57) {
+                    ejeY = 360;
+                    ejeYF = 338;
+                } else if (i >= 58 && i <= 71) {
+                    ejeY = 425;
+                    ejeYF = 401;
+                } else if (i >= 72 && i <= 85) {
+                    ejeY = 490;
+                    ejeYF = 472;
+                } else if (i >= 86 && i <= 99) {
+                    ejeY = 555;
+                    ejeYF = 530;
+                }
+                switch (i) {
+                    case 2:
+                    case 29:
+                    case 30:
+                    case 57:
+                    case 58:
+                    case 72:
+                    case 86:
+                        ejeX = 258;
                         break;
-                     case 10: case 21: case 38: case 49: case 66: case 80: case 94:
-                         ejeX = 737;
-                         break;
-                     case 11: case 20: case 39: case 48: case 67: case 81: case 95:
-                         ejeX = 796;
-                         break;
-                     case 12: case 19: case 40: case 47: case 68: case 82: case 96:
-                         ejeX = 857;
-                         break;
-                     case 13: case 18: case 41: case 46: case 69: case 83: case 97:
-                         ejeX = 918;
-                         break;
-                     case 14: case 17: case 42: case 45: case 70: case 84: case 98:
-                         ejeX = 977;
-                         break;
-                     case 15: case 16: case 43: case 44: case 71: case 85: case 99:
-                         ejeX = 1035;
-                         break;
-                 }
+                    case 3:
+                    case 28:
+                    case 31:
+                    case 56:
+                    case 59:
+                    case 73:
+                    case 87:
+                        ejeX = 318;
+                        break;
+                    case 4:
+                    case 27:
+                    case 32:
+                    case 55:
+                    case 60:
+                    case 74:
+                    case 88:
+                        ejeX = 378;
+                        break;
+                    case 5:
+                    case 26:
+                    case 33:
+                    case 54:
+                    case 61:
+                    case 75:
+                    case 89:
+                        ejeX = 436;
+                        break;
+                    case 6:
+                    case 25:
+                    case 34:
+                    case 53:
+                    case 62:
+                    case 76:
+                    case 90:
+                        ejeX = 499;
+                        break;
+                    case 7:
+                    case 24:
+                    case 35:
+                    case 52:
+                    case 63:
+                    case 77:
+                    case 91:
+                        ejeX = 557;
+                        break;
+                    case 8:
+                    case 23:
+                    case 36:
+                    case 51:
+                    case 64:
+                    case 78:
+                    case 92:
+                        ejeX = 615;
+                        break;
+                    case 9:
+                    case 22:
+                    case 37:
+                    case 50:
+                    case 65:
+                    case 79:
+                    case 93:
+                        ejeX = 678;
+                        break;
+                    case 10:
+                    case 21:
+                    case 38:
+                    case 49:
+                    case 66:
+                    case 80:
+                    case 94:
+                        ejeX = 737;
+                        break;
+                    case 11:
+                    case 20:
+                    case 39:
+                    case 48:
+                    case 67:
+                    case 81:
+                    case 95:
+                        ejeX = 796;
+                        break;
+                    case 12:
+                    case 19:
+                    case 40:
+                    case 47:
+                    case 68:
+                    case 82:
+                    case 96:
+                        ejeX = 857;
+                        break;
+                    case 13:
+                    case 18:
+                    case 41:
+                    case 46:
+                    case 69:
+                    case 83:
+                    case 97:
+                        ejeX = 918;
+                        break;
+                    case 14:
+                    case 17:
+                    case 42:
+                    case 45:
+                    case 70:
+                    case 84:
+                    case 98:
+                        ejeX = 977;
+                        break;
+                    case 15:
+                    case 16:
+                    case 43:
+                    case 44:
+                    case 71:
+                    case 85:
+                    case 99:
+                        ejeX = 1035;
+                        break;
+                }
 
-             EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, ejeX, ejeY);
-             EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, ejeX, ejeYF);
-             coordenadasCasilla.add(ejeCasilla);
-             coordenadasCasillaFicha.add(ejeCasillaF);
+                EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, ejeX, ejeY);
+                EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, ejeX, ejeYF);
+                coordenadasCasilla.add(ejeCasilla);
+                coordenadasCasillaFicha.add(ejeCasillaF);
 
-         }
+            }
         }
     }
 
-    public void colocarCasillasEspeciales(){
+    public void colocarCasillasEspeciales() {
 
         ArrayList<Integer> posicionesDiablillos = mc.obtenerDiablillos();
         ArrayList<Integer> posicionesStones = mc.obtenerStones();
         ArrayList<Integer> posicionesQuerubines = mc.obtenerQuerubines();
 
-        for (int i = 0; i < posicionesDiablillos.size(); i++){
+        for (int i = 0; i < posicionesDiablillos.size(); i++) {
             anchorPaneTablero.getChildren().add(circleDiablillo(posicionesDiablillos.get(i)));
         }
 
-        for (int i = 0; i < posicionesStones.size(); i++){
+        for (int i = 0; i < posicionesStones.size(); i++) {
             anchorPaneTablero.getChildren().add(circleStone(posicionesStones.get(i)));
         }
 
-        for (int i = 0; i < posicionesQuerubines.size(); i++){
+        for (int i = 0; i < posicionesQuerubines.size(); i++) {
             anchorPaneTablero.getChildren().add(circleQuerubin(posicionesQuerubines.get(i)));
         }
 
     }
 
-    public Circle circleQuerubin(int posicion){
+    public Circle circleQuerubin(int posicion) {
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(84, 197, 219));
         cQuerubin.setLayoutY(coordenadasCasilla.get(posicion).getLayoutY());
@@ -357,7 +445,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         return cQuerubin;
     }
 
-    public Circle circleDiablillo(int posicion){
+    public Circle circleDiablillo(int posicion) {
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(204, 39, 22));
         cQuerubin.setRadius(9.0);
@@ -368,7 +456,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         return cQuerubin;
     }
 
-    public Circle circleStone(int posicion){
+    public Circle circleStone(int posicion) {
         Circle cQuerubin = new Circle();
         cQuerubin.setFill(Color.rgb(22, 204, 64));
         cQuerubin.setRadius(9.0);
@@ -379,7 +467,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         return cQuerubin;
     }
 
-    public void turnoDadoAtaque(){
+    public void turnoDadoAtaque() {
         imgViewDado.setVisible(false);
         btnTirarDado.setVisible(false);
         imgViewDadoAtaque.setVisible(true);
@@ -390,14 +478,14 @@ public class tableroPartidaController implements Initializable,Observador  {
         btnTirarDadoAtaque.setLayoutY(296);
     }
 
-    public void turnoDadoMovimiento(){
+    public void turnoDadoMovimiento() {
         imgViewDado.setVisible(true);
         btnTirarDado.setVisible(true);
         imgViewDadoAtaque.setVisible(false);
         btnTirarDadoAtaque.setVisible(false);
     }
 
-    public void colocarNombres(){
+    public void colocarNombres() {
         ArrayList<String> listaJugadores = controladorTablero.nombreJugadores;
         Image imgfP1 = new Image("/imgs/FICHAS-02.png");
         fichaP1.setImage(imgfP1);
@@ -423,11 +511,11 @@ public class tableroPartidaController implements Initializable,Observador  {
         fichaP4.setLayoutX(coordenadasCasillaFicha.get(0).getLayoutX());
         fichaP4.setFitWidth(45);
         fichaP4.setFitHeight(45);
-        switch (listaJugadores.size()){
+        switch (listaJugadores.size()) {
             case 1:
-                lblP1.setText(lblP1.getText()+" "+ listaJugadores.get(0));
+                lblP1.setText(lblP1.getText() + " " + listaJugadores.get(0));
                 lblP2.setVisible(true);
-                lblP2.setText(lblP2.getText()+" Computadora");
+                lblP2.setText(lblP2.getText() + " Computadora");
                 lblP3.setVisible(false);
                 lblP4.setVisible(false);
                 imgP2.setVisible(true);
@@ -437,8 +525,8 @@ public class tableroPartidaController implements Initializable,Observador  {
                 anchorPaneTablero.getChildren().add(fichaP2);
                 break;
             case 2:
-                lblP1.setText(lblP1.getText() + " "+listaJugadores.get(0));
-                lblP2.setText(lblP2.getText() +" "+ listaJugadores.get(1));
+                lblP1.setText(lblP1.getText() + " " + listaJugadores.get(0));
+                lblP2.setText(lblP2.getText() + " " + listaJugadores.get(1));
                 lblP3.setVisible(false);
                 lblP4.setVisible(false);
                 imgP3.setVisible(false);
@@ -447,9 +535,9 @@ public class tableroPartidaController implements Initializable,Observador  {
                 anchorPaneTablero.getChildren().add(fichaP2);
                 break;
             case 3:
-                lblP1.setText(lblP1.getText() + " "+listaJugadores.get(0));
-                lblP2.setText(lblP2.getText() +" "+ listaJugadores.get(1));
-                lblP3.setText(lblP3.getText() + " "+listaJugadores.get(2));
+                lblP1.setText(lblP1.getText() + " " + listaJugadores.get(0));
+                lblP2.setText(lblP2.getText() + " " + listaJugadores.get(1));
+                lblP3.setText(lblP3.getText() + " " + listaJugadores.get(2));
                 lblP4.setVisible(false);
                 anchorPaneTablero.getChildren().add(fichaP1);
                 anchorPaneTablero.getChildren().add(fichaP2);
@@ -457,10 +545,10 @@ public class tableroPartidaController implements Initializable,Observador  {
 
                 break;
             case 4:
-                lblP1.setText(lblP1.getText() +" "+ listaJugadores.get(0));
-                lblP2.setText(lblP2.getText() +" "+ listaJugadores.get(1));
-                lblP3.setText(lblP3.getText() +" "+ listaJugadores.get(2));
-                lblP4.setText(lblP4.getText() + " "+listaJugadores.get(3));
+                lblP1.setText(lblP1.getText() + " " + listaJugadores.get(0));
+                lblP2.setText(lblP2.getText() + " " + listaJugadores.get(1));
+                lblP3.setText(lblP3.getText() + " " + listaJugadores.get(2));
+                lblP4.setText(lblP4.getText() + " " + listaJugadores.get(3));
                 anchorPaneTablero.getChildren().add(fichaP1);
                 anchorPaneTablero.getChildren().add(fichaP2);
                 anchorPaneTablero.getChildren().add(fichaP3);
@@ -473,8 +561,8 @@ public class tableroPartidaController implements Initializable,Observador  {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Salir");
         alert.setHeaderText("¿Desea salir del juego?");
-        Optional<ButtonType> opcion =  alert.showAndWait();
-        if(opcion.get() == ButtonType.OK){
+        Optional<ButtonType> opcion = alert.showAndWait();
+        if (opcion.get() == ButtonType.OK) {
             Platform.exit();
         }
     }
@@ -482,9 +570,9 @@ public class tableroPartidaController implements Initializable,Observador  {
     public int tirarDado() throws IOException {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDado.setImage(imgDadoGirandoNumero);
-        String urlImgDadoNumerico= "";
+        String urlImgDadoNumerico = "";
         int valorDadoMovimeinto = mc.obtenerMovimiento();
-        switch (valorDadoMovimeinto){
+        switch (valorDadoMovimeinto) {
             case 1:
                 urlImgDadoNumerico = "/imgs/dadoUno.jpg";
                 break;
@@ -512,14 +600,36 @@ public class tableroPartidaController implements Initializable,Observador  {
         return valorDadoMovimeinto;
 
     }
-
-    public void tirarDadoAtaque(ActionEvent event) throws IOException {
+    //ActionEvent event
+    public void tirarDadoAtaque() throws IOException {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDadoAtaque.setImage(imgDadoGirandoNumero);
 
-        String urlImgDadoNumerico= "";
-        int valorDadoAtaque = (int) Math.floor(Math.random()*6+1);
-        switch (valorDadoAtaque){
+        String resultadoDadoAtaque = mc.obtenerAtaque();
+
+        switch (resultadoDadoAtaque) {
+            case "Tu girada ha resultado en ataca un personaje de la triada":
+                valorDadoAtaque = 1;
+                break;
+            case "Tu girada ha resultado en atacan dos personajes de la triada":
+                valorDadoAtaque = 2;
+                break;
+            case "Tu girada ha resultado en ataca tres personaje de la triada":
+                valorDadoAtaque = 3;
+                break;
+            case "Tu girada ha resultado en ataca solo un personaje y puede activar un poder especial de cualquiera":
+                valorDadoAtaque = 4;
+                break;
+            case "Tu girada ha resultado en atacan dos personajes y se activa un poder especial":
+                valorDadoAtaque = 5;
+                break;
+            case "Tu girada ha resultado en atacan todos los personajes y se activan dos poderes especiales":
+                valorDadoAtaque = 6;
+                break;
+        }
+
+        String urlImgDadoNumerico = "";
+        switch (valorDadoAtaque) {
             case 1:
                 urlImgDadoNumerico = "/imgs/atacaUnPersonajeTriada.jpg";
                 break;
@@ -541,34 +651,34 @@ public class tableroPartidaController implements Initializable,Observador  {
         }
         Image imgDadoAta = new Image(urlImgDadoNumerico);
         Timeline timeline =
-                new Timeline(new KeyFrame(Duration.millis(2000), e -> imgViewDadoAtaque.setImage(imgDadoAta)));
+                new Timeline(new KeyFrame(Duration.millis(1000), e -> imgViewDadoAtaque.setImage(imgDadoAta)));
         timeline.play();
     }
 
-    public void iniciarArregloInfoElementos(){
+    public void iniciarArregloInfoElementos() {
         ElementoTabla eleFuego = new ElementoTabla("Le otorga 5 puntos extra a un personaje de la triada por 2 turnos",
                 "Fuego", "Neutral", "Desventaja", "Ventaja", "Desventaja", "Desventaja",
-                "Ventaja" );
+                "Ventaja");
 
         ElementoTabla eleAgua = new ElementoTabla("Habilita dado de ataque para tiro extra",
                 "Agua", "Ventaja", "Neutral", "Desventaja", "Desventaja", "Ventaja",
-                "Desventaja" );
+                "Desventaja");
 
         ElementoTabla elePlanta = new ElementoTabla("Por 2 turnos no deja que un jugador saque más de 3 en su dado de movimientos",
                 "Planta", "Desventaja", "Ventaja", "Neutral", "Ventaja", "Desventaja",
-                "Desventaja" );
+                "Desventaja");
 
         ElementoTabla eleElectrico = new ElementoTabla("Causa una parálisis que puede evitar que 1 jugador tire el dado de movimiento, este efecto dura 3 turnos",
                 "Eléctrico", "Ventaja", "Ventaja", "Desventaja", "Neutral", "Desventaja",
-                "Ventaja" );
+                "Ventaja");
 
         ElementoTabla eleRoca = new ElementoTabla("Crea 1 stone en casilla de algún contrincante con desventaja de su triada (Stone 60 pts vida)",
                 "Roca", "Ventaja", "Desventaja", "Ventaja", "Ventaja", "Neutral",
-                "Desventaja" );
+                "Desventaja");
 
         ElementoTabla eleHielo = new ElementoTabla("Congela a un jugador por turno",
                 "Hielo", "Desventaja", "Ventaja", "Ventaja", "Desventaja", "Ventaja",
-                "Ventaja" );
+                "Ventaja");
 
         arregloInfoElementos.add(eleFuego);
         arregloInfoElementos.add(eleAgua);
@@ -618,11 +728,11 @@ public class tableroPartidaController implements Initializable,Observador  {
         tbl.getColumns().add(column7);
         tbl.getColumns().add(column8);
 
-        if(arregloInfoElementos.size() == 0){
+        if (arregloInfoElementos.size() == 0) {
             iniciarArregloInfoElementos();
         }
 
-        for (ElementoTabla obj : arregloInfoElementos ) {
+        for (ElementoTabla obj : arregloInfoElementos) {
             tbl.getItems().add(obj);
         }
 
@@ -633,6 +743,342 @@ public class tableroPartidaController implements Initializable,Observador  {
 
         alert.showAndWait();
     }
+
+    public void decisionJugadorStone() throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText("Hora de atacar guerrero");
+        String nombreElemento1 = jugadorTurno.ficha.getPersonajes()[0].getElemento().getTipo();
+        String nombreElemento2 = jugadorTurno.ficha.getPersonajes()[1].getElemento().getTipo();
+        String nombreElemento3 = jugadorTurno.ficha.getPersonajes()[2].getElemento().getTipo();
+        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        boolean opcionesPoderes = false;
+
+        GridPane gP = new GridPane();
+
+        Text txtAtaca = new Text("Ataque de: ");
+        txtAtaca.setFont(Font.font("Matura MT Script Capitals", 30));
+        txtAtaca.setFill(Color.rgb(58, 54, 21));
+        gP.add(txtAtaca, 0, 0);
+        //Columna 0
+        cb1Elemento = new CheckBox(nombreElemento1);
+        cb1Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        gP.add(cb1Elemento, 0, 1);
+
+        cb2Elemento = new CheckBox(nombreElemento2);
+        cb2Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        gP.add(cb2Elemento, 0, 2);
+
+        cb3Elemento = new CheckBox(nombreElemento3);
+        cb3Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        gP.add(cb3Elemento, 0, 3);
+
+        //Columna 1
+        ImageView img1Elemento = new ImageView();
+        Image img1 = new Image("/imgs/" + nombreElemento1 + ".png");
+        img1Elemento.setImage(img1);
+        img1Elemento.setFitHeight(50);
+        img1Elemento.setFitWidth(50);
+        gP.add(img1Elemento, 1, 1);
+
+        ImageView img2Elemento = new ImageView();
+        Image img2 = new Image("/imgs/" + nombreElemento2 + ".png");
+        img2Elemento.setImage(img2);
+        img2Elemento.setFitHeight(50);
+        img2Elemento.setFitWidth(50);
+        gP.add(img2Elemento, 1, 2);
+
+        ImageView img3Elemento = new ImageView();
+        Image img3 = new Image("/imgs/" + nombreElemento3 + ".png");
+        img3Elemento.setImage(img3);
+        img3Elemento.setFitHeight(50);
+        img3Elemento.setFitWidth(50);
+        gP.add(img3Elemento, 1, 3);
+
+        switch (valorDadoAtaque) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                cb1Elemento.setSelected(true);
+                cb1Elemento.setDisable(true);
+                cb2Elemento.setSelected(true);
+                cb2Elemento.setDisable(true);
+                cb3Elemento.setSelected(true);
+                cb3Elemento.setDisable(true);
+                break;
+            case 4:
+                opcionesPoderes = true;
+                break;
+            case 5:
+                opcionesPoderes = true;
+                break;
+            case 6:
+                cb1Elemento.setSelected(true);
+                cb1Elemento.setDisable(true);
+                cb2Elemento.setSelected(true);
+                cb2Elemento.setDisable(true);
+                cb3Elemento.setSelected(true);
+                cb3Elemento.setDisable(true);
+                opcionesPoderes = true;
+                break;
+        }
+
+        //Columna 2
+        if (opcionesPoderes) {
+            Text txtPoder = new Text("Poder especial de: ");
+            txtPoder.setFont(Font.font("Matura MT Script Capitals", 30));
+            txtPoder.setFill(Color.rgb(58, 54, 21));
+            gP.add(txtPoder, 2, 0);
+            cb1Ataque = new CheckBox(nombreElemento1);
+            cb1Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            gP.add(cb1Ataque, 2, 1);
+            cb2Ataque = new CheckBox(nombreElemento2);
+            cb2Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            gP.add(cb2Ataque, 2, 2);
+            cb3Ataque = new CheckBox(nombreElemento3);
+            cb3Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            gP.add(cb3Ataque, 2, 3);
+        }
+
+        //validación uno, una opción seleccionada para elementos
+        EventHandler ePrimerValidacionElementoC1C4 = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (event.getSource() instanceof CheckBox) {
+                    CheckBox chk = (CheckBox) event.getSource();
+//
+                    if (nombreElemento1.equals(chk.getText())) {
+                        cb2Elemento.setSelected(!cb1Elemento.isSelected());
+                        cb3Elemento.setSelected(!cb1Elemento.isSelected());
+
+                    } else if (nombreElemento2.equals(chk.getText())) {
+                        cb1Elemento.setSelected(!cb2Elemento.isSelected());
+                        cb3Elemento.setSelected(!cb2Elemento.isSelected());
+
+                    } else if (nombreElemento3.equals(chk.getText())) {
+                        cb1Elemento.setSelected(!cb3Elemento.isSelected());
+                        cb2Elemento.setSelected(!cb3Elemento.isSelected());
+
+                    }
+
+                    if ((cb1Elemento.isSelected() ||
+                            cb2Elemento.isSelected() ||
+                            cb3Elemento.isSelected())
+                            &&
+                            (
+                                    (cb1Elemento.isSelected() != cb2Elemento.isSelected() &&
+                                            cb1Elemento.isSelected() != cb3Elemento.isSelected())
+                                            ||
+                                            (cb2Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                    cb2Elemento.isSelected() != cb3Elemento.isSelected())
+                                            ||
+                                            (cb3Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                    cb3Elemento.isSelected() != cb2Elemento.isSelected())
+                            )
+                    ) {
+                        validacionCBElementos = true;
+                        if (validacionCBPoderes && valorDadoAtaque == 4 || valorDadoAtaque == 1) {
+                            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                        }
+
+                    } else {
+                        validacionCBElementos = false;
+                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                    }
+
+                }
+
+            }
+
+        };
+
+        //validación dos segundaValidación, dos opciones seleccionadas para elementos
+        EventHandler eSegundaValidacionElementosC2C5 = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (event.getSource() instanceof CheckBox) {
+                    CheckBox chk = (CheckBox) event.getSource();
+//                    System.out.println("Action performed on checkbox " + chk.getText());
+                    if (nombreElemento1.equals(chk.getText())) {
+                        if (cb2Elemento.isSelected() && cb3Elemento.isSelected()) {
+                            cb2Elemento.setSelected(false);
+                            cb3Elemento.setSelected(false);
+                        }
+
+                    } else if (nombreElemento2.equals(chk.getText())) {
+                        if (cb1Elemento.isSelected() && cb3Elemento.isSelected()) {
+                            cb1Elemento.setSelected(false);
+                            cb3Elemento.setSelected(false);
+                        }
+
+                    } else if (nombreElemento3.equals(chk.getText())) {
+                        if (cb1Elemento.isSelected() && cb2Elemento.isSelected()) {
+                            cb1Elemento.setSelected(false);
+                            cb2Elemento.setSelected(false);
+                        }
+                    }
+
+                    if (((cb1Elemento.isSelected() && cb2Elemento.isSelected()) ||
+                            (cb1Elemento.isSelected() && cb3Elemento.isSelected()) ||
+                            (cb2Elemento.isSelected() && cb3Elemento.isSelected()))
+                            &&
+                            !(cb1Elemento.isSelected() &&
+                                    cb2Elemento.isSelected() &&
+                                    cb3Elemento.isSelected())) {
+                        validacionCBElementos = true;
+                        if (validacionCBPoderes && valorDadoAtaque == 5 || valorDadoAtaque == 2) {
+                            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                        }
+
+                    } else {
+                        validacionCBElementos = false;
+                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                    }
+
+
+                }
+            }
+        };
+
+        //valición un poder seleccionado
+        //validación uno, una opción seleccionada para elementos
+        EventHandler ePrimerValidacionPoderC4C5 = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (event.getSource() instanceof CheckBox) {
+                    CheckBox chk = (CheckBox) event.getSource();
+//
+                    if (nombreElemento1.equals(chk.getText())) {
+                        cb2Ataque.setSelected(!cb1Ataque.isSelected());
+                        cb3Ataque.setSelected(!cb1Ataque.isSelected());
+
+                    } else if (nombreElemento2.equals(chk.getText())) {
+                        cb1Ataque.setSelected(!cb2Ataque.isSelected());
+                        cb3Ataque.setSelected(!cb2Ataque.isSelected());
+
+                    } else if (nombreElemento3.equals(chk.getText())) {
+                        cb1Ataque.setSelected(!cb3Ataque.isSelected());
+                        cb2Ataque.setSelected(!cb3Ataque.isSelected());
+
+                    }
+
+                    if ((cb1Ataque.isSelected() ||
+                            cb2Ataque.isSelected() ||
+                            cb3Ataque.isSelected())
+                            &&
+                            (
+                                    (cb1Ataque.isSelected() != cb2Ataque.isSelected() &&
+                                            cb1Ataque.isSelected() != cb3Ataque.isSelected())
+                                            ||
+                                            (cb2Ataque.isSelected() != cb1Ataque.isSelected() &&
+                                                    cb2Ataque.isSelected() != cb3Ataque.isSelected())
+                                            ||
+                                            (cb3Ataque.isSelected() != cb1Ataque.isSelected() &&
+                                                    cb3Ataque.isSelected() != cb2Ataque.isSelected())
+                            )
+                    ) {
+                        validacionCBPoderes = true;
+                        if (validacionCBElementos && (valorDadoAtaque == 4 || valorDadoAtaque == 5)) {
+                            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                        }
+
+                    } else {
+                        validacionCBPoderes = false;
+                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                    }
+
+                }
+
+            }
+
+        };
+
+
+        //validación dos poderes seleccionados
+        EventHandler eSegundaValidacionPoderC6 = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (event.getSource() instanceof CheckBox) {
+                    CheckBox chk = (CheckBox) event.getSource();
+//                    System.out.println("Action performed on checkbox " + chk.getText());
+                    if (nombreElemento1.equals(chk.getText())) {
+                        if (cb2Ataque.isSelected() && cb3Ataque.isSelected()) {
+                            cb2Ataque.setSelected(false);
+                            cb3Ataque.setSelected(false);
+                        }
+
+                    } else if (nombreElemento2.equals(chk.getText())) {
+                        if (cb1Ataque.isSelected() && cb3Ataque.isSelected()) {
+                            cb1Ataque.setSelected(false);
+                            cb3Ataque.setSelected(false);
+                        }
+
+                    } else if (nombreElemento3.equals(chk.getText())) {
+                        if (cb1Ataque.isSelected() && cb2Ataque.isSelected()) {
+                            cb1Ataque.setSelected(false);
+                            cb2Ataque.setSelected(false);
+                        }
+                    }
+
+                    if (((cb1Ataque.isSelected() && cb2Ataque.isSelected()) ||
+                            (cb1Ataque.isSelected() && cb3Ataque.isSelected()) ||
+                            (cb2Ataque.isSelected() && cb3Ataque.isSelected()))
+                            &&
+                            !(cb1Ataque.isSelected() &&
+                                    cb2Ataque.isSelected() &&
+                                    cb3Ataque.isSelected())) {
+                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                    } else {
+                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                    }
+
+
+                }
+            }
+        };
+
+
+        if (valorDadoAtaque == 1 || valorDadoAtaque == 4) {
+            cb1Elemento.setOnAction(ePrimerValidacionElementoC1C4);
+            cb2Elemento.setOnAction(ePrimerValidacionElementoC1C4);
+            cb3Elemento.setOnAction(ePrimerValidacionElementoC1C4);
+        }
+        if (valorDadoAtaque == 2 || valorDadoAtaque == 5) {
+            cb1Elemento.setOnAction(eSegundaValidacionElementosC2C5);
+            cb2Elemento.setOnAction(eSegundaValidacionElementosC2C5);
+            cb3Elemento.setOnAction(eSegundaValidacionElementosC2C5);
+        }
+        if (valorDadoAtaque == 4 || valorDadoAtaque == 5) {
+            cb1Ataque.setOnAction(ePrimerValidacionPoderC4C5);
+            cb2Ataque.setOnAction(ePrimerValidacionPoderC4C5);
+            cb3Ataque.setOnAction(ePrimerValidacionPoderC4C5);
+        }
+        if (valorDadoAtaque == 6) {
+            cb1Ataque.setOnAction(eSegundaValidacionPoderC6);
+            cb2Ataque.setOnAction(eSegundaValidacionPoderC6);
+            cb3Ataque.setOnAction(eSegundaValidacionPoderC6);
+        }
+
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(800, 400);
+        alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
+
+
+        //Para validar botón
+        Optional<ButtonType> result = alert.showAndWait();
+        if (!result.isPresent()) {
+        } else if (result.get() == ButtonType.OK) {
+
+        }
+        alert.showAndWait();
+    }
+
+
+
 
     public void dialogoZorvan() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -740,7 +1186,7 @@ public class tableroPartidaController implements Initializable,Observador  {
     }
 
     public void dialogoMoverse(int resultadoDado) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
         GridPane gP = new GridPane();
         Text txt = new Text("Avanza: " + resultadoDado +" casillas.");
@@ -749,7 +1195,7 @@ public class tableroPartidaController implements Initializable,Observador  {
         gP.add(txt, 0,0);
         alert.getDialogPane().setContent(gP);
         alert.setResizable(true);
-        alert.getDialogPane().setPrefSize(100, 100);
+        alert.getDialogPane().setPrefSize(200, 150);
         alert.showAndWait();
     }
 

@@ -216,7 +216,7 @@ public class MainController implements IMainController{
             ataques=((Ataque) partida.dadoMovimiento).getAtaques();
         }
 
-        return ataques.get(res);
+        return ataques.get(res-1);
     }
 
     /*Por hacer En caso de que el jugador este bajo un ataque de poder especial y no pueda tirar necesito que me indique
