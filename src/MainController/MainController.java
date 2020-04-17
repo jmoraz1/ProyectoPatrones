@@ -209,8 +209,8 @@ public class MainController implements IMainController{
 
     }
     public  String obtenerAtaque(){
-        int res =  partida.obtenerTipoAtaque();
         partida.dadoMovimiento=new Ataque(partida.dadoMovimiento);
+        int res =  partida.obtenerTipoAtaque();
         ArrayList<String>ataques=new ArrayList<>();
         if(partida.dadoMovimiento instanceof Ataque){
             ataques=((Ataque) partida.dadoMovimiento).getAtaques();
