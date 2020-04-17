@@ -6,13 +6,14 @@ import Patterns.Decorator.Ataque;
 import Patterns.FactoryMethod.FabricaPersonajes;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
+import Patterns.Proxy.IMainController;
 import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 //import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainController {
+public class MainController implements IMainController{
 
     public static Tablero partida;
 
@@ -22,8 +23,7 @@ public class MainController {
 
 
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
-    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores, String psw) throws IOException {
-        if (psw== "admin"){
+    public  Tablero NuevaPartida(ArrayList<Jugador> jugadores)  throws IOException {
         Jugador[] arrJugadores= new Jugador[jugadores.size()];
         int cont = 0;
         for (Jugador dato: jugadores) {
@@ -36,10 +36,6 @@ public class MainController {
             partida.casillas.get(0).setFicha(arrJugadores[i].getFicha());
         }
         return partida;
-        }else{
-            Tablero tmp= null;
-            return tmp;
-        }
 
     }
 
@@ -214,8 +210,13 @@ public class MainController {
     }
     public  String obtenerAtaque(){
         int res =  partida.obtenerTipoAtaque();
-        Ataque tmpAtaque = new Ataque(res);
-        return tmpAtaque.gatInfoDecorada();
+        partida.dadoMovimiento=new Ataque(partida.dadoMovimiento);
+        ArrayList<String>ataques=new ArrayList<>();
+        if(partida.dadoMovimiento instanceof Ataque){
+            ataques=((Ataque) partida.dadoMovimiento).getAtaques();
+        }
+
+        return ataques.get(res);
     }
 
     /*Por hacer En caso de que el jugador este bajo un ataque de poder especial y no pueda tirar necesito que me indique
@@ -233,5 +234,10 @@ public class MainController {
 
     public void Ataque () {
 
+    }
+
+    @Override
+    public MainController obtenerMainController(String psw) throws IOException {
+        return this;
     }
 }

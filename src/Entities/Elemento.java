@@ -1,6 +1,6 @@
 package Entities;
 
-public class Elemento {
+public abstract class Elemento {
     String tipo;
 
     public Elemento(String tipo) {

@@ -5,7 +5,7 @@ import Interfaces.IGirable;
 import static java.lang.Math.floor;
 import static java.lang.Math.random;
 
-public class DadoAtaque implements IGirable {
+public class DadoAtaque extends IGirable {
 
     private static DadoAtaque instance;
     int[] ataques;
@@ -21,10 +21,5 @@ public class DadoAtaque implements IGirable {
         return instance;
     }
 
-
-    @Override
-    public int girar() {
-        int valor = (int) floor(random()*6+1);
-        return ataques[valor];
-    }
+    
 }

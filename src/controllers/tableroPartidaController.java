@@ -10,6 +10,7 @@ import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaNormal;
 import Patterns.Prototype.CasillaQuerubin;
 import Patterns.Prototype.CasillaZorvan;
+import Patterns.Proxy.MainControllerProxy;
 import clasesUI.EjeXYCasilla;
 import clasesUI.ElementoTabla;
 import javafx.animation.KeyFrame;
@@ -40,7 +41,7 @@ import java.util.ResourceBundle;
 
 public class tableroPartidaController implements Initializable,Observador  {
 
-    public MainController mc = new MainController();
+    public MainController mc;
 
     public ArrayList<ElementoTabla> arregloInfoElementos = new ArrayList<>();
 
@@ -106,6 +107,11 @@ public class tableroPartidaController implements Initializable,Observador  {
     private int cantidadJugadores = 0;
     private int jugadorNuevaPosicion;
 
+    public tableroPartidaController() throws IOException {
+        MainControllerProxy proxy= new MainControllerProxy();
+        mc=proxy.obtenerMainController("admin");
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         imgViewDado.setVisible(true);
@@ -121,7 +127,7 @@ public class tableroPartidaController implements Initializable,Observador  {
     public void iniciarTodoTablero(ActionEvent event) throws IOException{
         colocarNombres();
         btnTirarDado.setDisable(false);
-        partida = mc.NuevaPartida(controladorTablero.arregloJugadores, "admin");
+        partida = mc.NuevaPartida(controladorTablero.arregloJugadores);
         cantidadJugadores = controladorTablero.arregloJugadores.size();
         //añadiendo este controller como observador de las casillas
         partida.observarCasillas(this);

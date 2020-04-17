@@ -1,5 +1,6 @@
 package Entities;
 
+import Interfaces.IGirable;
 import Patterns.Observer.Observador;
 import Patterns.Prototype.Manager;
 import Patterns.Singleton.DadoMovimiento;
@@ -16,8 +17,8 @@ public class Tablero  {
 
     public ArrayList<Casilla>casillas;
     public Jugador turno;
-    public DadoMovimiento dadoMovimiento;
-    public DadoAtaque dadoAtaque;
+    public IGirable dadoMovimiento;
+    public IGirable dadoAtaque;
     public Jugador[] jugadores;
 
     public Tablero(Jugador[] jugadores) {

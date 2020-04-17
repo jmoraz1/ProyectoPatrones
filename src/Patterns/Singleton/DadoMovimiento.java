@@ -4,7 +4,7 @@ import Interfaces.IGirable;
 
 import static java.lang.Math.*;
 
-public class DadoMovimiento implements IGirable {
+public class DadoMovimiento extends IGirable {
     private static DadoMovimiento instance;
 
 

@@ -7,30 +7,29 @@ import Interfaces.IMetodoFabrica;
 public class FabricaPersonajes implements IMetodoFabrica {
     @Override
     public Personaje crearPersonaje(String Elemento) {
-        Personaje tmpPersonaje;
         Elemento tmpElemento;
 
         switch (Elemento){
             case "Fuego":
-                tmpElemento=new Elemento(Elemento);
+                tmpElemento=new Fuego();
                 break;
             case "Agua":
-                tmpElemento=new Elemento(Elemento);
+                tmpElemento=new Agua();
                 break;
             case "Planta":
-                tmpElemento= new Elemento(Elemento);
+                tmpElemento= new Planta();
                 break;
             case "Electrico":
-                tmpElemento=new Elemento(Elemento);
+                tmpElemento=new Electrico();
                 break;
             case "Roca":
-                tmpElemento=new Elemento(Elemento);
+                tmpElemento=new Roca();
                 break;
             default:
                 //en este caso sería Hielo
-                tmpElemento=new Elemento(Elemento);
+                tmpElemento=new Hielo();
                 break;
         }
-        return tmpPersonaje= new Personaje(tmpElemento);
+        return new Personaje(tmpElemento);
     }
 }
