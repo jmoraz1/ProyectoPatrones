@@ -22,4 +22,9 @@ public class DadoMovimiento extends IGirable {
         int valor = (int) floor(random()*6+1);
         return valor;
     }
+
+    public int girarLimitado() {
+        int valor = (int) floor(random()*3+1);
+        return valor;
+    }
 }

@@ -1,7 +1,6 @@
 package Entities;
 
 import Interfaces.IGirable;
-import Patterns.Observer.Observador;
 import Patterns.Prototype.Manager;
 import Patterns.Singleton.DadoMovimiento;
 import controllers.tableroPartidaController;
@@ -17,7 +16,7 @@ public class Tablero  {
 
     public ArrayList<Casilla>casillas;
     public Jugador turno;
-    public IGirable dadoMovimiento;
+    public DadoMovimiento dadoMovimiento;
     public IGirable dadoAtaque;
     public Jugador[] jugadores;
 
@@ -53,5 +52,14 @@ public class Tablero  {
             casilla.addObserver(o);
         }
 
+    }
+
+    public Jugador obtenerJugador(String j){
+        for (int i = 0; i < jugadores.length; i++) {
+            if (jugadores[i].getNombre()==j){
+                return this.jugadores[i];
+            }
+        }
+        return null;
     }
 }

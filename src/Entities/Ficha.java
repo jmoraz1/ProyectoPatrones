@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Ficha {
     Personaje[] personajes = new Personaje[3];
+    int contador = 0;
 
     public Ficha(Personaje[] personajes) {
         this.personajes = personajes;

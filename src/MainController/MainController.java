@@ -15,6 +15,10 @@ import java.util.ArrayList;
 public class MainController implements IMainController{
 
     public static Tablero partida;
+    public ArrayList<Jugador> congelados = new ArrayList<>();
+    public ArrayList<Jugador> dadoLimitado = new ArrayList<>();
+    public ArrayList<Jugador> paralizados = new ArrayList<>();
+    public ArrayList<Jugador> updated = new ArrayList<>();
 
    /* public static void main(String[] args) {
 
@@ -118,7 +122,51 @@ public class MainController implements IMainController{
         return posicioQueribunes;
     }
 
-    public  int obtenerMovimiento(){
+    public  int obtenerMovimiento(String jugador){
+        Jugador tmp = partida.obtenerJugador(jugador);
+        if (dadoLimitado.contains(tmp)){
+            for (Jugador j:dadoLimitado) {
+                if (j.equals(tmp)){
+                    if (j.contadorPlanta== 2){
+                        j.setContadorPlanta(0);
+                        dadoLimitado.remove(j);
+                        break;
+                    }else{
+                        j.setContadorPlanta(j.getContadorPlanta()+1);
+                        return partida.dadoMovimiento.girarLimitado();
+                    }
+                }
+            }
+            return partida.dadoMovimiento.girarLimitado();
+        }
+        if (paralizados.contains(tmp)){
+            for (Jugador j:paralizados) {
+                if (j.equals(tmp)){
+                    if (j.contadorElectrico== 3){
+                        j.setContadorElectrico(0);
+                        paralizados.remove(j);
+                        break;
+                    }else{
+                        j.setContadorElectrico(j.getContadorElectrico()+1);
+                        return 0;
+                    }
+                }
+            }
+        }
+        if (congelados.contains(tmp)){
+            for (Jugador j:congelados) {
+                if (j.equals(tmp)) {
+                    if (j.contadorHielo == 1) {
+                        j.setContadorElectrico(0);
+                        paralizados.remove(j);
+                        break;
+                    } else {
+                        j.setContadorHielo(j.getContadorElectrico() + 1);
+                        return 0;
+                    }
+                }
+            }
+        }
         return partida.obtenerNumeroMovimiento();
     }
 
@@ -240,5 +288,32 @@ public class MainController implements IMainController{
     @Override
     public MainController obtenerMainController(String psw) throws IOException {
         return this;
+    }
+
+
+    public String poderPlanta(String jugador){
+        String s ="Por dos turnos no deja que "+jugador+"  saque mas de tres en su dado de movimientos";
+        dadoLimitado.add(partida.obtenerJugador(jugador));
+        return s;
+    }
+
+    public String poderElectrico(String jugador){
+        String s = "Causa una parálisis que  evita que "+jugador+" tire el dado de movimiento, este efecto dura tres turnos";
+        Jugador tmp = partida.obtenerJugador(jugador);
+        paralizados.add(tmp);
+        return s;
+    }
+
+    public String poderHielo(String jugador){
+        String s = "Congela a "+jugador+" por un turno";
+        Jugador tmp = partida.obtenerJugador(jugador);
+        congelados.add(tmp);
+        return s;
+    }
+
+    public String poderFuego(String jugador, Elemento e){
+        String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
+        updated.add(partida.obtenerJugador(jugador));
+        return s;
     }
 }
