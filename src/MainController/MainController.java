@@ -316,4 +316,19 @@ public class MainController implements IMainController{
         updated.add(partida.obtenerJugador(jugador));
         return s;
     }
+
+    public String poderAgua(){
+        return "Su poder especial le permite lanzar de nuevo el dado de ataque";
+    }
+
+    public String poderRoca(String jugador, int i){
+        String s = "El jugador "+jugador+"ha seleccionado colocar un stone en la casilla "+i;
+        if (partida.casillas.get(i-1) instanceof CasillaStoneAdapter){
+            ((CasillaStoneAdapter)partida.casillas.get(i)).dobleStone();
+        }else {
+            CasillaStoneAdapter casillaStoneAdapter= new CasillaStoneAdapter(0);
+            partida.casillas.set((i-1),casillaStoneAdapter);
+        }
+        return s;
+    }
 }

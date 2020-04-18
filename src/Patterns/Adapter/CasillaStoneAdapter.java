@@ -28,6 +28,10 @@ public class CasillaStoneAdapter extends Casilla implements IPersonaje {
 
     }
 
+    public void dobleStone(){
+        this.getStone().dobleStone();
+    }
+
     @Override
     public Casilla clone() {
         return new CasillaStoneAdapter(this.getNumero());
