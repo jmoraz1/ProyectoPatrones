@@ -323,12 +323,102 @@ public class MainController implements IMainController{
 
     public String poderRoca(String jugador, int i){
         String s = "El jugador "+jugador+"ha seleccionado colocar un stone en la casilla "+i;
-        if (partida.casillas.get(i-1) instanceof CasillaStoneAdapter){
-            ((CasillaStoneAdapter)partida.casillas.get(i)).dobleStone();
-        }else {
-            CasillaStoneAdapter casillaStoneAdapter= new CasillaStoneAdapter(0);
+            Jugador j = partida.obtenerJugador(jugador);
+            CasillaStoneAdapter casillaStoneAdapter= generarStone(j.ficha);
             partida.casillas.set((i-1),casillaStoneAdapter);
-        }
+            
         return s;
+    }
+
+    private CasillaStoneAdapter generarStone(Ficha ficha) {
+        Personaje[] p = ficha.getPersonajes();
+        Elemento uno= p[0].getElemento();
+        Elemento dos=p[1].getElemento();
+        Elemento tres=p[2].getElemento();
+        ArrayList<Elemento> elementoNuevoStone=new ArrayList<>();
+        FabricaElementos fe= new FabricaElementos();
+
+        switch (uno.getTipo()){
+            case "Fuego":
+                Elemento a =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(a);
+                break;
+            case "Agua":
+                Elemento b =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(b);
+                break;
+            case "Planta":
+                Elemento c =fe.obtenerElemento("Electrico");
+                elementoNuevoStone.add(c);
+                break;
+            case "Electrico":
+                Elemento d =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(d);
+                break;
+            case "Roca":
+                Elemento e =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(e);
+                break;
+            default:
+                Elemento f =fe.obtenerElemento("Fuego");
+                elementoNuevoStone.add(f);
+                break;
+        }
+        switch (dos.getTipo()){
+            case "Fuego":
+                Elemento a =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(a);
+                break;
+            case "Agua":
+                Elemento b =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(b);
+                break;
+            case "Planta":
+                Elemento c =fe.obtenerElemento("Electrico");
+                elementoNuevoStone.add(c);
+                break;
+            case "Electrico":
+                Elemento d =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(d);
+                break;
+            case "Roca":
+                Elemento e =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(e);
+                break;
+            default:
+                Elemento f =fe.obtenerElemento("Fuego");
+                elementoNuevoStone.add(f);
+                break;
+        }
+        switch (tres.getTipo()){
+            case "Fuego":
+                Elemento a =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(a);
+                break;
+            case "Agua":
+                Elemento b =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(b);
+                break;
+            case "Planta":
+                Elemento c =fe.obtenerElemento("Electrico");
+                elementoNuevoStone.add(c);
+                break;
+            case "Electrico":
+                Elemento d =fe.obtenerElemento("Roca");
+                elementoNuevoStone.add(d);
+                break;
+            case "Roca":
+                Elemento e =fe.obtenerElemento("Hielo");
+                elementoNuevoStone.add(e);
+                break;
+            default:
+                Elemento f =fe.obtenerElemento("Fuego");
+                elementoNuevoStone.add(f);
+                break;
+        }
+
+        Stone s = new Stone(60, elementoNuevoStone);
+        CasillaStoneAdapter csa= new CasillaStoneAdapter(s);
+        return csa;
     }
 }

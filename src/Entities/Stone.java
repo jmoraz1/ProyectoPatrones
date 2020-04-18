@@ -13,6 +13,11 @@ public class Stone {
         this.elementos = generarElementos();
     }
 
+    public Stone(int vida, ArrayList<Elemento> elementos){
+        this.vida = vida;
+        this.elementos=elementos;
+    }
+
     private ArrayList<Elemento> generarElementos() {
         FabricaElementos fabrica=new FabricaElementos();
 

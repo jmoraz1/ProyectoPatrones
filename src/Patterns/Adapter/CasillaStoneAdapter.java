@@ -15,6 +15,12 @@ public class CasillaStoneAdapter extends Casilla implements IPersonaje {
         this.setStone();
     }
 
+    public CasillaStoneAdapter(Stone stone) {
+        this.setNumero(0);
+        this.setTipo("Stone");
+        this.stone = stone;
+    }
+
     public Stone getStone() {
         return stone;
     }
