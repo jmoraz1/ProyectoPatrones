@@ -57,4 +57,8 @@ public class Stone {
         }
         return estado;
     }
+
+    public void dobleStone(){
+        this.vida= getVida()+100;
+    }
 }
