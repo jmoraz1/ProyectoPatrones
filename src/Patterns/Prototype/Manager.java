@@ -24,6 +24,7 @@ public class Manager {
         casillas=incluirQuerubines(casillas);
         casillas=incluirStones(casillas);
         casillas.set(99,zorvan.clone());
+        casillas.set(0,normal.clone());
         return casillas;
     }
 
