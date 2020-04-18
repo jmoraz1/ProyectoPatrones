@@ -59,6 +59,6 @@ public class Stone {
     }
 
     public void dobleStone(){
-        this.vida= getVida()+100;
+        this.vida= getVida()+60;
     }
 }
