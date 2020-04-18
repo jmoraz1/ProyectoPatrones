@@ -1,10 +1,8 @@
 package controllers;
-import Entities.Casilla;
-import Entities.Ficha;
-import Entities.Jugador;
-import Entities.Tablero;
+import Entities.*;
 import MainController.MainController;
 import Patterns.Adapter.CasillaStoneAdapter;
+import Patterns.FactoryMethod.FabricaElementos;
 import Patterns.Observer.Observador;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaNormal;
@@ -36,6 +34,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.ControladorPrueba;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -61,7 +60,8 @@ public class tableroPartidaController implements Initializable,Observador {
     @FXML
     private Label lblP4;
     @FXML
-    private TextField txtJugadorEnTurno;
+    private Label lblJuega;
+
     @FXML
     private Button btnTirarDadoAtaque;
     @FXML
@@ -116,10 +116,17 @@ public class tableroPartidaController implements Initializable,Observador {
     private CheckBox cb3Ataque;
     private boolean validacionCBPoderes = false;
 
+    ArrayList<Elemento> elementosAtacan;
+    ArrayList<Elemento> poderesAtacan;
+
+    private String informacionResultadoDadoAtaque;
+
     public tableroPartidaController() throws IOException {
         MainControllerProxy proxy = new MainControllerProxy();
         mc = proxy.obtenerMainController("admin");
     }
+
+    private FabricaElementos fabElementos = new FabricaElementos();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -130,7 +137,7 @@ public class tableroPartidaController implements Initializable,Observador {
         btnTirarDadoAtaque.setVisible(false);
         flechaTirarDado.setVisible(false);
         iniciarValoresCoordenadas();
-        txtJugadorEnTurno.setDisable(true);
+
 
     }
 
@@ -148,7 +155,7 @@ public class tableroPartidaController implements Initializable,Observador {
         //Coloca las casillas especiales en el tablero
         colocarCasillasEspeciales();
         //Coloca en el input el nombre del jugador en truno
-        txtJugadorEnTurno.setText(controladorTablero.arregloJugadores.get(0).getNombre());
+        lblJuega.setText(controladorTablero.arregloJugadores.get(0).getNombre());
         //Establece el jugador en turno
         jugadorTurno = partida.turno;
         jugadoresPartida = partida.jugadores;
@@ -159,17 +166,12 @@ public class tableroPartidaController implements Initializable,Observador {
         //deshabilita el botón de iniciar tablero
         btnIniciarTodoTablero.setDisable(true);
         //prueba del dado de ataque
-//        try {
-//            tirarDadoAtaque();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void cambiarTurno() {
         //cambia el turno del jugador y coloca en el input el nombre del jugador en turno
         jugadorTurno = mc.obtenerTurno();
-        txtJugadorEnTurno.setText(jugadorTurno.getNombre());
+        lblJuega.setText(jugadorTurno.getNombre());
         if (numFicha == controladorTablero.arregloJugadores.size()) {
             numFicha = 1;
         } else {
@@ -179,6 +181,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
     public void gestionarTurno(ActionEvent event) throws IOException {
         //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO V
+
         // ER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
 
         int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
@@ -214,9 +217,12 @@ public class tableroPartidaController implements Initializable,Observador {
         Timeline timeline =
                 new Timeline(new KeyFrame(Duration.millis(1000), e -> imgViewDado.setImage(imgDadoNum)));
         timeline.play();
+
         //indica al usuario que debe moverse
         dialogoMoverse(resultadoDadoMovimiento);
+
         jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
+
         ImageView fichaJugadorIv = null;
         switch (numFicha) {
             case 1:
@@ -235,9 +241,7 @@ public class tableroPartidaController implements Initializable,Observador {
         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
 
-        Ficha fichaActiva = mc.obtenerFicha();
-        posicionActual = mc.obtenerPosicionJugador(fichaActiva);
-        mc.moverFicha(posicionActual, jugadorNuevaPosicion, fichaActiva);
+        mc.moverFicha(posicionActual, jugadorNuevaPosicion, jugadorTurno.ficha);
         //Debo setear nuevo jugador en turno
 
         cambiarTurno();
@@ -247,13 +251,13 @@ public class tableroPartidaController implements Initializable,Observador {
         double ejeX = 0;
         double ejeY = 0;
         double ejeYF = 0;
-        for (int i = 1; i <= 100; i++) {
-            if (i == 1) {
+        for (int i = 0; i < 100; i++) {
+            if (i == 0) {
                 EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 183, 165);
                 EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 183, 142);
                 coordenadasCasilla.add(ejeCasilla);
                 coordenadasCasillaFicha.add(ejeCasillaF);
-            } else if (i == 100) {
+            } else if (i == 99) {
                 EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 1130, 555);
                 coordenadasCasilla.add(ejeCasilla);
                 EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1130, 530);
@@ -288,7 +292,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 30:
                     case 57:
                     case 58:
-                    case 72:
+                    case 85:
                     case 86:
                         ejeX = 258;
                         break;
@@ -297,7 +301,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 31:
                     case 56:
                     case 59:
-                    case 73:
+                    case 84:
                     case 87:
                         ejeX = 318;
                         break;
@@ -306,7 +310,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 32:
                     case 55:
                     case 60:
-                    case 74:
+                    case 83:
                     case 88:
                         ejeX = 378;
                         break;
@@ -315,7 +319,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 33:
                     case 54:
                     case 61:
-                    case 75:
+                    case 82:
                     case 89:
                         ejeX = 436;
                         break;
@@ -324,7 +328,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 34:
                     case 53:
                     case 62:
-                    case 76:
+                    case 81:
                     case 90:
                         ejeX = 499;
                         break;
@@ -333,7 +337,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 35:
                     case 52:
                     case 63:
-                    case 77:
+                    case 80:
                     case 91:
                         ejeX = 557;
                         break;
@@ -342,7 +346,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 36:
                     case 51:
                     case 64:
-                    case 78:
+                    case 79:
                     case 92:
                         ejeX = 615;
                         break;
@@ -351,7 +355,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 37:
                     case 50:
                     case 65:
-                    case 79:
+                    case 78:
                     case 93:
                         ejeX = 678;
                         break;
@@ -360,7 +364,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 38:
                     case 49:
                     case 66:
-                    case 80:
+                    case 77:
                     case 94:
                         ejeX = 737;
                         break;
@@ -369,7 +373,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 39:
                     case 48:
                     case 67:
-                    case 81:
+                    case 76:
                     case 95:
                         ejeX = 796;
                         break;
@@ -378,7 +382,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 40:
                     case 47:
                     case 68:
-                    case 82:
+                    case 75:
                     case 96:
                         ejeX = 857;
                         break;
@@ -387,7 +391,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 41:
                     case 46:
                     case 69:
-                    case 83:
+                    case 74:
                     case 97:
                         ejeX = 918;
                         break;
@@ -396,7 +400,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 42:
                     case 45:
                     case 70:
-                    case 84:
+                    case 73:
                     case 98:
                         ejeX = 977;
                         break;
@@ -405,7 +409,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     case 43:
                     case 44:
                     case 71:
-                    case 85:
+                    case 72:
                     case 99:
                         ejeX = 1035;
                         break;
@@ -495,26 +499,26 @@ public class tableroPartidaController implements Initializable,Observador {
         ArrayList<String> listaJugadores = controladorTablero.nombreJugadores;
         Image imgfP1 = new Image("/imgs/FICHAS-02.png");
         fichaP1.setImage(imgfP1);
-        fichaP1.setLayoutY(coordenadasCasillaFicha.get(0).getLayoutY());
-        fichaP1.setLayoutX(coordenadasCasillaFicha.get(0).getLayoutX());
+        fichaP1.setLayoutY(155);
+        fichaP1.setLayoutX(123);
         fichaP1.setFitWidth(45);
         fichaP1.setFitHeight(45);
         Image imgfP2 = new Image("/imgs/FICHAS-04.png");
         fichaP2.setImage(imgfP2);
-        fichaP2.setLayoutY(coordenadasCasillaFicha.get(0).getLayoutY());
-        fichaP2.setLayoutX(coordenadasCasillaFicha.get(0).getLayoutX());
+        fichaP2.setLayoutY(155);
+        fichaP2.setLayoutX(123);
         fichaP2.setFitWidth(45);
         fichaP2.setFitHeight(45);
         Image imgfP3 = new Image("/imgs/FICHAS-05.png");
         fichaP3.setImage(imgfP3);
-        fichaP3.setLayoutY(coordenadasCasillaFicha.get(0).getLayoutY());
-        fichaP3.setLayoutX(coordenadasCasillaFicha.get(0).getLayoutX());
+        fichaP3.setLayoutY(155);
+        fichaP3.setLayoutX(123);
         fichaP3.setFitWidth(45);
         fichaP3.setFitHeight(45);
         Image imgfP4 = new Image("/imgs/FICHAS-03.png");
         fichaP4.setImage(imgfP4);
-        fichaP4.setLayoutY(coordenadasCasillaFicha.get(0).getLayoutY());
-        fichaP4.setLayoutX(coordenadasCasillaFicha.get(0).getLayoutX());
+        fichaP4.setLayoutY(155);
+        fichaP4.setLayoutX(123);
         fichaP4.setFitWidth(45);
         fichaP4.setFitHeight(45);
         switch (listaJugadores.size()) {
@@ -612,6 +616,7 @@ public class tableroPartidaController implements Initializable,Observador {
         imgViewDadoAtaque.setImage(imgDadoGirandoNumero);
 
         String resultadoDadoAtaque = mc.obtenerAtaque();
+        informacionResultadoDadoAtaque = resultadoDadoAtaque;
 
         switch (resultadoDadoAtaque) {
             case "Tu girada ha resultado en ataca un personaje de la triada":
@@ -754,7 +759,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Información");
-        alert.setHeaderText("Hora de atacar guerrero");
+        alert.setHeaderText("Hora de atacar guerrero. "+informacionResultadoDadoAtaque);
         String nombreElemento1 = jugadorTurno.ficha.getPersonajes()[0].getElemento().getTipo();
         String nombreElemento2 = jugadorTurno.ficha.getPersonajes()[1].getElemento().getTipo();
         String nombreElemento3 = jugadorTurno.ficha.getPersonajes()[2].getElemento().getTipo();
@@ -814,6 +819,7 @@ public class tableroPartidaController implements Initializable,Observador {
                 cb2Elemento.setDisable(true);
                 cb3Elemento.setSelected(true);
                 cb3Elemento.setDisable(true);
+                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
                 break;
             case 4:
                 opcionesPoderes = true;
@@ -1074,17 +1080,40 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
 
 
+        alert.showAndWait();
         //Para validar botón
         Optional<ButtonType> result = alert.showAndWait();
-        if (!result.isPresent()) {
-        } else if (result.get() == ButtonType.OK) {
+       if
+        (!result.isPresent()) {
+        }
+        else if (result.get() == ButtonType.OK) {
+            elementosAtacan  = new   ArrayList<Elemento>();
+                if(cb1Elemento.isSelected()){
+                    elementosAtacan.add(fabElementos.obtenerElemento(cb1Elemento.getText()));
+                }
+                if(cb2Elemento.isSelected()){
+                    elementosAtacan.add(fabElementos.obtenerElemento(cb2Elemento.getText()));
+                }
+                if(cb3Elemento.isSelected()){
+                    elementosAtacan.add(fabElementos.obtenerElemento(cb3Elemento.getText()));
+                }
+
+                if(valorDadoAtaque ==4 || valorDadoAtaque == 5 || valorDadoAtaque ==6){
+                    poderesAtacan = new ArrayList<Elemento>();
+                    if(cb1Ataque.isSelected()){
+                        poderesAtacan.add(fabElementos.obtenerElemento(cb1Ataque.getText()));
+                    }
+                    if(cb2Ataque.isSelected()){
+                        poderesAtacan.add(fabElementos.obtenerElemento(cb2Ataque.getText()));
+                    }
+                    if(cb3Ataque.isSelected()){
+                        poderesAtacan.add(fabElementos.obtenerElemento(cb3Ataque.getText()));
+                    }
+                }
 
         }
-        alert.showAndWait();
+
     }
-
-
-
 
     public void dialogoZorvan() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -1228,35 +1257,35 @@ public class tableroPartidaController implements Initializable,Observador {
             }
             if(value.equals("Diablito")){
                 dialogoDiablillo();
+                int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                 nuevaPosicion = mc.movimientoDiablito();
-                Ficha ficha=mc.obtenerFicha();
-                int posicionActual=mc.obtenerPosicionJugador(ficha);
+
                 fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                 fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+                mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
 
             }else if(value.equals("Querubin")){
                 dialogoQuerubin();
+                int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                 nuevaPosicion = mc.movimientoQuerubin();
-                Ficha ficha=mc.obtenerFicha();
-                int posicionActual=mc.obtenerPosicionJugador(ficha);
                 fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                 fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+                mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
 
             }else if(value.equals("Stone")){
                 dialogoStone();
-                mc.obtenerTurno().setInabilitado(true);
+                //no se puede usar obtener turno porque mueve al jugador
+                 mc.partida.turno.setInabilitado(true);
                 //para validar si el jugador no puede moverse hasta matar al stone
             }else if(value.equals("Zorvan")){
                 dialogoZorvan();
                 int casillasExtras = jugadorNuevaPosicion - 100;
+                int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                 nuevaPosicion = mc.movimientoZorvan(casillasExtras);
-                Ficha ficha=mc.obtenerFicha();
-                int posicionActual=mc.obtenerPosicionJugador(ficha);
+                mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
                 fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                 fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
-                mc.moverFicha(posicionActual,nuevaPosicion,ficha);
+
             }
 
         }
