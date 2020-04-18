@@ -18,7 +18,7 @@ public class MainController implements IMainController{
     public ArrayList<Jugador> congelados = new ArrayList<>();
     public ArrayList<Jugador> dadoLimitado = new ArrayList<>();
     public ArrayList<Jugador> paralizados = new ArrayList<>();
-    public ArrayList<Jugador> updated = new ArrayList<>();
+    public ArrayList<JugadorElemento> updated = new ArrayList<>();
 
    /* public static void main(String[] args) {
 
@@ -313,9 +313,10 @@ public class MainController implements IMainController{
 
     public String poderFuego(String jugador, Elemento e){
         String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
-        updated.add(partida.obtenerJugador(jugador));
+        JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
         return s;
     }
+
 
     public String poderAgua(){
         return "Su poder especial le permite lanzar de nuevo el dado de ataque";
