@@ -353,11 +353,11 @@ public class MainController implements IMainController{
                 elementoNuevoStone.add(c);
                 break;
             case "Electrico":
-                Elemento d =fe.obtenerElemento("Roca");
+                Elemento d =fe.obtenerElemento("Planta");
                 elementoNuevoStone.add(d);
                 break;
             case "Roca":
-                Elemento e =fe.obtenerElemento("Hielo");
+                Elemento e =fe.obtenerElemento("Agua");
                 elementoNuevoStone.add(e);
                 break;
             default:
@@ -379,11 +379,11 @@ public class MainController implements IMainController{
                 elementoNuevoStone.add(c);
                 break;
             case "Electrico":
-                Elemento d =fe.obtenerElemento("Roca");
+                Elemento d =fe.obtenerElemento("Planta");
                 elementoNuevoStone.add(d);
                 break;
             case "Roca":
-                Elemento e =fe.obtenerElemento("Hielo");
+                Elemento e =fe.obtenerElemento("Agua");
                 elementoNuevoStone.add(e);
                 break;
             default:
@@ -405,11 +405,11 @@ public class MainController implements IMainController{
                 elementoNuevoStone.add(c);
                 break;
             case "Electrico":
-                Elemento d =fe.obtenerElemento("Roca");
+                Elemento d =fe.obtenerElemento("Planta");
                 elementoNuevoStone.add(d);
                 break;
             case "Roca":
-                Elemento e =fe.obtenerElemento("Hielo");
+                Elemento e =fe.obtenerElemento("Agua");
                 elementoNuevoStone.add(e);
                 break;
             default:
