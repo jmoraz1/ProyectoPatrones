@@ -4,11 +4,14 @@ import Entities.Elemento;
 import Entities.Personaje;
 import Interfaces.IMetodoFabrica;
 
-public class FabricaPersonajes implements IMetodoFabrica {
+public class FabricaElementos implements IMetodoFabrica {
     @Override
     public Personaje crearPersonaje(String Elemento) {
-        Elemento tmpElemento;
+        return new Personaje(obtenerElemento(Elemento));
+    }
 
+    public Elemento obtenerElemento(String Elemento){
+        Elemento tmpElemento;
         switch (Elemento){
             case "Fuego":
                 tmpElemento=new Fuego();
@@ -30,6 +33,6 @@ public class FabricaPersonajes implements IMetodoFabrica {
                 tmpElemento=new Hielo();
                 break;
         }
-        return new Personaje(tmpElemento);
+        return tmpElemento;
     }
 }

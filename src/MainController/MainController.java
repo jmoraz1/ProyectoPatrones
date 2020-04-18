@@ -3,11 +3,10 @@ package MainController;
 import Entities.*;
 import Patterns.Adapter.CasillaStoneAdapter;
 import Patterns.Decorator.Ataque;
-import Patterns.FactoryMethod.FabricaPersonajes;
+import Patterns.FactoryMethod.FabricaElementos;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaQuerubin;
 import Patterns.Proxy.IMainController;
-import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 //import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -41,9 +40,9 @@ public class MainController implements IMainController{
 
     private void asignarFichas(Jugador[] arrJugadores) {
         for (int i = 0; i < arrJugadores.length; i++) { // esto lo hace por cada jugador
-            FabricaPersonajes Personaje1; // esto representa
-            FabricaPersonajes Personaje2; // esto representa
-            FabricaPersonajes Personaje3; // esto representa
+            FabricaElementos Personaje1; // esto representa
+            FabricaElementos Personaje2; // esto representa
+            FabricaElementos Personaje3; // esto representa
             Personaje [] arr_Personajes = new Personaje [3];
             int valor1 = 0; // Valor 1, 2 y 3 representa un elemento
             int valor2 = 0;
@@ -62,7 +61,7 @@ public class MainController implements IMainController{
         }
     }
     private Personaje asignarElemento(int tipo_elemento) {
-        FabricaPersonajes personaje = new FabricaPersonajes();
+        FabricaElementos personaje = new FabricaElementos();
         switch (tipo_elemento){
             case 1:
                 return personaje.crearPersonaje("Fuego");
@@ -209,14 +208,16 @@ public class MainController implements IMainController{
 
     }
     public  String obtenerAtaque(){
-        partida.dadoMovimiento=new Ataque(partida.dadoMovimiento);
+        String ataque="";
+        partida.dadoAtaque=new Ataque(partida.dadoAtaque);
         int res =  partida.obtenerTipoAtaque();
         ArrayList<String>ataques=new ArrayList<>();
-        if(partida.dadoMovimiento instanceof Ataque){
-            ataques=((Ataque) partida.dadoMovimiento).getAtaques();
-        }
+        if(partida.dadoAtaque instanceof Ataque){
+            ataques=((Ataque) partida.dadoAtaque).getAtaques();
 
-        return ataques.get(res-1);
+        }
+        ataque=ataques.get(res-1);
+        return ataque;
     }
 
     /*Por hacer En caso de que el jugador este bajo un ataque de poder especial y no pueda tirar necesito que me indique

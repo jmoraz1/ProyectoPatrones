@@ -1,17 +1,21 @@
 package Entities;
 
+import Patterns.FactoryMethod.FabricaElementos;
+
 import java.util.*;
 
 public class Stone {
     int vida;
-    ArrayList<String> elementos= new ArrayList<String>();
+    ArrayList<Elemento> elementos= new ArrayList<Elemento>();
 
     public Stone() {
         this.vida = 100;
         this.elementos = generarElementos();
     }
 
-    private ArrayList<String> generarElementos() {
+    private ArrayList<Elemento> generarElementos() {
+        FabricaElementos fabrica=new FabricaElementos();
+
         Random rand = new Random();
         List<String> elementosDisponibles = new ArrayList<>();
         elementosDisponibles.add("Agua");
@@ -20,12 +24,12 @@ public class Stone {
         elementosDisponibles.add("Electrico");
         elementosDisponibles.add("Roca");
         elementosDisponibles.add("Hielo");
-        ArrayList<String>elementosStone=new ArrayList<String>();
+        ArrayList<Elemento>elementosStone=new ArrayList<Elemento>();
         int contadorElementos = 3;
 
         for (int i = 0; i < contadorElementos; i++) {
             int randomIndex = rand.nextInt(elementosDisponibles.size());
-            elementosStone.add(elementosDisponibles.get(randomIndex));
+            elementosStone.add(fabrica.obtenerElemento(elementosDisponibles.get(randomIndex)));
         }
         return elementosStone;
     }
@@ -38,18 +42,18 @@ public class Stone {
         this.vida = vida;
     }
 
-    public ArrayList<String> getElementos() {
+    public ArrayList<Elemento> getElementos() {
         return elementos;
     }
 
-    public void setElementos(ArrayList<String> elementos) {
+    public void setElementos(ArrayList<Elemento> elementos) {
         this.elementos = elementos;
     }
 
     public String mostrarElementosYVida() {
         String estado="Vida: "+getVida();
         for (int i = 0; i < elementos.size(); i++){
-            estado+=elementos.get(i);
+            estado+=elementos.get(i).getTipo();
         }
         return estado;
     }

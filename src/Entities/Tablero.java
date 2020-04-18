@@ -44,7 +44,7 @@ public class Tablero  {
     public int obtenerNumeroMovimiento(){ return dadoMovimiento.girar();}
 
     public int obtenerTipoAtaque(){
-        return dadoMovimiento.girar();
+        return dadoAtaque.girar();
     }
 
     public void observarCasillas(tableroPartidaController o){

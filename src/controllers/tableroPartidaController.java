@@ -158,6 +158,12 @@ public class tableroPartidaController implements Initializable,Observador {
         flechaTirarDado.setVisible(true);
         //deshabilita el botón de iniciar tablero
         btnIniciarTodoTablero.setDisable(true);
+        //prueba del dado de ataque
+//        try {
+//            tirarDadoAtaque();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void cambiarTurno() {

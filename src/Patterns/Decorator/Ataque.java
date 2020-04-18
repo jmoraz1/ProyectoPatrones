@@ -15,12 +15,12 @@ public class Ataque extends Decorador {
     }
 
     public void setAtaques(){
-        ataques.set(0, "Tu girada ha resultado en ataca un personaje de la triada");
-        ataques.set(1, "Tu girada ha resultado en atacan dos personajes de la triada");
-        ataques.set(2, "Tu girada ha resultado en ataca tres personaje de la triada");
-        ataques.set(3, "Tu girada ha resultado en ataca solo un personaje y puede activar un poder especial de cualquiera");
-        ataques.set(4, "Tu girada ha resultado en atacan dos personajes y se activa un poder especial");
-        ataques.set(5, "Tu girada ha resultado en atacan todos los personajes y se activan dos poderes especiales");
+        ataques.add(0, "Tu girada ha resultado en ataca un personaje de la triada");
+        ataques.add(1, "Tu girada ha resultado en atacan dos personajes de la triada");
+        ataques.add(2, "Tu girada ha resultado en ataca tres personaje de la triada");
+        ataques.add(3, "Tu girada ha resultado en ataca solo un personaje y puede activar un poder especial de cualquiera");
+        ataques.add(4, "Tu girada ha resultado en atacan dos personajes y se activa un poder especial");
+        ataques.add(5, "Tu girada ha resultado en atacan todos los personajes y se activan dos poderes especiales");
 
     }
     @Override
