@@ -251,13 +251,13 @@ public class tableroPartidaController implements Initializable,Observador {
         double ejeX = 0;
         double ejeY = 0;
         double ejeYF = 0;
-        for (int i = 0; i < 100; i++) {
-            if (i == 0) {
+        for (int i = 1; i <= 100; i++) {
+            if (i == 1) {
                 EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 183, 165);
                 EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 183, 142);
                 coordenadasCasilla.add(ejeCasilla);
                 coordenadasCasillaFicha.add(ejeCasillaF);
-            } else if (i == 99) {
+            } else if (i == 100) {
                 EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 1130, 555);
                 coordenadasCasilla.add(ejeCasilla);
                 EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1130, 530);
@@ -499,26 +499,26 @@ public class tableroPartidaController implements Initializable,Observador {
         ArrayList<String> listaJugadores = controladorTablero.nombreJugadores;
         Image imgfP1 = new Image("/imgs/FICHAS-02.png");
         fichaP1.setImage(imgfP1);
-        fichaP1.setLayoutY(155);
-        fichaP1.setLayoutX(123);
+        fichaP1.setLayoutY(145);
+        fichaP1.setLayoutX(183);
         fichaP1.setFitWidth(45);
         fichaP1.setFitHeight(45);
         Image imgfP2 = new Image("/imgs/FICHAS-04.png");
         fichaP2.setImage(imgfP2);
-        fichaP2.setLayoutY(155);
-        fichaP2.setLayoutX(123);
+        fichaP2.setLayoutY(145);
+        fichaP2.setLayoutX(183);
         fichaP2.setFitWidth(45);
         fichaP2.setFitHeight(45);
         Image imgfP3 = new Image("/imgs/FICHAS-05.png");
         fichaP3.setImage(imgfP3);
-        fichaP3.setLayoutY(155);
-        fichaP3.setLayoutX(123);
+        fichaP3.setLayoutY(145);
+        fichaP3.setLayoutX(183);
         fichaP3.setFitWidth(45);
         fichaP3.setFitHeight(45);
         Image imgfP4 = new Image("/imgs/FICHAS-03.png");
         fichaP4.setImage(imgfP4);
-        fichaP4.setLayoutY(155);
-        fichaP4.setLayoutX(123);
+        fichaP4.setLayoutY(145);
+        fichaP4.setLayoutX(183);
         fichaP4.setFitWidth(45);
         fichaP4.setFitHeight(45);
         switch (listaJugadores.size()) {
