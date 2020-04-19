@@ -137,7 +137,9 @@ public class tableroPartidaController implements Initializable,Observador {
     }
 
     private FabricaElementos fabElementos = new FabricaElementos();
-
+    private int resulNuevaPosicion;
+    private Boolean ganador=false;
+    //booleano de ganador para que el salga despues de zorvan
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         imgViewDado.setVisible(true);
@@ -193,8 +195,16 @@ public class tableroPartidaController implements Initializable,Observador {
 
     private void turnoPC() throws IOException {
         ActionEvent event=new ActionEvent();
+        int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
         dialogoTurnoComputadora();
+//        if(posicionActual==0){
+//            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
+//        }
+        //para probar lo de Zorvan, se pone la compu en al posicion 96
+
         gestionarTurno(event);
+
+
     }
 
     private void dialogoTurnoComputadora() {
@@ -256,7 +266,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
         //indica al usuario que debe moverse
         dialogoMoverse(resultadoDadoMovimiento);
-
+        resulNuevaPosicion=posicionActual+resultadoDadoMovimiento;
         jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
 
         ImageView fichaJugadorIv = null;
@@ -1154,14 +1164,14 @@ public class tableroPartidaController implements Initializable,Observador {
     }
 
     //Levanta diálogo Zorvan cuándo el jugador hace trampa
-    public void dialogoZorvan() throws IOException {
+    public void dialogoZorvan(int cantCasillas) throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
 
         GridPane gP = new GridPane();
         Text txt = new Text("Zorvan: " +
                 "\n-¡Alto Ahí!" +
-                "\nNo hay cabida para los tramposos, dévuelvete "+4+" espacios.");
+                "\nNo hay cabida para los tramposos, dévuelvete "+cantCasillas+" espacios.");
         txt.setFont(Font.font("Matura MT Script Capitals", 20));
         txt.setFill(Color.rgb(58,54,21));
 
@@ -1312,6 +1322,10 @@ public class tableroPartidaController implements Initializable,Observador {
                 dialogoQuerubin();
                 int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                 nuevaPosicion = mc.movimientoQuerubin();
+                if(nuevaPosicion>99){
+                    resulNuevaPosicion=nuevaPosicion;
+                    nuevaPosicion=99;
+                }
                 fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                 fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
                 mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
@@ -1322,13 +1336,29 @@ public class tableroPartidaController implements Initializable,Observador {
                  mc.partida.turno.setInabilitado(true);
                 //para validar si el jugador no puede moverse hasta matar al stone
             }else if(value.equals("Zorvan")){
-                dialogoZorvan();
-                int casillasExtras = jugadorNuevaPosicion - 100;
-                int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
-                nuevaPosicion = mc.movimientoZorvan(casillasExtras);
-                mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
-                fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
-                fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                int casillasExtras = resulNuevaPosicion - 99;
+                if(ganador==false){
+                    if(casillasExtras==0){
+                        dialogoZorvanGanador();
+                        ganador=true;
+                        int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
+                        nuevaPosicion = 99;
+                        mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
+                        fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                        fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                    }else{
+                        dialogoZorvan(casillasExtras);
+                        int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
+                        nuevaPosicion = mc.movimientoZorvan(casillasExtras);
+                        mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
+                        fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
+                        fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+
+                    }
+
+                }
+
+
 
             }
 
