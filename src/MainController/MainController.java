@@ -24,6 +24,7 @@ public class MainController implements IMainController{
 
     }*/
 
+
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
     public  Tablero NuevaPartida(ArrayList<Jugador> jugadores)  throws IOException {
         Jugador[] arrJugadores= new Jugador[jugadores.size()];
@@ -289,6 +290,21 @@ public class MainController implements IMainController{
         return this;
     }
 
+    public boolean casillaStone(String nombre){
+        Ficha f = partida.obtenerJugador(nombre).getFicha();
+
+        for (Casilla c: partida.casillas) {
+            ArrayList<Ficha> af = c.getFichas();
+            for (Ficha ficha:af) {
+                if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     public String poderPlanta(String jugador){
         String s ="Por dos turnos no deja que "+jugador+"  saque mas de tres en su dado de movimientos";
         dadoLimitado.add(partida.obtenerJugador(jugador));
@@ -314,6 +330,7 @@ public class MainController implements IMainController{
             JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
             return s;
     }
+
 
     public String poderAgua(){
         return "Su poder especial le permite lanzar de nuevo el dado de ataque";
