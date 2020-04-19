@@ -1248,7 +1248,7 @@ public class tableroPartidaController implements Initializable,Observador {
                         String infoPoderRoca = "Selecciona el jugador al que deseas colocarle un stone";
                         decisionJugadorPoderAplicar(infoPoderRoca, "Roca");
                         //RECORDAR QUITAR EL NUEVE
-                        mc.poderRoca(jugadorAAfectarPorPoder,9);
+                        mc.poderRoca(jugadorAAfectarPorPoder);
                         break;
                 }
             }
