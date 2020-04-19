@@ -1215,25 +1215,25 @@ public class tableroPartidaController implements Initializable,Observador {
                         String infoPoderPlanta = "Selecciona a un jugador para que por dos turnos " +
                                 "no dejes que saque mas de tres en su dado de movimientos";
                         decisionJugadorPoderAplicar(infoPoderPlanta, "Planta");
-                        mc.poderPlanta(jugadorAAfectarPorPoder);
+                        dialogoPoder(mc.poderPlanta(jugadorAAfectarPorPoder),"Planta");
                         break;
                     case "Electrico":
                         //darle a elegir a cuál jugador aplicar poder
                         String infoPoderElectrico = "Selecciona a un jugador para que no tire dado movimiento en tres turnos";
                         decisionJugadorPoderAplicar(infoPoderElectrico, "Electrico");
-                        mc.poderElectrico(jugadorAAfectarPorPoder);
+                        dialogoPoder(mc.poderElectrico(jugadorAAfectarPorPoder), "Electrico");
                         break;
                     case "Hielo":
                         //darle a elegir a cuál jugador aplicar poder
                         String infoPoderHielo = "Selecciona el jugador al que deseas congelar por un turno";
                         decisionJugadorPoderAplicar(infoPoderHielo, "Hielo");
-                        mc.poderHielo(jugadorAAfectarPorPoder);
+                        dialogoPoder(mc.poderHielo(jugadorAAfectarPorPoder), "Hielo");
                         break;
                     case "Fuego":
                         //decidir a cual elemento se le dan 5 pts extra de la triada propia
                         String infoPoderFuego = "Selecciona el elemento de tu triada al que le otorgas 5 puntos extra por dos turnos";
                         decisionJugadorPoderAplicar(infoPoderFuego, "Fuego");
-                        mc.poderFuego(jugadorTurno.getNombre(), elementoAAfectarPorPoder);
+                        dialogoPoder(mc.poderFuego(jugadorTurno.getNombre(), elementoAAfectarPorPoder),"Fuego");
                         break;
                     case "Agua":
                         //lanzar dado ataque de nuevo
@@ -1248,7 +1248,8 @@ public class tableroPartidaController implements Initializable,Observador {
                         String infoPoderRoca = "Selecciona el jugador al que deseas colocarle un stone";
                         decisionJugadorPoderAplicar(infoPoderRoca, "Roca");
                         //RECORDAR QUITAR EL NUEVE
-                        mc.poderRoca(jugadorAAfectarPorPoder,9);
+                        ;
+                        dialogoPoder(mc.poderRoca(jugadorAAfectarPorPoder,9),"Roca");
                         break;
                 }
             }
@@ -1480,6 +1481,12 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.getDialogPane().setPrefSize(800, 400);
         alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
 
+        if(cantidadJugadores ==2){
+            cbJ1.setSelected(true);
+            cbJ1.setDisable(true);
+            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+        }
+
         //Para validar botón
         Optional<ButtonType> result = alert.showAndWait();
         if
@@ -1539,6 +1546,55 @@ public class tableroPartidaController implements Initializable,Observador {
         imgZorvan.setFitHeight(100);
         imgZorvan.setFitWidth(100);
         gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(300, 200);
+        alert.showAndWait();
+    }
+
+    public void dialogoPoder(String infoPoder, String tipoPoder){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Poder" + tipoPoder);
+
+        GridPane gP = new GridPane();
+        Text txt = new Text(infoPoder);
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+        gP.add(txt, 0,0);
+
+
+        ImageView imgZorvan = new ImageView();
+        String url = "";
+        switch (tipoPoder){
+            case "Fuego":
+                url = "/imgs/Fuego.png";
+                break;
+            case "Roca":
+                url = "/imgs/Roca.png";
+                break;
+            case "Hielo":
+                url = "/imgs/Hielo.png";
+                break;
+            case "Electrico":
+                url = "/imgs/Electrico.png";
+                break;
+            case "Planta":
+                url = "/imgs/Planta.png";
+                break;
+        }
+
+        Image imgZ = new Image(url);
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(100);
+        imgZorvan.setFitWidth(100);
+        gP.add(imgZorvan, 0, 1);
+
+        Text txt2 = new Text(infoPoder);
+        txt2.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt2.setFill(Color.rgb(58,54,21));
+        gP.add(txt2, 0,2);
+
+
         alert.getDialogPane().setContent(gP);
         alert.setResizable(true);
         alert.getDialogPane().setPrefSize(300, 200);
