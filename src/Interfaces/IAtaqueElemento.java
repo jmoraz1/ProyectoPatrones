@@ -1,5 +1,5 @@
 package Interfaces;
 
 public interface IAtaqueElemento {
-    boolean Evaluar_Ventaja();
+    void Evaluar_Ventaja();
 }
