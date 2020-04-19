@@ -156,7 +156,6 @@ public class seleccionarJugadoresController implements Initializable {
                 ((Node) (event.getSource())).getScene().getWindow().hide();
             }
 
-
         }else{
             camposVacios();
         }
@@ -192,7 +191,7 @@ public class seleccionarJugadoresController implements Initializable {
     public void camposVacios() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setHeaderText("Existen campos sin rellenar.");
+        alert.setHeaderText("Existen campos sin rellenar o la longitud de los nombres es mayor a 11.");
         alert.setContentText("Revise los campos que hacen falta.");
         alert.showAndWait();
     }
@@ -208,16 +207,16 @@ public class seleccionarJugadoresController implements Initializable {
 
     public boolean validarCampos(){
 
-        if(!txtFieldP1.isDisable() && "".equals(txtFieldP1.getText())){
+        if(!txtFieldP1.isDisable() && "".equals(txtFieldP1.getText()) || txtFieldP1.getText().length()>11){
             return false;
         }
-        if(!txtFieldP2.isDisable() && "".equals(txtFieldP2.getText())){
+        if(!txtFieldP2.isDisable() && "".equals(txtFieldP2.getText()) || txtFieldP2.getText().length()>11){
             return false;
         }
-        if(!txtFieldP3.isDisable() && "".equals(txtFieldP3.getText())){
+        if(!txtFieldP3.isDisable() && "".equals(txtFieldP3.getText()) || txtFieldP3.getText().length()>11){
             return false;
         }
-        if(!txtFieldP3.isDisable() && "".equals(txtFieldP3.getText())){
+        if(!txtFieldP3.isDisable() && "".equals(txtFieldP3.getText()) ||  txtFieldP4.getText().length()>11){
             return false;
         }
         return true;

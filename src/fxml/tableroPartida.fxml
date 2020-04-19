@@ -20,7 +20,7 @@
             <Image url="@../imgs/ejemploFINAL-01.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="lblP3" layoutX="714.0" layoutY="601.0" prefHeight="47.0" prefWidth="163.0" text="P3:">
+      <Label fx:id="lblP3" layoutX="714.0" layoutY="601.0" prefHeight="47.0" prefWidth="247.0" text="P3:">
          <font>
             <Font name="Matura MT Script Capitals" size="25.0" />
          </font>
@@ -34,7 +34,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label fx:id="lblP1" layoutX="219.0" layoutY="601.0" prefHeight="47.0" prefWidth="196.0" text="P1:">
+      <Label fx:id="lblP1" layoutX="75.0" layoutY="601.0" prefHeight="47.0" prefWidth="247.0" text="P1:">
          <font>
             <Font name="Matura MT Script Capitals" size="25.0" />
          </font>
@@ -48,7 +48,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label fx:id="lblP4" layoutX="948.0" layoutY="601.0" prefHeight="47.0" prefWidth="163.0" text="P4:">
+      <Label fx:id="lblP4" layoutX="1050.0" layoutY="601.0" prefHeight="47.0" prefWidth="247.0" text="P4:">
          <font>
             <Font name="Matura MT Script Capitals" size="25.0" />
          </font>
@@ -62,7 +62,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label fx:id="lblP2" layoutX="459.0" layoutY="601.0" prefHeight="47.0" prefWidth="204.0" text="P2:">
+      <Label fx:id="lblP2" layoutX="375.0" layoutY="601.0" prefHeight="47.0" prefWidth="247.0" text="P2:">
          <font>
             <Font name="Matura MT Script Capitals" size="25.0" />
          </font>
@@ -161,12 +161,12 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <ImageView fx:id="imgP4" fitHeight="60.0" fitWidth="60.0" layoutX="889.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgP4" fitHeight="60.0" fitWidth="60.0" layoutX="1000.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imgs/FICHAS-03.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgP1" fitHeight="60.0" fitWidth="60.0" layoutX="159.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgP1" fitHeight="60.0" fitWidth="60.0" layoutX="25.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imgs/FICHAS-02.png" />
          </image>
@@ -176,7 +176,7 @@
             <Image url="@../imgs/FICHAS-05.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgP2" fitHeight="60.0" fitWidth="60.0" layoutX="406.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgP2" fitHeight="60.0" fitWidth="60.0" layoutX="325.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imgs/FICHAS-04.png" />
          </image>
