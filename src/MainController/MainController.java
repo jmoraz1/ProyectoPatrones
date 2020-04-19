@@ -21,7 +21,7 @@ public class MainController implements IMainController{
     public ArrayList<Jugador> congelados = new ArrayList<>();
     public ArrayList<Jugador> dadoLimitado = new ArrayList<>();
     public ArrayList<Jugador> paralizados = new ArrayList<>();
-    public ArrayList<JugadorElemento> updated = new ArrayList<>();
+    public ArrayList<Jugador> updated = new ArrayList<>();
 
    /* public static void main(String[] args) {
 
@@ -170,6 +170,18 @@ public class MainController implements IMainController{
                 }
             }
         }
+        if (updated.contains(partida.obtenerJugador(jugador))){
+            for (Jugador j :updated) {
+                if (j.getNombre()==jugador){
+                    if (j.contadorUpdates==2){
+                        j.contadorUpdates=0;
+                        updated.remove(j);
+                        break;
+                    }
+                }
+            }
+        }
+
         return partida.obtenerNumeroMovimiento();
     }
 
@@ -298,7 +310,7 @@ public class MainController implements IMainController{
                 }
             }
         }
-        //AtaqueElemento ataqueElemento = new AtaqueElemento();
+
         AtaqueElemento ae;
         for (Elemento e : arr_elementos) {
             switch (e.getTipo()){
@@ -335,8 +347,15 @@ public class MainController implements IMainController{
             }
         }
         RecibirAtaque ra = new RecibirAtaque();
-        ra.visit(casilla, ataque);
-        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida() - ataque);
+
+        for (Jugador j:updated) {
+            if (j.getNombre()==jugador){
+                ra.visit(casilla, ataque+5);
+            }else {
+                ra.visit(casilla, ataque);
+            }
+        }
+        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
         if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
             return false;
         } else {
@@ -386,7 +405,7 @@ public class MainController implements IMainController{
 
     public String poderFuego(String jugador, Elemento e){
             String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
-            JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
+            Jugador je = partida.obtenerJugador(jugador);
             return s;
     }
 
