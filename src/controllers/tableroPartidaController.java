@@ -196,7 +196,12 @@ public class tableroPartidaController implements Initializable,Observador {
 
     private void turnoPC() throws IOException {
         ActionEvent event=new ActionEvent();
+        int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
         dialogoTurnoComputadora();
+        if(posicionActual==0){
+            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
+        }
+//            para probar lo de Zorvan, se pone la compu en al posicion 96
         gestionarTurno(event);
     }
 
