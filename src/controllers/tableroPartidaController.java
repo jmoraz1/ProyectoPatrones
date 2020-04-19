@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -168,7 +169,7 @@ public class tableroPartidaController implements Initializable,Observador {
         //prueba del dado de ataque
     }
 
-    public void cambiarTurno() {
+    public void cambiarTurno() throws IOException {
         //cambia el turno del jugador y coloca en el input el nombre del jugador en turno
         jugadorTurno = mc.obtenerTurno();
         lblJuega.setText(jugadorTurno.getNombre());
@@ -177,6 +178,30 @@ public class tableroPartidaController implements Initializable,Observador {
         } else {
             numFicha++;
         }
+
+        if(jugadorTurno.getNombre().equals("Computadora")){
+           turnoPC();
+        }
+    }
+
+    private void turnoPC() throws IOException {
+        ActionEvent event=new ActionEvent();
+        dialogoTurnoComputadora();
+        gestionarTurno(event);
+    }
+
+    private void dialogoTurnoComputadora() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        GridPane gP = new GridPane();
+        Text txt = new Text("Turno de la computadora.");
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+        gP.add(txt, 0,0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(200, 150);
+        alert.showAndWait();
     }
 
     public void gestionarTurno(ActionEvent event) throws IOException {
