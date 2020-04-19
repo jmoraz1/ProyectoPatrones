@@ -23,17 +23,19 @@ public class Estrategia_Hielo extends AtaqueElemento {
     @Override
     public void Evaluar_Ventaja() {
         for (int j=0; j<getElementosContrincante().size();j++){
-            if(((validacionDeElemento(getElementosContrincante().get(j).toString())))){
+            // Si es un elemento con ventaja entonces el ataque es de 15
+            if(((validacionDeElemento(getElementosContrincante().get(j).toString()))) && (getAtaque() < 15)){
                 setAtaque(15);
-                setMejorElemento(getElementosContrincante().get(j));
-            } else if((getNombreElemento() == getElementosContrincante().get(j).toString()) && (getAtaque() < 10)){
+                setMejorElemento(getElementosContrincante().get(j).toString());
+                // Si es el mismo elemento
+            } else if((getNombreElemento().equals(getElementosContrincante().get(j).toString())) && (getAtaque() < 10)){
                 setAtaque(10);
-                setMejorElemento(getElementosContrincante().get(j));
-            } else{
+                setMejorElemento(getElementosContrincante().get(j).toString());
+                // Si es un el elemento sin ventaja entonces el ataque es de 5
+            } else {
                 setAtaque(5);
-                setMejorElemento(getElementosContrincante().get(j) && (getAtaque() < 5));
+                setMejorElemento(getElementosContrincante().get(j).toString());
             }
-            getElementosContrincante().get(j).toString();
         }
     }
 }
