@@ -292,6 +292,7 @@ public class MainController implements IMainController{
 
     public boolean casillaStone(String nombre){
         Ficha f = partida.obtenerJugador(nombre).getFicha();
+
         for (Casilla c: partida.casillas) {
             ArrayList<Ficha> af = c.getFichas();
             for (Ficha ficha:af) {
