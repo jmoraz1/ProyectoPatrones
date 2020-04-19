@@ -124,8 +124,8 @@ public class tableroPartidaController implements Initializable,Observador {
     //Determina si el juego sigue o ya alguien ganó
     private boolean terminaJuego = false;
 
-    ArrayList<Elemento> elementosAtacan;
-    ArrayList<Elemento> poderesAtacan;
+    ArrayList<Elemento> elementosAtacan = null;
+    ArrayList<Elemento> poderesAtacan = null;
 
     private String informacionResultadoDadoAtaque;
 
@@ -212,12 +212,25 @@ public class tableroPartidaController implements Initializable,Observador {
     }
 
     public void gestionarTurno(ActionEvent event) throws IOException {
-        //VALIDAR QUE LA POSICIÓN ACTUAL DEL JUGADOR NO SEA STONE Y DE SERLO V
-
-        // ER SI YA LE GANÓ AL STONE PARA PODER TIRAR DADO DE MOVIMIENTO
-
         int posicionActual = mc.obtenerPosicionJugador(jugadorTurno.ficha);
-        //Pone el dado a "girar"
+        //VALIDAR SI POSICIÓN ACTUAL DE JUGADOR ES STONE Y SI NO LO HA VENCIDO
+
+        //ELSE LLAMAR DADO MOVIMIENTO
+
+        if(1>5){
+            turnoDadoAtaque();
+            tirarDadoAtaque();
+        }else{
+            turnoDadoMovimiento();
+            gestionarTurnoDadoMovimiento(posicionActual);
+        }
+
+        //Cambiar turnonuevo jugador en turno
+        cambiarTurno();
+    }
+
+    //Se usa cuándo el jugador en turno está habilitado para jugar por movimiento
+    public void gestionarTurnoDadoMovimiento(int posicionActual)throws IOException {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDado.setImage(imgDadoGirandoNumero);
         String urlImgDadoNumerico = "";
@@ -244,9 +257,9 @@ public class tableroPartidaController implements Initializable,Observador {
             case 6:
                 urlImgDadoNumerico = "/imgs/dadoSeis.jpg";
                 break;
-                default:
-                    urlImgDadoNumerico = "/imgs/dadoAtaqueLimpio.jpg";
-                    break;
+            default:
+                urlImgDadoNumerico = "/imgs/dadoAtaqueLimpio.jpg";
+                break;
         }
         Image imgDadoNum = new Image(urlImgDadoNumerico);
         //permite que la imagen se muestre por un tiempo haciendo ver que está girando
@@ -255,8 +268,8 @@ public class tableroPartidaController implements Initializable,Observador {
         timeline.play();
 
         //indica al usuario que debe moverse
-        dialogoMoverse(resultadoDadoMovimiento);
 
+        dialogoMoverse(resultadoDadoMovimiento);
         jugadorNuevaPosicion = mc.obtenerNuevaPosicionFicha(resultadoDadoMovimiento);
 
         ImageView fichaJugadorIv = null;
@@ -276,11 +289,7 @@ public class tableroPartidaController implements Initializable,Observador {
         }
         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutY());
         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
-
         mc.moverFicha(posicionActual, jugadorNuevaPosicion, jugadorTurno.ficha);
-
-        //Cambiar turnonuevo jugador en turno
-        cambiarTurno();
     }
 
     public void iniciarValoresCoordenadas() {
@@ -1153,6 +1162,36 @@ public class tableroPartidaController implements Initializable,Observador {
 
     }
 
+    public void gestionarElementosPoderesContraStoneContrincantes(){
+        for (Elemento e : elementosAtacan){
+            switch (e.getTipo()){
+                case "Planta":
+                    mc.poderPlanta("jugador");
+                    break;
+                case "Electrico":
+                    mc.poderElectrico("jugador");
+                    break;
+                case "Hielo":
+                    mc.poderHielo("jugador");
+                    break;
+                case "Fuego":
+                    mc.poderFuego("jugador", e);
+                    break;
+                case "Agua":
+                    mc.poderAgua();
+                    break;
+                    default:
+                        mc.poderRoca("jugador", 3);
+                        break;
+            }
+        }
+
+        if(poderesAtacan != null){
+
+        }
+
+    }
+
     //Levanta diálogo Zorvan cuándo el jugador hace trampa
     public void dialogoZorvan() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -1267,10 +1306,17 @@ public class tableroPartidaController implements Initializable,Observador {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
         GridPane gP = new GridPane();
-        Text txt = new Text("Avanza: " + resultadoDado +" casillas.");
-        txt.setFont(Font.font("Matura MT Script Capitals", 20));
-        txt.setFill(Color.rgb(58,54,21));
-        gP.add(txt, 0,0);
+        if(resultadoDado == 0){
+            Text txt0 = new Text("Estás bajo el efecto de un poder especial, no te puedes mover");
+            txt0.setFont(Font.font("Matura MT Script Capitals", 20));
+            txt0.setFill(Color.rgb(58,54,21));
+            gP.add(txt0, 0,0);
+        }else{
+            Text txt = new Text("Avanza: " + resultadoDado +" casillas.");
+            txt.setFont(Font.font("Matura MT Script Capitals", 20));
+            txt.setFill(Color.rgb(58,54,21));
+            gP.add(txt, 0,0);
+        }
         alert.getDialogPane().setContent(gP);
         alert.setResizable(true);
         alert.getDialogPane().setPrefSize(200, 150);

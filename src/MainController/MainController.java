@@ -187,8 +187,6 @@ public class MainController implements IMainController{
         return nuevaPosicion;
     }
 
-
-
     public int movimientoQuerubin() throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
@@ -218,7 +216,6 @@ public class MainController implements IMainController{
 
         return nuevaPosicion;
     }
-
 
     public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
@@ -255,6 +252,7 @@ public class MainController implements IMainController{
 
 
     }
+
     public  String obtenerAtaque(){
         String ataque="";
         partida.dadoAtaque=new Ataque(partida.dadoAtaque);
@@ -290,7 +288,6 @@ public class MainController implements IMainController{
         return this;
     }
 
-
     public String poderPlanta(String jugador){
         String s ="Por dos turnos no deja que "+jugador+"  saque mas de tres en su dado de movimientos";
         dadoLimitado.add(partida.obtenerJugador(jugador));
@@ -316,7 +313,6 @@ public class MainController implements IMainController{
             JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
             return s;
     }
-
 
     public String poderAgua(){
         return "Su poder especial le permite lanzar de nuevo el dado de ataque";
