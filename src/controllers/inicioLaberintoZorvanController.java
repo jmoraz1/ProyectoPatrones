@@ -57,7 +57,7 @@ public class inicioLaberintoZorvanController implements Initializable {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.setTitle("AtoCR");
+        stage.setTitle("Instrucciones");
         stage.setResizable(false);
         stage.show();
         ((Node) (event.getSource())).getScene().getWindow().hide();
