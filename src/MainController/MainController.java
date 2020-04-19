@@ -312,9 +312,9 @@ public class MainController implements IMainController{
     }
 
     public String poderFuego(String jugador, Elemento e){
-        String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
-        JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
-        return s;
+            String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
+            JugadorElemento je = new JugadorElemento(partida.obtenerJugador(jugador), e);
+            return s;
     }
 
 
@@ -323,6 +323,7 @@ public class MainController implements IMainController{
     }
 
     public String poderRoca(String jugador, int i){
+        //cambiar string
         String s = "El jugador "+jugador+"ha seleccionado colocar un stone en la casilla "+i;
             Jugador j = partida.obtenerJugador(jugador);
             CasillaStoneAdapter casillaStoneAdapter= generarStone(j.ficha);
