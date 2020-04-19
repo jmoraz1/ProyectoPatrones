@@ -20,7 +20,11 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -32,6 +36,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.ControladorPrueba;
 import java.io.IOException;
@@ -116,11 +121,15 @@ public class tableroPartidaController implements Initializable,Observador {
     private CheckBox cb2Ataque;
     private CheckBox cb3Ataque;
     private boolean validacionCBPoderes = false;
+    //Determina si el juego sigue o ya alguien ganó
+    private boolean terminaJuego = false;
 
     ArrayList<Elemento> elementosAtacan;
     ArrayList<Elemento> poderesAtacan;
 
     private String informacionResultadoDadoAtaque;
+
+    private String nombreGanadorJuego = "";
 
     public tableroPartidaController() throws IOException {
         MainControllerProxy proxy = new MainControllerProxy();
@@ -138,8 +147,6 @@ public class tableroPartidaController implements Initializable,Observador {
         btnTirarDadoAtaque.setVisible(false);
         flechaTirarDado.setVisible(false);
         iniciarValoresCoordenadas();
-
-
     }
 
     public void iniciarTodoTablero(ActionEvent event) throws IOException {
@@ -237,6 +244,9 @@ public class tableroPartidaController implements Initializable,Observador {
             case 6:
                 urlImgDadoNumerico = "/imgs/dadoSeis.jpg";
                 break;
+                default:
+                    urlImgDadoNumerico = "/imgs/dadoAtaqueLimpio.jpg";
+                    break;
         }
         Image imgDadoNum = new Image(urlImgDadoNumerico);
         //permite que la imagen se muestre por un tiempo haciendo ver que está girando
@@ -268,8 +278,8 @@ public class tableroPartidaController implements Initializable,Observador {
         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(jugadorNuevaPosicion).getLayoutX());
 
         mc.moverFicha(posicionActual, jugadorNuevaPosicion, jugadorTurno.ficha);
-        //Debo setear nuevo jugador en turno
 
+        //Cambiar turnonuevo jugador en turno
         cambiarTurno();
     }
 
@@ -693,6 +703,7 @@ public class tableroPartidaController implements Initializable,Observador {
         timeline.play();
     }
 
+    //Inicia información sobre ventajas, desventajas y poderes de los elementos de tríada
     public void iniciarArregloInfoElementos() {
         ElementoTabla eleFuego = new ElementoTabla("Le otorga 5 puntos extra a un personaje de la triada por 2 turnos",
                 "Fuego", "Neutral", "Desventaja", "Ventaja", "Desventaja", "Desventaja",
@@ -726,6 +737,7 @@ public class tableroPartidaController implements Initializable,Observador {
         arregloInfoElementos.add(eleHielo);
     }
 
+    //Muestra la información general de los elementos al jugador
     public void infoElementos(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -782,6 +794,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //El jugador decide que hacer dado el dado de ataque
     public void decisionJugadorStone() throws IOException {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1106,8 +1119,6 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.getDialogPane().setPrefSize(800, 400);
         alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
 
-
-        alert.showAndWait();
         //Para validar botón
         Optional<ButtonType> result = alert.showAndWait();
        if
@@ -1142,6 +1153,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
     }
 
+    //Levanta diálogo Zorvan cuándo el jugador hace trampa
     public void dialogoZorvan() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
@@ -1168,6 +1180,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //Levanta diálogo diablillo cuándo el jugador cae en casilla diablillo
     public void dialogoDiablillo() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
@@ -1195,6 +1208,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //Levanta diálogo querubin cuándo el jugador cae en casilla querubin
     public void dialogoQuerubin() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
@@ -1221,6 +1235,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //Levanta diálogo stone cuándo el jugador cae en casilla stone
     public void dialogoStone() throws IOException {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alerta");
@@ -1247,6 +1262,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //Levanta diálogo para indicar cuántas casillas el jugador debe avanzar según resultado dado
     public void dialogoMoverse(int resultadoDado) throws IOException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -1261,6 +1277,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    //Observa si la casilla dónde cae jugador no es una casilla normal para disparar un evento
     @Override
     public void update(String value) throws IOException {
         value=value;
@@ -1317,4 +1334,54 @@ public class tableroPartidaController implements Initializable,Observador {
 
         }
     }
+
+    //Método que se muestra cuando un jugador ganó, indica lo acontecido y lo lleva a la vista final
+    public void dialogoZorvanGanador() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+
+        GridPane gP = new GridPane();
+        Text txt = new Text("Zorvan: " +
+                "\n-¡Excelente guerrero@ "+ nombreGanadorJuego+"!" +
+                "\nHas vencido las artimañas del juego y lo has logrado dignamente. "+
+                "\nEres el GANADOR del juego.");
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+
+        gP.add(txt, 0,0);
+
+        ImageView imgZorvan = new ImageView();
+        Image imgZ = new Image("/imgs/zorvan.jpeg");
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(400);
+        imgZorvan.setFitWidth(300);
+        gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(500, 380);
+
+        Stage stagePrevia = (Stage) btnTirarDado.getScene().getWindow();
+        Optional<ButtonType> result = alert.showAndWait();
+           if
+            (!result.isPresent()) {
+            }
+            else if (result.get() == ButtonType.OK) {
+               FXMLLoader loader = new FXMLLoader();
+               loader.setLocation(getClass().getResource("/fxml/resultadoPartida.fxml"));
+               loader.load();
+               resultadoPartidaController controller = loader.<resultadoPartidaController>getController();
+               controller.txtFieldGanador.setText(nombreGanadorJuego);
+               Parent root = loader.getRoot();
+               Platform.runLater(() -> root.requestFocus());
+               Scene scene = new Scene(root);
+               Stage stage = new Stage();
+               stage.setScene(scene);
+               stage.setTitle("Laberinto de Zorvan");
+               stage.setResizable(false);
+               stage.show();
+               stagePrevia.hide();
+
+            }
+    }
+
 }

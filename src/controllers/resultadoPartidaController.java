@@ -18,10 +18,14 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+
+
+
 public class resultadoPartidaController implements Initializable {
 
     @FXML
-    private TextField txtFieldGanador;
+    public TextField txtFieldGanador;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
