@@ -297,11 +297,10 @@ public class MainController implements IMainController{
             for (Ficha ficha:af) {
                 if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
                     return true;
-                }else {
-                    return false;
                 }
             }
         }
+        return false;
     }
 
 
