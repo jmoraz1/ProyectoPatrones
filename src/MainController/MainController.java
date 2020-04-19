@@ -295,11 +295,11 @@ public class MainController implements IMainController{
         return partida.siguienteTurno();
     }
 
-    public boolean Ataque (String jugador, ArrayList<Elemento> arr_elementos) {
+
+    public boolean stoneVencido (String jugador) {
         Ficha f = partida.obtenerJugador(jugador).ficha;
         ArrayList<Ficha> af = new ArrayList<>();
         Casilla casilla = new CasillaStoneAdapter(0);
-        int ataque = 0;
         for (Casilla c: partida.casillas) {
             af = c.getFichas();
             casilla = c;
@@ -311,36 +311,62 @@ public class MainController implements IMainController{
             }
         }
 
+        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
+        if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    public String Ataque (String jugador, ArrayList<Elemento> arr_elementos) {
+        Ficha f = partida.obtenerJugador(jugador).ficha;
+        ArrayList<Ficha> af = new ArrayList<>();
+        Casilla casilla = new CasillaStoneAdapter(0);
+        int ataque = 0;
+        ArrayList<Elemento> arr_elementos_Stone= new ArrayList<>();
+        for (Casilla c: partida.casillas) {
+            af = c.getFichas();
+            casilla = c;
+            for (Ficha ficha:af) {
+                if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+                    arr_elementos_Stone = ((CasillaStoneAdapter) c).getStone().getElementos();
+                    break;
+                }
+            }
+        }
+
         AtaqueElemento ae;
         for (Elemento e : arr_elementos) {
             switch (e.getTipo()){
                 case "Agua":
-                    ae = new Estrategia_Agua("Agua", af);
+                    ae = new Estrategia_Agua("Agua", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
                 case "Electrico":
-                    ae = new Estrategia_Electrico("Electrico", af);
+                    ae = new Estrategia_Electrico("Electrico", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
                 case "Fuego":
-                    ae = new Estrategia_Fuego("Fuego", af);
+                    ae = new Estrategia_Fuego("Fuego", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
                 case "Hielo":
-                    ae = new Estrategia_Hielo("Hielo", af);
+                    ae = new Estrategia_Hielo("Hielo", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
                 case "Planta":
-                    ae = new Estrategia_Planta("Planta", af);
+                    ae = new Estrategia_Planta("Planta", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
                 case "Roca":
-                    ae = new Estrategia_Roca("Roca", af);
+                    ae = new Estrategia_Roca("Roca", arr_elementos_Stone);
                     ae.Evaluar_Ventaja();
                     ataque = ataque + ae.getAtaque();
                     break;
@@ -351,16 +377,23 @@ public class MainController implements IMainController{
         for (Jugador j:updated) {
             if (j.getNombre()==jugador){
                 ra.visit(casilla, ataque+5);
+                ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
+                if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
+                    return "La vida actual del stone es: "+((CasillaStoneAdapter) casilla).getStone().getVida()+", su ataque ha sido de: "+(ataque+5);
+                } else {
+                    return "Usted ha vencido el stone"+", su ataque ha sido de: "+(ataque+5);
+                }
             }else {
                 ra.visit(casilla, ataque);
+                ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
+                if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
+                    return "La vida actual del stone es: "+((CasillaStoneAdapter) casilla).getStone().getVida()+", su ataque ha sido de: "+ataque;
+                } else {
+                    return "Usted ha vencido el stone"+", su ataque ha sido de: "+ataque;
+                }
             }
         }
-        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
-        if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
-            return false;
-        } else {
-            return true;
-        }
+        return "";
     }
 
     @Override
