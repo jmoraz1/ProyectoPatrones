@@ -286,7 +286,7 @@ public class MainController implements IMainController{
     public boolean Ataque (String jugador, ArrayList<Elemento> arr_elementos) {
         Ficha f = partida.obtenerJugador(jugador).ficha;
         ArrayList<Ficha> af = new ArrayList<>();
-        Casilla casilla =  new CasillaStoneAdapter(0);
+        Casilla casilla = new CasillaStoneAdapter(0);
         int ataque = 0;
         for (Casilla c: partida.casillas) {
             af = c.getFichas();
@@ -336,7 +336,12 @@ public class MainController implements IMainController{
         }
         RecibirAtaque ra = new RecibirAtaque();
         ra.visit(casilla, ataque);
-        return true;
+        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida() - ataque);
+        if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
