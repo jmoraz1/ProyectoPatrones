@@ -121,6 +121,14 @@ public class tableroPartidaController implements Initializable,Observador {
     private CheckBox cb2Ataque;
     private CheckBox cb3Ataque;
     private boolean validacionCBPoderes = false;
+
+    //checkbox para jugadores
+    private CheckBox cbJ1;
+    private CheckBox cbJ2;
+    private CheckBox cbJ3;
+
+    private String jugadorAAfectarPorPoder = "";
+    private Elemento elementoAAfectarPorPoder = null;
     //Determina si el juego sigue o ya alguien ganó
     private boolean terminaJuego = false;
 
@@ -225,14 +233,16 @@ public class tableroPartidaController implements Initializable,Observador {
 
         //ELSE LLAMAR DADO MOVIMIENTO
 
-        if(1>5){
+        if(mc.casillaStone(jugadorTurno.getNombre())){
+            //habilita dado ataque y deshabilita dado movimiento
             turnoDadoAtaque();
             tirarDadoAtaque();
+            decisionJugadorStone();
+            gestionarElementosPoderesContraStoneContrincantes();
         }else{
             turnoDadoMovimiento();
             gestionarTurnoDadoMovimiento(posicionActual);
         }
-
         //Cambiar turnonuevo jugador en turno
         cambiarTurno();
     }
@@ -533,13 +543,11 @@ public class tableroPartidaController implements Initializable,Observador {
 
     public void turnoDadoAtaque() {
         imgViewDado.setVisible(false);
-        btnTirarDado.setVisible(false);
+        btnTirarDado.setVisible(true);
         imgViewDadoAtaque.setVisible(true);
         imgViewDadoAtaque.setLayoutX(34);
         imgViewDadoAtaque.setLayoutY(211);
-        btnTirarDadoAtaque.setVisible(true);
-        btnTirarDadoAtaque.setLayoutX(26);
-        btnTirarDadoAtaque.setLayoutY(296);
+
     }
 
     public void turnoDadoMovimiento() {
@@ -1171,34 +1179,369 @@ public class tableroPartidaController implements Initializable,Observador {
 
     }
 
-    public void gestionarElementosPoderesContraStoneContrincantes(){
-        for (Elemento e : elementosAtacan){
-            switch (e.getTipo()){
-                case "Planta":
-                    mc.poderPlanta("jugador");
-                    break;
-                case "Electrico":
-                    mc.poderElectrico("jugador");
-                    break;
-                case "Hielo":
-                    mc.poderHielo("jugador");
-                    break;
-                case "Fuego":
-                    mc.poderFuego("jugador", e);
-                    break;
-                case "Agua":
-                    mc.poderAgua();
-                    break;
-                    default:
-                        mc.poderRoca("jugador", 3);
+    public void gestionarElementosPoderesContraStoneContrincantes() throws IOException {
+
+        //falta ataque stone
+        if(elementosAtacan != null){
+            for (Elemento e : elementosAtacan){
+                switch (e.getTipo()){
+                    case "Planta":
+
                         break;
+                    case "Electrico":
+
+                        break;
+                    case "Hielo":
+
+                        break;
+                    case "Fuego":
+
+                        break;
+                    case "Agua":
+
+                        break;
+                    default:
+
+                        break;
+                }
             }
         }
 
         if(poderesAtacan != null){
-
+            for (Elemento e : poderesAtacan){
+                switch (e.getTipo()){
+                    case "Planta":
+                        //darle a elegir a cuál jugador aplicar poder
+                        String infoPoderPlanta = "Selecciona a un jugador para que por dos turnos " +
+                                "no dejes que saque mas de tres en su dado de movimientos";
+                        decisionJugadorPoderAplicar(infoPoderPlanta, "Planta");
+                        mc.poderPlanta(jugadorAAfectarPorPoder);
+                        break;
+                    case "Electrico":
+                        //darle a elegir a cuál jugador aplicar poder
+                        String infoPoderElectrico = "Selecciona a un jugador para que no tire dado movimiento en tres turnos";
+                        decisionJugadorPoderAplicar(infoPoderElectrico, "Electrico");
+                        mc.poderElectrico(jugadorAAfectarPorPoder);
+                        break;
+                    case "Hielo":
+                        //darle a elegir a cuál jugador aplicar poder
+                        String infoPoderHielo = "Selecciona el jugador al que deseas congelar por un turno";
+                        decisionJugadorPoderAplicar(infoPoderHielo, "Hielo");
+                        mc.poderHielo(jugadorAAfectarPorPoder);
+                        break;
+                    case "Fuego":
+                        //decidir a cual elemento se le dan 5 pts extra de la triada propia
+                        String infoPoderFuego = "Selecciona el elemento de tu triada al que le otorgas 5 puntos extra por dos turnos";
+                        decisionJugadorPoderAplicar(infoPoderFuego, "Fuego");
+                        mc.poderFuego(jugadorTurno.getNombre(), elementoAAfectarPorPoder);
+                        break;
+                    case "Agua":
+                        //lanzar dado ataque de nuevo
+                        String infoPoderAgua =  mc.poderAgua();
+                        dialogoPoderAgua(infoPoderAgua);
+                        turnoDadoAtaque();
+                        tirarDadoAtaque();
+                        decisionJugadorStone();
+                        gestionarElementosPoderesContraStoneContrincantes();
+                        break;
+                    default:
+                        String infoPoderRoca = "Selecciona el jugador al que deseas colocarle un stone";
+                        decisionJugadorPoderAplicar(infoPoderRoca, "Roca");
+                        mc.poderRoca(jugadorAAfectarPorPoder);
+                        break;
+                }
+            }
         }
 
+    }
+
+    public void decisionJugadorPoderAplicar(String infoPoder, String tipoPoder) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText("Hora de aplicar un poder especial guerrero.");
+        String nombreElemento1 = jugadorTurno.ficha.getPersonajes()[0].getElemento().getTipo();
+        String nombreElemento2 = jugadorTurno.ficha.getPersonajes()[1].getElemento().getTipo();
+        String nombreElemento3 = jugadorTurno.ficha.getPersonajes()[2].getElemento().getTipo();
+        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        boolean opcionesPoderes = false;
+
+        Text txtInfo = new Text(infoPoder);
+        txtInfo.setFont(Font.font("Matura MT Script Capitals", 30));
+        txtInfo.setFill(Color.rgb(58, 54, 21));
+        alert.getDialogPane().setContent(txtInfo);
+        GridPane gP = new GridPane();
+
+        switch (tipoPoder) {
+            case "Planta":
+            case "Electrico":
+            case "Hielo":
+            case "Roca":
+                Text txtAtaca = new Text("Ataque a jugador: ");
+                txtAtaca.setFont(Font.font("Matura MT Script Capitals", 30));
+                txtAtaca.setFill(Color.rgb(58, 54, 21));
+                gP.add(txtAtaca, 0, 0);
+                //Columna 0
+
+                int indexArray = 0;
+                String[] arrayNombreJugadores = new String[cantidadJugadores - 1];
+                for (Jugador j : partida.jugadores) {
+                    if (j.getNombre() != jugadorTurno.getNombre()) {
+                        arrayNombreJugadores[indexArray] = j.getNombre();
+                        indexArray++;
+                    }
+                }
+                cbJ1 = new CheckBox(arrayNombreJugadores[0]);
+                cbJ1.setFont(Font.font("Matura MT Script Capitals", 30));
+                gP.add(cbJ1, 0, 1);
+
+                if (cantidadJugadores == 3 || cantidadJugadores == 4) {
+                    cbJ2 = new CheckBox(arrayNombreJugadores[1]);
+                    cbJ2.setFont(Font.font("Matura MT Script Capitals", 30));
+                    gP.add(cbJ2, 0, 2);
+
+                    if (cantidadJugadores == 3) {
+                        EventHandler eValidacionJugador3 = new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                if (event.getSource() instanceof CheckBox) {
+                                    CheckBox chk = (CheckBox) event.getSource();//
+                                    if (cbJ1.getText().equals(chk.getText())) {
+                                        cbJ2.setSelected(!cbJ1.isSelected());
+                                    } else if (cbJ2.getText().equals(chk.getText())) {
+                                        cbJ1.setSelected(!cbJ2.isSelected());
+                                    }
+                                    if (!cbJ1.isSelected() && !cbJ2.isSelected()) {
+                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                                    } else {
+                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                                    }
+                                }
+                            }
+                        };
+
+                        cbJ1.setOnAction(eValidacionJugador3);
+                        cbJ2.setOnAction(eValidacionJugador3);
+                    }
+
+                    if (cantidadJugadores == 4) {
+                        cbJ3 = new CheckBox(arrayNombreJugadores[2]);
+                        cbJ3.setFont(Font.font("Matura MT Script Capitals", 30));
+                        gP.add(cbJ3, 0, 2);
+
+                        EventHandler eValidacionJugador4 = new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                if (event.getSource() instanceof CheckBox) {
+                                    CheckBox chk = (CheckBox) event.getSource();
+//
+                                    if (cbJ1.getText().equals(chk.getText())) {
+                                        cbJ2.setSelected(!cbJ1.isSelected());
+                                        cbJ3.setSelected(!cbJ1.isSelected());
+
+                                    } else if (cbJ2.getText().equals(chk.getText())) {
+                                        cbJ1.setSelected(!cbJ2.isSelected());
+                                        cbJ3.setSelected(!cbJ2.isSelected());
+
+                                    } else if (cbJ3.getText().equals(chk.getText())) {
+                                        cbJ1.setSelected(!cbJ3.isSelected());
+                                        cbJ2.setSelected(!cbJ3.isSelected());
+
+                                    }
+
+                                    if ((cbJ1.isSelected() ||
+                                            cbJ2.isSelected() ||
+                                            cbJ3.isSelected())
+                                            &&
+                                            (
+                                                    (cbJ1.isSelected() != cbJ2.isSelected() &&
+                                                            cbJ1.isSelected() != cbJ3.isSelected())
+                                                            ||
+                                                            (cbJ2.isSelected() != cbJ1.isSelected() &&
+                                                                    cbJ2.isSelected() != cbJ3.isSelected())
+                                                            ||
+                                                            (cbJ3.isSelected() != cbJ1.isSelected() &&
+                                                                    cbJ3.isSelected() != cbJ2.isSelected())
+                                            )
+                                    ) {
+
+                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+
+
+                                    } else {
+                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                                    }
+
+                                }
+
+                            }
+
+                        };
+
+                        cbJ1.setOnAction(eValidacionJugador4);
+                        cbJ2.setOnAction(eValidacionJugador4);
+                        cbJ3.setOnAction(eValidacionJugador4);
+
+                    }
+                }
+                break;
+            //selecciona elemento triada
+            case "Fuego":
+                cb1Elemento = new CheckBox(nombreElemento1);
+                cb1Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+                gP.add(cb1Elemento, 0, 1);
+                cb2Elemento = new CheckBox(nombreElemento2);
+                cb2Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+                gP.add(cb2Elemento, 0, 2);
+                cb3Elemento = new CheckBox(nombreElemento3);
+                cb3Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+                gP.add(cb3Elemento, 0, 3);
+                //Columna 1
+                ImageView img1Elemento = new ImageView();
+                Image img1 = new Image("/imgs/" + nombreElemento1 + ".png");
+                img1Elemento.setImage(img1);
+                img1Elemento.setFitHeight(50);
+                img1Elemento.setFitWidth(50);
+                gP.add(img1Elemento, 1, 1);
+
+                ImageView img2Elemento = new ImageView();
+                Image img2 = new Image("/imgs/" + nombreElemento2 + ".png");
+                img2Elemento.setImage(img2);
+                img2Elemento.setFitHeight(50);
+                img2Elemento.setFitWidth(50);
+                gP.add(img2Elemento, 1, 2);
+
+                ImageView img3Elemento = new ImageView();
+                Image img3 = new Image("/imgs/" + nombreElemento3 + ".png");
+                img3Elemento.setImage(img3);
+                img3Elemento.setFitHeight(50);
+                img3Elemento.setFitWidth(50);
+                gP.add(img3Elemento, 1, 3);
+
+                EventHandler ePrimerValidacionElemento = new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (event.getSource() instanceof CheckBox) {
+                            CheckBox chk = (CheckBox) event.getSource();
+//
+                            if (nombreElemento1.equals(chk.getText())) {
+                                cb2Elemento.setSelected(!cb1Elemento.isSelected());
+                                cb3Elemento.setSelected(!cb1Elemento.isSelected());
+
+                            } else if (nombreElemento2.equals(chk.getText())) {
+                                cb1Elemento.setSelected(!cb2Elemento.isSelected());
+                                cb3Elemento.setSelected(!cb2Elemento.isSelected());
+
+                            } else if (nombreElemento3.equals(chk.getText())) {
+                                cb1Elemento.setSelected(!cb3Elemento.isSelected());
+                                cb2Elemento.setSelected(!cb3Elemento.isSelected());
+
+                            }
+
+                            if ((cb1Elemento.isSelected() ||
+                                    cb2Elemento.isSelected() ||
+                                    cb3Elemento.isSelected())
+                                    &&
+                                    (
+                                            (cb1Elemento.isSelected() != cb2Elemento.isSelected() &&
+                                                    cb1Elemento.isSelected() != cb3Elemento.isSelected())
+                                                    ||
+                                                    (cb2Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                            cb2Elemento.isSelected() != cb3Elemento.isSelected())
+                                                    ||
+                                                    (cb3Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                            cb3Elemento.isSelected() != cb2Elemento.isSelected())
+                                    )
+                            ) {
+                                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+
+                            } else {
+                                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                            }
+                        }
+
+                    }
+
+                };
+
+                cb1Elemento.setOnAction(ePrimerValidacionElemento);
+                cb2Elemento.setOnAction(ePrimerValidacionElemento);
+                cb3Elemento.setOnAction(ePrimerValidacionElemento);
+                break;
+            //vuelve a tirar dado
+            case "Agua":
+                break;
+        }
+
+
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(800, 400);
+        alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
+
+        //Para validar botón
+        Optional<ButtonType> result = alert.showAndWait();
+        if
+        (!result.isPresent()) {
+        } else if (result.get() == ButtonType.OK) {
+            switch (tipoPoder) {
+                case "Planta":
+                case "Electrico":
+                case "Hielo":
+                case "Roca":
+                    if (cantidadJugadores == 3 || cantidadJugadores == 4) {
+                        if (cbJ1.isSelected()) {
+                            jugadorAAfectarPorPoder = cbJ1.getText();
+                        }
+                        if (cbJ2.isSelected()) {
+                            jugadorAAfectarPorPoder = cbJ2.getText();
+                        }
+                        if (cantidadJugadores == 4) {
+                            if (cbJ3.isSelected()) {
+                                jugadorAAfectarPorPoder = cbJ3.getText();
+                            }
+                        }
+                    } else {
+                        if (cbJ1.isSelected()) {
+                            jugadorAAfectarPorPoder = cbJ1.getText();
+                        }
+                    }
+                    break;
+                //selecciona elemento triada
+                case "Fuego":
+                    if (cb1Elemento.isSelected()) {
+                        elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb1Elemento.getText());
+                        if (cb2Elemento.isSelected()) {
+                            elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb2Elemento.getText());
+                        }
+                        if (cb3Elemento.isSelected()) {
+                            elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb3Elemento.getText());
+                        }
+                    }
+            }
+        }
+    }
+
+    public void dialogoPoderAgua(String infoAgua){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Poder agua");
+
+        GridPane gP = new GridPane();
+        Text txt = new Text(infoAgua);
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+
+        gP.add(txt, 0,0);
+        ImageView imgZorvan = new ImageView();
+        Image imgZ = new Image("/imgs/Agua.png");
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(100);
+        imgZorvan.setFitWidth(100);
+        gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(300, 200);
+        alert.showAndWait();
     }
 
     //Levanta diálogo Zorvan cuándo el jugador hace trampa

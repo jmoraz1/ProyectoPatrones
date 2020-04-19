@@ -395,12 +395,27 @@ public class MainController implements IMainController{
         return "Su poder especial le permite lanzar de nuevo el dado de ataque";
     }
 
-    public String poderRoca(String jugador, int i){
+    public int obtenerIndice(String jugador){
+        int indice=0;
+        Ficha f = partida.obtenerJugador(jugador).getFicha();
+        for (Casilla c:partida.casillas) {
+            ArrayList<Ficha> fichas = c.getFichas();
+            for (Ficha fi:fichas) {
+                if (fi.equals(f)){
+                    return indice;
+                }
+            }
+            indice++;
+        }
+        return 0;
+    }
+
+    public String poderRoca(String jugador){
         //cambiar string
         String s = "Un jugador ha colocado un stone en la casilla de "+jugador;
             Jugador j = partida.obtenerJugador(jugador);
             CasillaStoneAdapter casillaStoneAdapter= generarStone(j.ficha);
-            partida.casillas.set((i-1),casillaStoneAdapter);
+            partida.casillas.set((obtenerIndice(jugador)),casillaStoneAdapter);
             
         return s;
     }
