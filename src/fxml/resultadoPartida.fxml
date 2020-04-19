@@ -32,7 +32,10 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <TextField fx:id="txtFieldGanador" layoutX="30.0" layoutY="279.0" prefHeight="57.0" prefWidth="417.0" />
+      <TextField fx:id="txtFieldGanador" alignment="CENTER" disable="true" layoutX="97.0" layoutY="282.0" prefHeight="68.0" prefWidth="286.0">
+         <font>
+            <Font name="Matura MT Script Capitals" size="41.0" />
+         </font></TextField>
       <Label layoutX="161.0" layoutY="199.0" prefHeight="94.0" prefWidth="176.0" text="Ganador">
          <font>
             <Font name="Matura MT Script Capitals" size="41.0" />
@@ -55,7 +58,7 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <Button id="btnMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="279.0" layoutY="455.0" mnemonicParsing="false" style="-fx-background-color: #191970;" text="Menú" textFill="WHITE" onAction="#inicioLaberinto">
+      <Button id="btnMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="279.0" layoutY="455.0" mnemonicParsing="false" onAction="#inicioLaberinto" style="-fx-background-color: #191970;" text="Menú" textFill="WHITE">
          <font>
             <Font name="Matura MT Script Capitals" size="19.0" />
          </font>
