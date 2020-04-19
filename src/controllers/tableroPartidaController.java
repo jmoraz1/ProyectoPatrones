@@ -206,9 +206,9 @@ public class tableroPartidaController implements Initializable,Observador {
         ActionEvent event=new ActionEvent();
         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
         dialogoTurnoComputadora();
-        if(posicionActual==0){
-            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
-        }
+//        if(posicionActual==0){
+//            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
+//        }
 //            para probar lo de Zorvan, se pone la compu en al posicion 96
         gestionarTurno(event);
     }
@@ -1727,9 +1727,9 @@ public class tableroPartidaController implements Initializable,Observador {
                 int casillasExtras = resulNuevaPosicion - 99;
                 if(ganador==false){
                     if(casillasExtras==0){
+                        nombreGanadorJuego=jugadorTurno.getNombre();
                         dialogoZorvanGanador();
                         ganador=true;
-                        nombreGanadorJuego=jugadorTurno.getNombre();
                         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                         nuevaPosicion = 99;
                         mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
@@ -1759,7 +1759,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
         GridPane gP = new GridPane();
         Text txt = new Text("Zorvan: " +
-                "\n-¡Excelente guerrero@ "+ nombreGanadorJuego+"!" +
+                "\n-¡Excelente guerrer@ "+ nombreGanadorJuego+"!" +
                 "\nHas vencido las artimañas del juego y lo has logrado dignamente. "+
                 "\nEres el GANADOR del juego.");
         txt.setFont(Font.font("Matura MT Script Capitals", 20));
