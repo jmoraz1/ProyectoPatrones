@@ -5,8 +5,11 @@ import Patterns.Adapter.CasillaStoneAdapter;
 import Patterns.Decorator.Ataque;
 import Patterns.FactoryMethod.FabricaElementos;
 import Patterns.Prototype.CasillaDiablillo;
+import Patterns.Prototype.CasillaNormal;
 import Patterns.Prototype.CasillaQuerubin;
 import Patterns.Proxy.IMainController;
+import Patterns.Strategy.*;
+import Patterns.Visitor.RecibirAtaque;
 //import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -219,7 +222,6 @@ public class MainController implements IMainController{
         return nuevaPosicion;
     }
 
-
     public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
         ArrayList<Casilla> casillas=partida.casillas;
@@ -281,8 +283,60 @@ public class MainController implements IMainController{
         return partida.siguienteTurno();
     }
 
-    public void Ataque () {
-
+    public boolean Ataque (String jugador, ArrayList<Elemento> arr_elementos) {
+        Ficha f = partida.obtenerJugador(jugador).ficha;
+        ArrayList<Ficha> af = new ArrayList<>();
+        Casilla casilla =  new CasillaStoneAdapter(0);
+        int ataque = 0;
+        for (Casilla c: partida.casillas) {
+            af = c.getFichas();
+            casilla = c;
+            for (Ficha ficha:af) {
+                if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+                    ArrayList<Elemento> arr_elementos_Stone = ((CasillaStoneAdapter) c).getStone().getElementos();
+                    break;
+                }
+            }
+        }
+        //AtaqueElemento ataqueElemento = new AtaqueElemento();
+        AtaqueElemento ae;
+        for (Elemento e : arr_elementos) {
+            switch (e.getTipo()){
+                case "Agua":
+                    ae = new Estrategia_Agua("Agua", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+                case "Electrico":
+                    ae = new Estrategia_Electrico("Electrico", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+                case "Fuego":
+                    ae = new Estrategia_Fuego("Fuego", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+                case "Hielo":
+                    ae = new Estrategia_Hielo("Hielo", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+                case "Planta":
+                    ae = new Estrategia_Planta("Planta", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+                case "Roca":
+                    ae = new Estrategia_Roca("Roca", af);
+                    ae.Evaluar_Ventaja();
+                    ataque = ataque + ae.getAtaque();
+                    break;
+            }
+        }
+        RecibirAtaque ra = new RecibirAtaque();
+        ra.visit(casilla, ataque);
+        return true;
     }
 
     @Override

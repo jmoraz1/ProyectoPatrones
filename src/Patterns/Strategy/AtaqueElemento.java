@@ -1,21 +1,21 @@
 package Patterns.Strategy;
+import Entities.Elemento;
 import Interfaces.IAtaqueElemento;
 
+import javax.xml.bind.Element;
 import java.util.ArrayList;
 
 public abstract class AtaqueElemento implements IAtaqueElemento{
     private int ataque = 0;
-    private String nombreElemento;
     private String mejorElemento;
-    private ArrayList elementosContrincante;
+
+    private String nombreElemento;
+    private ArrayList<Elemento> elementosContrincante;
 
     public AtaqueElemento(String nombreElemento, ArrayList elementosContrincante) {
         this.nombreElemento = nombreElemento;
         this.elementosContrincante = elementosContrincante;
     }
-
-    @Override
-    public abstract void Evaluar_Ventaja();
 
     public int getAtaque() {
         return this.ataque;
@@ -47,4 +47,7 @@ public abstract class AtaqueElemento implements IAtaqueElemento{
     protected void setMejorElemento(String mejorElemento) {
         this.mejorElemento = mejorElemento;
     }
+
+    @Override
+    public abstract void Evaluar_Ventaja();
 }

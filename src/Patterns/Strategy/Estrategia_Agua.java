@@ -1,8 +1,10 @@
 package Patterns.Strategy;
 
+import Interfaces.IAtaqueElemento;
+
 import java.util.ArrayList;
 
-public class Estrategia_Agua extends AtaqueElemento{
+public class Estrategia_Agua extends AtaqueElemento {
 
     public Estrategia_Agua(String nombreElemento, ArrayList ElementosContrincante) {
         super(nombreElemento, ElementosContrincante);

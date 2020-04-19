@@ -2,7 +2,7 @@ package Patterns.Strategy;
 
 import java.util.ArrayList;
 
-public class Estrategia_Fuego extends AtaqueElemento{
+public class Estrategia_Fuego extends AtaqueElemento {
 
     public Estrategia_Fuego(String nombreElemento, ArrayList ElementosContrincante) {
         super(nombreElemento, ElementosContrincante);
