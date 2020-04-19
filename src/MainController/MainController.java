@@ -24,7 +24,6 @@ public class MainController implements IMainController{
 
     }*/
 
-
     //El tablero en el atributo turno ya posee el jugador que tiene el turno uno
     public  Tablero NuevaPartida(ArrayList<Jugador> jugadores)  throws IOException {
         Jugador[] arrJugadores= new Jugador[jugadores.size()];
@@ -187,6 +186,8 @@ public class MainController implements IMainController{
         return nuevaPosicion;
     }
 
+
+
     public int movimientoQuerubin() throws IOException {
         Ficha fichaActiva=partida.turno.getFicha();
         int posicionActual=obtenerPosicionJugador(fichaActiva);
@@ -216,6 +217,7 @@ public class MainController implements IMainController{
 
         return nuevaPosicion;
     }
+
 
     public int obtenerPosicionJugador(Ficha fichaActiva) {
         int index=0;
@@ -252,7 +254,6 @@ public class MainController implements IMainController{
 
 
     }
-
     public  String obtenerAtaque(){
         String ataque="";
         partida.dadoAtaque=new Ataque(partida.dadoAtaque);
