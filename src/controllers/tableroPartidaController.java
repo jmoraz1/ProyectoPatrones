@@ -1183,6 +1183,9 @@ public class tableroPartidaController implements Initializable,Observador {
 
         //falta ataque stone
         if(elementosAtacan != null){
+
+            mc.Ataque(jugadorTurno.getNombre(),elementosAtacan);
+
             for (Elemento e : elementosAtacan){
                 switch (e.getTipo()){
                     case "Planta":
@@ -1267,7 +1270,7 @@ public class tableroPartidaController implements Initializable,Observador {
         String nombreElemento2 = jugadorTurno.ficha.getPersonajes()[1].getElemento().getTipo();
         String nombreElemento3 = jugadorTurno.ficha.getPersonajes()[2].getElemento().getTipo();
         alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
-        boolean opcionesPoderes = false;
+
 
         Text txtInfo = new Text(infoPoder);
         txtInfo.setFont(Font.font("Matura MT Script Capitals", 30));
