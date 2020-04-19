@@ -190,7 +190,8 @@ public class tableroPartidaController implements Initializable,Observador {
         imgViewDado.setImage(imgDadoGirandoNumero);
         String urlImgDadoNumerico = "";
         //se genera el valor del dado de movimiento
-        int resultadoDadoMovimiento = mc.obtenerMovimiento();
+        String jugadorActivo=jugadorTurno.getNombre();
+        int resultadoDadoMovimiento = mc.obtenerMovimiento(jugadorActivo);
         //Según el resultado coloca la imagen del dado que coincide con su número
         switch (resultadoDadoMovimiento) {
             case 1:
@@ -581,7 +582,8 @@ public class tableroPartidaController implements Initializable,Observador {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
         imgViewDado.setImage(imgDadoGirandoNumero);
         String urlImgDadoNumerico = "";
-        int valorDadoMovimeinto = mc.obtenerMovimiento();
+        String jugadorActivo=jugadorTurno.getNombre();
+        int valorDadoMovimeinto = mc.obtenerMovimiento(jugadorActivo);
         switch (valorDadoMovimeinto) {
             case 1:
                 urlImgDadoNumerico = "/imgs/dadoUno.jpg";
