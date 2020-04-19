@@ -290,6 +290,20 @@ public class MainController implements IMainController{
         return this;
     }
 
+    public boolean casillaStone(String nombre){
+        Ficha f = partida.obtenerJugador(nombre).getFicha();
+        for (Casilla c: partida.casillas) {
+            ArrayList<Ficha> af = c.getFichas();
+            for (Ficha ficha:af) {
+                if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+    }
+
 
     public String poderPlanta(String jugador){
         String s ="Por dos turnos no deja que "+jugador+"  saque mas de tres en su dado de movimientos";
