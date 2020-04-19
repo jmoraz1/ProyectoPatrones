@@ -338,7 +338,7 @@ public class MainController implements IMainController{
 
     public String poderRoca(String jugador, int i){
         //cambiar string
-        String s = "El jugador "+jugador+"ha seleccionado colocar un stone en la casilla "+i;
+        String s = "Un jugador ha colocado un stone en la casilla de "+jugador;
             Jugador j = partida.obtenerJugador(jugador);
             CasillaStoneAdapter casillaStoneAdapter= generarStone(j.ficha);
             partida.casillas.set((i-1),casillaStoneAdapter);
