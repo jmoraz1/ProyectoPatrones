@@ -1,31 +1,38 @@
 package Patterns.Strategy;
 
-public class Estrategia_Planta extends AtaqueElemento{
+import java.util.ArrayList;
 
-    private boolean validacion;
+public class Estrategia_Planta extends AtaqueElemento {
 
-    public Estrategia_Planta(String nombreElemento, boolean validacion) {
-        super(nombreElemento);
-        this.validacion = validacion;
+    public Estrategia_Planta(String nombreElemento, ArrayList ElementosContrincante) {
+        super(nombreElemento, ElementosContrincante);
     }
 
     public boolean validacionDeElemento(String tipo_elemento) {
         switch (tipo_elemento){
             case "Agua":
             case "Electrico":
-                this.validacion = true;
-                break;
+                return true;
             default:
-                //en este caso de que no tenga ventaja como los elementos de fuego, hielo, planta y roca.
-                this.validacion = false;
-                break;
+                //en este caso de que no tenga ventaja como los elementos de fuego, hielo y roca.
+                return false;
         }
-
-        return validacion;
     }
 
     @Override
-    public boolean Evaluar_Ventaja() {
-        return validacionDeElemento(getNombreElemento());
+    public void Evaluar_Ventaja() {
+        for (int j=0; j<getElementosContrincante().size();j++){
+            if(((validacionDeElemento(getElementosContrincante().get(j).toString())))){
+                setAtaque(15);
+                setMejorElemento(getElementosContrincante().get(j));
+            } else if((getNombreElemento() == getElementosContrincante().get(j).toString()) && (getAtaque() < 10)){
+                setAtaque(10);
+                setMejorElemento(getElementosContrincante().get(j));
+            } else{
+                setAtaque(5);
+                setMejorElemento(getElementosContrincante().get(j) && (getAtaque() < 5));
+            }
+            getElementosContrincante().get(j).toString();
+        }
     }
 }
