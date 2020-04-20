@@ -299,24 +299,23 @@ public class MainController implements IMainController{
     public boolean stoneVencido (String jugador) {
         Ficha f = partida.obtenerJugador(jugador).ficha;
         ArrayList<Ficha> af = new ArrayList<>();
-        Casilla casilla = new CasillaStoneAdapter(0);
+
         for (Casilla c: partida.casillas) {
             af = c.getFichas();
-            casilla = c;
             for (Ficha ficha:af) {
                 if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
-                    ArrayList<Elemento> arr_elementos_Stone = ((CasillaStoneAdapter) c).getStone().getElementos();
-                    break;
+
+                    if (((CasillaStoneAdapter) c).getStone().getVida() > 0){
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
+
             }
         }
 
-        ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
-        if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
-            return false;
-        } else {
-            return true;
-        }
+        return  false;
     }
 
 
@@ -328,13 +327,15 @@ public class MainController implements IMainController{
         ArrayList<Elemento> arr_elementos_Stone= new ArrayList<>();
         for (Casilla c: partida.casillas) {
             af = c.getFichas();
-            casilla = c;
+
             for (Ficha ficha:af) {
                 if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+                    casilla = c;
                     arr_elementos_Stone = ((CasillaStoneAdapter) c).getStone().getElementos();
                     break;
                 }
             }
+
         }
 
         AtaqueElemento ae;
@@ -377,23 +378,23 @@ public class MainController implements IMainController{
         for (Jugador j:updated) {
             if (j.getNombre()==jugador){
                 ra.visit(casilla, ataque+5);
-                ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
+
                 if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
                     return "La vida actual del stone es: "+((CasillaStoneAdapter) casilla).getStone().getVida()+", su ataque ha sido de: "+(ataque+5);
                 } else {
                     return "Usted ha vencido el stone"+", su ataque ha sido de: "+(ataque+5);
                 }
-            }else {
-                ra.visit(casilla, ataque);
-                ((CasillaStoneAdapter) casilla).getStone().setVida(((CasillaStoneAdapter) casilla).getStone().getVida());
-                if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
-                    return "La vida actual del stone es: "+((CasillaStoneAdapter) casilla).getStone().getVida()+", su ataque ha sido de: "+ataque;
-                } else {
-                    return "Usted ha vencido el stone"+", su ataque ha sido de: "+ataque;
-                }
             }
+
         }
-        return "";
+        ra.visit(casilla, ataque);
+
+        if (((CasillaStoneAdapter) casilla).getStone().getVida() > 0){
+            return "La vida actual del stone es: "+((CasillaStoneAdapter) casilla).getStone().getVida()+", su ataque ha sido de: "+ataque;
+        } else {
+            return "Usted ha vencido el stone"+", su ataque ha sido de: "+ataque;
+        }
+
     }
 
     @Override
@@ -437,7 +438,7 @@ public class MainController implements IMainController{
     }
 
     public String poderFuego(String jugador, Elemento e){
-            String s = jugador+ "le otorga cinco puntos extra al personaje de "+e+" en la triada por dos turnos";
+            String s = jugador+ " le otorga cinco puntos extra al personaje de "+e.getTipo()+" en la triada por dos turnos";
             Jugador je = partida.obtenerJugador(jugador);
             return s;
     }

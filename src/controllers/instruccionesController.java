@@ -56,6 +56,6 @@ public class instruccionesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        txtAreaInstrucciones.setDisable(true);
     }
 }

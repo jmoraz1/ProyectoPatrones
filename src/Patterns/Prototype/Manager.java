@@ -43,7 +43,7 @@ public class Manager {
 
     private ArrayList<Casilla> incluirStones(ArrayList<Casilla> casillas) {
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             int randomIndex = rand.nextInt(casillas.size()-1);
             casillas.set(randomIndex,stone.clone());
         }
@@ -53,7 +53,7 @@ public class Manager {
 
     private ArrayList<Casilla> incluirQuerubines(ArrayList<Casilla> casillas) {
         Random rand = new Random();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 8; i++) {
             int randomIndex = rand.nextInt(casillas.size()-1);
             casillas.set(randomIndex,querubin.clone());
         }
@@ -63,7 +63,7 @@ public class Manager {
 
     private ArrayList<Casilla> incluirDiablitos(ArrayList<Casilla>  casillas){
         Random rand = new Random();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 8; i++) {
             int randomIndex = rand.nextInt(casillas.size()-1);
             casillas.set(randomIndex,diablito.clone());
         }

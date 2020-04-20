@@ -233,7 +233,7 @@ public class tableroPartidaController implements Initializable,Observador {
 
         //ELSE LLAMAR DADO MOVIMIENTO
 
-        if(mc.casillaStone(jugadorTurno.getNombre())){
+        if(mc.casillaStone(jugadorTurno.getNombre()) && !mc.stoneVencido(jugadorTurno.getNombre())){
             //habilita dado ataque y deshabilita dado movimiento
             turnoDadoAtaque();
             tirarDadoAtaque();
@@ -680,47 +680,31 @@ public class tableroPartidaController implements Initializable,Observador {
 
         String resultadoDadoAtaque = mc.obtenerAtaque();
         informacionResultadoDadoAtaque = resultadoDadoAtaque;
-
+        String urlImgDadoNumerico = "";
         switch (resultadoDadoAtaque) {
             case "Tu girada ha resultado en ataca un personaje de la triada":
+                urlImgDadoNumerico = "/imgs/atacaUnPersonajeTriada.jpg";
                 valorDadoAtaque = 1;
                 break;
             case "Tu girada ha resultado en atacan dos personajes de la triada":
+                urlImgDadoNumerico = "/imgs/atacanDosPersonajesTriada.jpg";
                 valorDadoAtaque = 2;
                 break;
             case "Tu girada ha resultado en ataca tres personaje de la triada":
+                urlImgDadoNumerico = "/imgs/atacanTresPersonajesTriada.jpg";
                 valorDadoAtaque = 3;
                 break;
             case "Tu girada ha resultado en ataca solo un personaje y puede activar un poder especial de cualquiera":
+                urlImgDadoNumerico = "/imgs/atacaUnPersonaActivaPoderEspecial.jpg";
                 valorDadoAtaque = 4;
                 break;
             case "Tu girada ha resultado en atacan dos personajes y se activa un poder especial":
+                urlImgDadoNumerico = "/imgs/atacanDosPersonajesPoderEspecial.jpg";
                 valorDadoAtaque = 5;
                 break;
             case "Tu girada ha resultado en atacan todos los personajes y se activan dos poderes especiales":
-                valorDadoAtaque = 6;
-                break;
-        }
-
-        String urlImgDadoNumerico = "";
-        switch (valorDadoAtaque) {
-            case 1:
-                urlImgDadoNumerico = "/imgs/atacaUnPersonajeTriada.jpg";
-                break;
-            case 2:
-                urlImgDadoNumerico = "/imgs/atacaUnPersonaActivaPoderEspecial.jpg";
-                break;
-            case 3:
-                urlImgDadoNumerico = "/imgs/atacanDosPersonajesTriada.jpg";
-                break;
-            case 4:
-                urlImgDadoNumerico = "/imgs/atacanDosPersonajesPoderEspecial.jpg";
-                break;
-            case 5:
-                urlImgDadoNumerico = "/imgs/atacanTresPersonajesTriada.jpg";
-                break;
-            case 6:
                 urlImgDadoNumerico = "/imgs/dadoAtacanTodosDosPoderEspeciales.jpg";
+                valorDadoAtaque = 6;
                 break;
         }
         Image imgDadoAta = new Image(urlImgDadoNumerico);
@@ -1183,34 +1167,13 @@ public class tableroPartidaController implements Initializable,Observador {
 
         //falta ataque stone
         if(elementosAtacan != null){
-
-            mc.Ataque(jugadorTurno.getNombre(),elementosAtacan);
-
-            for (Elemento e : elementosAtacan){
-                switch (e.getTipo()){
-                    case "Planta":
-
-                        break;
-                    case "Electrico":
-
-                        break;
-                    case "Hielo":
-
-                        break;
-                    case "Fuego":
-
-                        break;
-                    case "Agua":
-
-                        break;
-                    default:
-
-                        break;
-                }
-            }
+            dialogoAtaqueAStone(mc.Ataque(jugadorTurno.getNombre(),elementosAtacan));
+            elementosAtacan = null;
         }
 
         if(poderesAtacan != null){
+
+            boolean existeAgua = false;
             for (Elemento e : poderesAtacan){
                 switch (e.getTipo()){
                     case "Planta":
@@ -1239,26 +1202,60 @@ public class tableroPartidaController implements Initializable,Observador {
                         dialogoPoder(mc.poderFuego(jugadorTurno.getNombre(), elementoAAfectarPorPoder),"Fuego");
                         break;
                     case "Agua":
-                        //lanzar dado ataque de nuevo
-                        String infoPoderAgua =  mc.poderAgua();
-                        dialogoPoderAgua(infoPoderAgua);
-                        turnoDadoAtaque();
-                        tirarDadoAtaque();
-                        decisionJugadorStone();
-                        gestionarElementosPoderesContraStoneContrincantes();
+                        existeAgua = true;
                         break;
                     default:
                         String infoPoderRoca = "Selecciona el jugador al que deseas colocarle un stone";
                         decisionJugadorPoderAplicar(infoPoderRoca, "Roca");
                         int posicionRoca = mc.obtenerIndice(jugadorAAfectarPorPoder);
-                        circleStone(posicionRoca);
+                        anchorPaneTablero.getChildren().add(circleStone(posicionRoca));
                         dialogoPoder(mc.poderRoca(jugadorAAfectarPorPoder),"Roca");
-
                         break;
                 }
             }
+
+            if(existeAgua){
+                String infoPoderAgua =  mc.poderAgua();
+                dialogoPoderAgua(infoPoderAgua);
+                if(!mc.stoneVencido(jugadorTurno.getNombre())){
+                    poderesAtacan = null;
+                    elementosAtacan = null;
+                    turnoDadoAtaque();
+                    tirarDadoAtaque();
+                    decisionJugadorStone();
+                    gestionarElementosPoderesContraStoneContrincantes();
+                }else{
+                    dialogoPoderAguaStoneVencido();
+                }
+            }
+
+            poderesAtacan = null;
         }
 
+
+
+    }
+
+    public void dialogoAtaqueAStone(String resultadoAtaque){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Resultado ataque");
+
+        GridPane gP = new GridPane();
+        Text txt = new Text(resultadoAtaque);
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+
+        gP.add(txt, 0,0);
+        ImageView imgZorvan = new ImageView();
+        Image imgZ = new Image("/imgs/stone.jpeg");
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(100);
+        imgZorvan.setFitWidth(100);
+        gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(300, 200);
+        alert.showAndWait();
     }
 
     public void decisionJugadorPoderAplicar(String infoPoder, String tipoPoder) throws IOException {
@@ -1485,7 +1482,7 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.getDialogPane().setPrefSize(800, 400);
         alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
 
-        if(cantidadJugadores ==2){
+        if(cantidadJugadores ==2 && tipoPoder !="Fuego"){
             cbJ1.setSelected(true);
             cbJ1.setDisable(true);
             alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
@@ -1523,12 +1520,12 @@ public class tableroPartidaController implements Initializable,Observador {
                 case "Fuego":
                     if (cb1Elemento.isSelected()) {
                         elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb1Elemento.getText());
-                        if (cb2Elemento.isSelected()) {
-                            elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb2Elemento.getText());
-                        }
-                        if (cb3Elemento.isSelected()) {
-                            elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb3Elemento.getText());
-                        }
+                    }
+                    if (cb2Elemento.isSelected()) {
+                        elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb2Elemento.getText());
+                    }
+                    if (cb3Elemento.isSelected()) {
+                        elementoAAfectarPorPoder = fabElementos.obtenerElemento(cb3Elemento.getText());
                     }
             }
         }
@@ -1556,9 +1553,31 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    public void dialogoPoderAguaStoneVencido(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Poder agua");
+
+        GridPane gP = new GridPane();
+        Text txt = new Text("El stone ya se venció. Poder agua no disponible.");
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+
+        gP.add(txt, 0,0);
+        ImageView imgZorvan = new ImageView();
+        Image imgZ = new Image("/imgs/Agua.png");
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(100);
+        imgZorvan.setFitWidth(100);
+        gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(300, 200);
+        alert.showAndWait();
+    }
+
     public void dialogoPoder(String infoPoder, String tipoPoder){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Poder" + tipoPoder);
+        alert.setTitle("Poder");
 
         GridPane gP = new GridPane();
         Text txt = new Text(infoPoder);
@@ -1592,12 +1611,6 @@ public class tableroPartidaController implements Initializable,Observador {
         imgZorvan.setFitHeight(100);
         imgZorvan.setFitWidth(100);
         gP.add(imgZorvan, 0, 1);
-
-        Text txt2 = new Text(infoPoder);
-        txt2.setFont(Font.font("Matura MT Script Capitals", 20));
-        txt2.setFill(Color.rgb(58,54,21));
-        gP.add(txt2, 0,2);
-
 
         alert.getDialogPane().setContent(gP);
         alert.setResizable(true);
