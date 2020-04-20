@@ -1801,9 +1801,9 @@ public class tableroPartidaController implements Initializable,Observador {
                 int casillasExtras = resulNuevaPosicion - 99;
                 if(ganador==false){
                     if(casillasExtras==0){
+                        nombreGanadorJuego=jugadorTurno.getNombre();
                         dialogoZorvanGanador();
                         ganador=true;
-                        nombreGanadorJuego=jugadorTurno.getNombre();
                         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                         nuevaPosicion = 99;
                         mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
