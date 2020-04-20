@@ -44,6 +44,7 @@ import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -206,9 +207,9 @@ public class tableroPartidaController implements Initializable,Observador {
         ActionEvent event=new ActionEvent();
         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
         dialogoTurnoComputadora();
-        if(posicionActual==0){
-            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
-        }
+//        if(posicionActual==0){
+//            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
+//        }
 //            para probar lo de Zorvan, se pone la compu en al posicion 96
         gestionarTurno(event);
     }
@@ -234,11 +235,17 @@ public class tableroPartidaController implements Initializable,Observador {
         //ELSE LLAMAR DADO MOVIMIENTO
 
         if(mc.casillaStone(jugadorTurno.getNombre()) && !mc.stoneVencido(jugadorTurno.getNombre())){
-            //habilita dado ataque y deshabilita dado movimiento
             turnoDadoAtaque();
             tirarDadoAtaque();
-            decisionJugadorStone();
-            gestionarElementosPoderesContraStoneContrincantes();
+            if(jugadorTurno.getNombre().equals("Computadora")){
+                decisionComputadoraStone();
+                gestionarElementosPoderesContraStoneContrincantes();
+            }else{
+                //habilita dado ataque y deshabilita dado movimiento
+                decisionJugadorStone();
+                gestionarElementosPoderesContraStoneContrincantes();
+            }
+
         }else{
             turnoDadoMovimiento();
             gestionarTurnoDadoMovimiento(posicionActual);
@@ -247,6 +254,210 @@ public class tableroPartidaController implements Initializable,Observador {
         cambiarTurno();
     }
 
+
+    public void decisionComputadoraStone() throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText("Hora de atacar guerrero. "+informacionResultadoDadoAtaque);
+        String nombreElemento1 = jugadorTurno.ficha.getPersonajes()[0].getElemento().getTipo();
+        String nombreElemento2 = jugadorTurno.ficha.getPersonajes()[1].getElemento().getTipo();
+        String nombreElemento3 = jugadorTurno.ficha.getPersonajes()[2].getElemento().getTipo();
+        boolean opcionesPoderes = false;
+
+        GridPane gP = new GridPane();
+
+        Text txtAtaca = new Text("Ataque de: ");
+        txtAtaca.setFont(Font.font("Matura MT Script Capitals", 30));
+        txtAtaca.setFill(Color.rgb(58, 54, 21));
+        gP.add(txtAtaca, 0, 0);
+        //Columna 0
+        cb1Elemento = new CheckBox(nombreElemento1);
+        cb1Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        cb1Elemento.setDisable(true);
+        gP.add(cb1Elemento, 0, 1);
+
+        cb2Elemento = new CheckBox(nombreElemento2);
+        cb2Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        cb2Elemento.setDisable(true);
+        gP.add(cb2Elemento, 0, 2);
+
+        cb3Elemento = new CheckBox(nombreElemento3);
+        cb3Elemento.setFont(Font.font("Matura MT Script Capitals", 30));
+        cb3Elemento.setDisable(true);
+        gP.add(cb3Elemento, 0, 3);
+
+        //Columna 1
+        ImageView img1Elemento = new ImageView();
+        Image img1 = new Image("/imgs/" + nombreElemento1 + ".png");
+        img1Elemento.setImage(img1);
+        img1Elemento.setFitHeight(50);
+        img1Elemento.setFitWidth(50);
+        gP.add(img1Elemento, 1, 1);
+
+        ImageView img2Elemento = new ImageView();
+        Image img2 = new Image("/imgs/" + nombreElemento2 + ".png");
+        img2Elemento.setImage(img2);
+        img2Elemento.setFitHeight(50);
+        img2Elemento.setFitWidth(50);
+        gP.add(img2Elemento, 1, 2);
+
+        ImageView img3Elemento = new ImageView();
+        Image img3 = new Image("/imgs/" + nombreElemento3 + ".png");
+        img3Elemento.setImage(img3);
+        img3Elemento.setFitHeight(50);
+        img3Elemento.setFitWidth(50);
+        gP.add(img3Elemento, 1, 3);
+
+        int seleccionElemento=0;
+        switch (valorDadoAtaque) {
+            case 1:
+            case 4:
+                seleccionElemento = (int) Math.floor(Math.random()*3+1);
+                switch (seleccionElemento){
+                    case 1:
+                        cb1Elemento.setSelected(true);
+
+                        break;
+                    case 2:
+                        cb2Elemento.setSelected(true);
+
+                        break;
+                    case 3:
+                        cb3Elemento.setSelected(true);
+
+                        break;
+                }
+                break;
+            case 2:
+            case 5:
+                int seleccionElemento2=0;
+                seleccionElemento = (int) Math.floor(Math.random()*3+1);
+                do{
+                    seleccionElemento2=(int) Math.floor(Math.random()*3+1);
+                }while(seleccionElemento==seleccionElemento2);
+
+                if(seleccionElemento==1 || seleccionElemento2==1){
+                    cb1Elemento.setSelected(true);
+                }
+                if(seleccionElemento==2 || seleccionElemento2==2){
+                    cb2Elemento.setSelected(true);
+                }
+                if(seleccionElemento==3 || seleccionElemento2==3){
+                    cb3Elemento.setSelected(true);
+                }
+               break;
+            case 3:
+            case 6:
+                cb1Elemento.setSelected(true);
+                cb2Elemento.setSelected(true);
+                cb3Elemento.setSelected(true);
+                break;
+
+
+        }
+
+
+        //Columna 2
+        if (valorDadoAtaque==4||valorDadoAtaque==5||valorDadoAtaque==6) {
+            Text txtPoder = new Text("Poder especial de: ");
+            txtPoder.setFont(Font.font("Matura MT Script Capitals", 30));
+            txtPoder.setFill(Color.rgb(58, 54, 21));
+            gP.add(txtPoder, 2, 0);
+            cb1Ataque = new CheckBox(nombreElemento1);
+            cb1Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            cb1Ataque.setDisable(true);
+            gP.add(cb1Ataque, 2, 1);
+            cb2Ataque = new CheckBox(nombreElemento2);
+            cb2Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            cb2Ataque.setDisable(true);
+            gP.add(cb2Ataque, 2, 2);
+            cb3Ataque = new CheckBox(nombreElemento3);
+            cb3Ataque.setFont(Font.font("Matura MT Script Capitals", 30));
+            cb3Ataque.setDisable(true);
+            gP.add(cb3Ataque, 2, 3);
+            int seleccionPoderEspecial=0;
+            switch (valorDadoAtaque){
+                case 4:
+                case 5:
+                    seleccionPoderEspecial=(int) Math.floor(Math.random()*3+1);
+                    switch (seleccionPoderEspecial){
+                        case 1:
+                            cb1Ataque.setSelected(true);
+
+                            break;
+                        case 2:
+                            cb2Ataque.setSelected(true);
+
+                            break;
+                        case 3:
+                            cb3Ataque.setSelected(true);
+
+                            break;
+                    }
+                    break;
+                case 6:
+                    int seleccionPoder2=0;
+                    seleccionPoderEspecial = (int) Math.floor(Math.random()*3+1);
+                    do{
+                        seleccionPoder2=(int) Math.floor(Math.random()*3+1);
+                    }while(seleccionPoderEspecial==seleccionPoder2);
+
+                    if(seleccionPoderEspecial==1 || seleccionPoder2==1){
+                        cb1Ataque.setSelected(true);
+                    }
+                    if(seleccionPoderEspecial==2 || seleccionPoder2==2){
+                        cb2Ataque.setSelected(true);
+                    }
+                    if(seleccionPoderEspecial==3 || seleccionPoder2==3){
+                        cb3Ataque.setSelected(true);
+                    }
+                    break;
+
+
+
+
+            }
+        }
+
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(800, 400);
+        alert.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
+
+        //Para validar botón
+        Optional<ButtonType> result = alert.showAndWait();
+        if
+        (!result.isPresent()) {
+        }
+        else if (result.get() == ButtonType.OK) {
+            elementosAtacan  = new   ArrayList<Elemento>();
+            if(cb1Elemento.isSelected()){
+                elementosAtacan.add(fabElementos.obtenerElemento(cb1Elemento.getText()));
+            }
+            if(cb2Elemento.isSelected()){
+                elementosAtacan.add(fabElementos.obtenerElemento(cb2Elemento.getText()));
+            }
+            if(cb3Elemento.isSelected()){
+                elementosAtacan.add(fabElementos.obtenerElemento(cb3Elemento.getText()));
+            }
+
+            if(valorDadoAtaque ==4 || valorDadoAtaque == 5 || valorDadoAtaque ==6){
+                poderesAtacan = new ArrayList<Elemento>();
+                if(cb1Ataque.isSelected()){
+                    poderesAtacan.add(fabElementos.obtenerElemento(cb1Ataque.getText()));
+                }
+                if(cb2Ataque.isSelected()){
+                    poderesAtacan.add(fabElementos.obtenerElemento(cb2Ataque.getText()));
+                }
+                if(cb3Ataque.isSelected()){
+                    poderesAtacan.add(fabElementos.obtenerElemento(cb3Ataque.getText()));
+                }
+            }
+
+        }
+
+    }
     //Se usa cuándo el jugador en turno está habilitado para jugar por movimiento
     public void gestionarTurnoDadoMovimiento(int posicionActual)throws IOException {
         Image imgDadoGirandoNumero = new Image("/imgs/dadoNumericoGirando.gif");
@@ -1303,7 +1514,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     cbJ2.setFont(Font.font("Matura MT Script Capitals", 30));
                     gP.add(cbJ2, 0, 2);
 
-                    if (cantidadJugadores == 3) {
+                    if (cantidadJugadores == 3 && !jugadorTurno.getNombre().equals("Computadora")) {
                         EventHandler eValidacionJugador3 = new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
@@ -1331,61 +1542,90 @@ public class tableroPartidaController implements Initializable,Observador {
                         cbJ3 = new CheckBox(arrayNombreJugadores[2]);
                         cbJ3.setFont(Font.font("Matura MT Script Capitals", 30));
                         gP.add(cbJ3, 0, 2);
-
-                        EventHandler eValidacionJugador4 = new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                if (event.getSource() instanceof CheckBox) {
-                                    CheckBox chk = (CheckBox) event.getSource();
+                        if(!jugadorTurno.getNombre().equals("Computadora")){
+                            EventHandler eValidacionJugador4 = new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    if (event.getSource() instanceof CheckBox) {
+                                        CheckBox chk = (CheckBox) event.getSource();
 //
-                                    if (cbJ1.getText().equals(chk.getText())) {
-                                        cbJ2.setSelected(!cbJ1.isSelected());
-                                        cbJ3.setSelected(!cbJ1.isSelected());
+                                        if (cbJ1.getText().equals(chk.getText())) {
+                                            cbJ2.setSelected(!cbJ1.isSelected());
+                                            cbJ3.setSelected(!cbJ1.isSelected());
 
-                                    } else if (cbJ2.getText().equals(chk.getText())) {
-                                        cbJ1.setSelected(!cbJ2.isSelected());
-                                        cbJ3.setSelected(!cbJ2.isSelected());
+                                        } else if (cbJ2.getText().equals(chk.getText())) {
+                                            cbJ1.setSelected(!cbJ2.isSelected());
+                                            cbJ3.setSelected(!cbJ2.isSelected());
 
-                                    } else if (cbJ3.getText().equals(chk.getText())) {
-                                        cbJ1.setSelected(!cbJ3.isSelected());
-                                        cbJ2.setSelected(!cbJ3.isSelected());
+                                        } else if (cbJ3.getText().equals(chk.getText())) {
+                                            cbJ1.setSelected(!cbJ3.isSelected());
+                                            cbJ2.setSelected(!cbJ3.isSelected());
 
-                                    }
+                                        }
 
-                                    if ((cbJ1.isSelected() ||
-                                            cbJ2.isSelected() ||
-                                            cbJ3.isSelected())
-                                            &&
-                                            (
-                                                    (cbJ1.isSelected() != cbJ2.isSelected() &&
-                                                            cbJ1.isSelected() != cbJ3.isSelected())
-                                                            ||
-                                                            (cbJ2.isSelected() != cbJ1.isSelected() &&
-                                                                    cbJ2.isSelected() != cbJ3.isSelected())
-                                                            ||
-                                                            (cbJ3.isSelected() != cbJ1.isSelected() &&
-                                                                    cbJ3.isSelected() != cbJ2.isSelected())
-                                            )
-                                    ) {
+                                        if ((cbJ1.isSelected() ||
+                                                cbJ2.isSelected() ||
+                                                cbJ3.isSelected())
+                                                &&
+                                                (
+                                                        (cbJ1.isSelected() != cbJ2.isSelected() &&
+                                                                cbJ1.isSelected() != cbJ3.isSelected())
+                                                                ||
+                                                                (cbJ2.isSelected() != cbJ1.isSelected() &&
+                                                                        cbJ2.isSelected() != cbJ3.isSelected())
+                                                                ||
+                                                                (cbJ3.isSelected() != cbJ1.isSelected() &&
+                                                                        cbJ3.isSelected() != cbJ2.isSelected())
+                                                )
+                                        ) {
 
-                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                                            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
 
 
-                                    } else {
-                                        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                                        } else {
+                                            alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                                        }
+
                                     }
 
                                 }
 
-                            }
-
-                        };
-
-                        cbJ1.setOnAction(eValidacionJugador4);
-                        cbJ2.setOnAction(eValidacionJugador4);
-                        cbJ3.setOnAction(eValidacionJugador4);
+                            };
+                            cbJ1.setOnAction(eValidacionJugador4);
+                            cbJ2.setOnAction(eValidacionJugador4);
+                            cbJ3.setOnAction(eValidacionJugador4);
+                        }
 
                     }
+                }
+                if(jugadorTurno.getNombre().equals("Computadora")){
+                    alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                    cbJ1.setDisable(true);
+                    int seleccionJugador=0;
+                    if(cantidadJugadores==3){
+                        cbJ2.setDisable(true);
+                        seleccionJugador=(int) Math.floor(Math.random()*2+1);
+                     }else if(cantidadJugadores==4){
+                        cbJ2.setDisable(true);
+                        cbJ3.setDisable(true);
+                        seleccionJugador=(int) Math.floor(Math.random()*2+1);
+                    }
+
+                    switch (seleccionJugador){
+                        case 1:
+                            cbJ1.setSelected(true);
+
+                            break;
+                        case 2:
+                            cbJ2.setSelected(true);
+
+                            break;
+                        case 3:
+                            cbJ3.setSelected(true);
+
+                            break;
+                    }
+
                 }
                 break;
             //selecciona elemento triada
@@ -1420,56 +1660,79 @@ public class tableroPartidaController implements Initializable,Observador {
                 img3Elemento.setFitHeight(50);
                 img3Elemento.setFitWidth(50);
                 gP.add(img3Elemento, 1, 3);
-
-                EventHandler ePrimerValidacionElemento = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (event.getSource() instanceof CheckBox) {
-                            CheckBox chk = (CheckBox) event.getSource();
+                if(!jugadorTurno.getNombre().equals("Computadora")){
+                    EventHandler ePrimerValidacionElemento = new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if (event.getSource() instanceof CheckBox) {
+                                CheckBox chk = (CheckBox) event.getSource();
 //
-                            if (nombreElemento1.equals(chk.getText())) {
-                                cb2Elemento.setSelected(!cb1Elemento.isSelected());
-                                cb3Elemento.setSelected(!cb1Elemento.isSelected());
+                                if (nombreElemento1.equals(chk.getText())) {
+                                    cb2Elemento.setSelected(!cb1Elemento.isSelected());
+                                    cb3Elemento.setSelected(!cb1Elemento.isSelected());
 
-                            } else if (nombreElemento2.equals(chk.getText())) {
-                                cb1Elemento.setSelected(!cb2Elemento.isSelected());
-                                cb3Elemento.setSelected(!cb2Elemento.isSelected());
+                                } else if (nombreElemento2.equals(chk.getText())) {
+                                    cb1Elemento.setSelected(!cb2Elemento.isSelected());
+                                    cb3Elemento.setSelected(!cb2Elemento.isSelected());
 
-                            } else if (nombreElemento3.equals(chk.getText())) {
-                                cb1Elemento.setSelected(!cb3Elemento.isSelected());
-                                cb2Elemento.setSelected(!cb3Elemento.isSelected());
+                                } else if (nombreElemento3.equals(chk.getText())) {
+                                    cb1Elemento.setSelected(!cb3Elemento.isSelected());
+                                    cb2Elemento.setSelected(!cb3Elemento.isSelected());
 
+                                }
+
+                                if ((cb1Elemento.isSelected() ||
+                                        cb2Elemento.isSelected() ||
+                                        cb3Elemento.isSelected())
+                                        &&
+                                        (
+                                                (cb1Elemento.isSelected() != cb2Elemento.isSelected() &&
+                                                        cb1Elemento.isSelected() != cb3Elemento.isSelected())
+                                                        ||
+                                                        (cb2Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                                cb2Elemento.isSelected() != cb3Elemento.isSelected())
+                                                        ||
+                                                        (cb3Elemento.isSelected() != cb1Elemento.isSelected() &&
+                                                                cb3Elemento.isSelected() != cb2Elemento.isSelected())
+                                        )
+                                ) {
+                                    alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+
+                                } else {
+                                    alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                                }
                             }
 
-                            if ((cb1Elemento.isSelected() ||
-                                    cb2Elemento.isSelected() ||
-                                    cb3Elemento.isSelected())
-                                    &&
-                                    (
-                                            (cb1Elemento.isSelected() != cb2Elemento.isSelected() &&
-                                                    cb1Elemento.isSelected() != cb3Elemento.isSelected())
-                                                    ||
-                                                    (cb2Elemento.isSelected() != cb1Elemento.isSelected() &&
-                                                            cb2Elemento.isSelected() != cb3Elemento.isSelected())
-                                                    ||
-                                                    (cb3Elemento.isSelected() != cb1Elemento.isSelected() &&
-                                                            cb3Elemento.isSelected() != cb2Elemento.isSelected())
-                                    )
-                            ) {
-                                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
-
-                            } else {
-                                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
-                            }
                         }
 
+                    };
+                    cb1Elemento.setOnAction(ePrimerValidacionElemento);
+                    cb2Elemento.setOnAction(ePrimerValidacionElemento);
+                    cb3Elemento.setOnAction(ePrimerValidacionElemento);
+                }
+
+                if(jugadorTurno.getNombre().equals("Computadora")){
+                    alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+                    cb1Elemento.setDisable(true);
+                    cb2Elemento.setDisable(true);
+                    cb3Elemento.setDisable(true);
+                    int seleccionElemento=0;
+                    seleccionElemento=(int) Math.floor(Math.random()*3+1);
+
+
+                    switch (seleccionElemento){
+                        case 1:
+                            cb1Elemento.setSelected(true);
+                            break;
+                        case 2:
+                            cb2Elemento.setSelected(true);
+                            break;
+                        case 3:
+                            cb3Elemento.setSelected(true);
+                            break;
                     }
 
-                };
-
-                cb1Elemento.setOnAction(ePrimerValidacionElemento);
-                cb2Elemento.setOnAction(ePrimerValidacionElemento);
-                cb3Elemento.setOnAction(ePrimerValidacionElemento);
+                }
                 break;
             //vuelve a tirar dado
             case "Agua":
