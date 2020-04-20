@@ -2063,9 +2063,14 @@ public class tableroPartidaController implements Initializable,Observador {
                 mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
 
             }else if(value.equals("Stone")){
-                dialogoStone();
-                //no se puede usar obtener turno porque mueve al jugador
-                 mc.partida.turno.setInabilitado(true);
+                int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
+                CasillaStoneAdapter casillaStone=(CasillaStoneAdapter) mc.partida.casillas.get(posicionActual);
+                if(casillaStone.getVidaStone()>0){
+                    dialogoStone();
+                    //no se puede usar obtener turno porque mueve al jugador
+                    mc.partida.turno.setInabilitado(true);
+                }
+
                 //para validar si el jugador no puede moverse hasta matar al stone
             }else if(value.equals("Zorvan")){
                 int casillasExtras = resulNuevaPosicion - 99;

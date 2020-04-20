@@ -7,6 +7,7 @@ import Patterns.FactoryMethod.FabricaElementos;
 import Patterns.Prototype.CasillaDiablillo;
 import Patterns.Prototype.CasillaNormal;
 import Patterns.Prototype.CasillaQuerubin;
+import Patterns.Prototype.Manager;
 import Patterns.Proxy.IMainController;
 import Patterns.Strategy.*;
 import Patterns.Visitor.RecibirAtaque;
@@ -308,7 +309,7 @@ public class MainController implements IMainController{
                     if (((CasillaStoneAdapter) c).getStone().getVida() > 0){
                         return false;
                     } else {
-                        ((CasillaStoneAdapter) c).getStone().setVida(100);
+//                        ((CasillaStoneAdapter) c).getStone().setVida(100);
                         return true;
                     }
                 }
@@ -583,9 +584,10 @@ public class MainController implements IMainController{
                 elementoNuevoStone.add(f);
                 break;
         }
-
-        Stone s = new Stone(60, elementoNuevoStone);
-        CasillaStoneAdapter csa= new CasillaStoneAdapter(s);
+        Manager mng=new Manager();
+        CasillaStoneAdapter csa= mng.generarCasillaStone();
+        csa.setElementosStone(elementoNuevoStone);
+        csa.setVidaStone(60);
         csa.setFicha(ficha);
         return csa;
     }

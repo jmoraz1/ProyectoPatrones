@@ -1,6 +1,7 @@
 package Patterns.Prototype;
 
 import Entities.Casilla;
+import Entities.Elemento;
 import Patterns.Adapter.CasillaStoneAdapter;
 
 import java.util.ArrayList;
@@ -54,6 +55,11 @@ public class Manager {
 
     public CasillaStoneAdapter generarCasillaStone(){
         return ((CasillaStoneAdapter)stone.clone());
+    }
+
+    public void setElementosStone (ArrayList<Elemento >elementos, Casilla casilla){
+        CasillaStoneAdapter casillaStoneAdapter=(CasillaStoneAdapter)casilla;
+        casillaStoneAdapter.setElementosStone(elementos);
     }
 
     private ArrayList<Casilla> incluirQuerubines(ArrayList<Casilla> casillas) {
