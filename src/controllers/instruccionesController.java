@@ -19,8 +19,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class instruccionesController implements Initializable {
-    @FXML
-    private TextArea txtAreaInstrucciones;
+
 
 
     public void salir(ActionEvent event) throws IOException {
@@ -56,6 +55,6 @@ public class instruccionesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        txtAreaInstrucciones.setDisable(true);
+
     }
 }
