@@ -198,7 +198,7 @@ public class tableroPartidaController implements Initializable,Observador {
             numFicha++;
         }
 
-        if(jugadorTurno.getNombre().equals("Computadora")){
+        if(jugadorTurno.getNombre().equals("Computadora") && !terminaJuego){
            turnoPC();
         }
     }
@@ -233,25 +233,27 @@ public class tableroPartidaController implements Initializable,Observador {
         //VALIDAR SI POSICIÓN ACTUAL DE JUGADOR ES STONE Y SI NO LO HA VENCIDO
 
         //ELSE LLAMAR DADO MOVIMIENTO
+        if(!terminaJuego){
+            if(mc.casillaStone(jugadorTurno.getNombre()) && !mc.stoneVencido(jugadorTurno.getNombre())){
+                turnoDadoAtaque();
+                tirarDadoAtaque();
+                if(jugadorTurno.getNombre().equals("Computadora")){
+                    decisionComputadoraStone();
+                    gestionarElementosPoderesContraStoneContrincantes();
+                }else{
+                    //habilita dado ataque y deshabilita dado movimiento
+                    decisionJugadorStone();
+                    gestionarElementosPoderesContraStoneContrincantes();
+                }
 
-        if(mc.casillaStone(jugadorTurno.getNombre()) && !mc.stoneVencido(jugadorTurno.getNombre())){
-            turnoDadoAtaque();
-            tirarDadoAtaque();
-            if(jugadorTurno.getNombre().equals("Computadora")){
-                decisionComputadoraStone();
-                gestionarElementosPoderesContraStoneContrincantes();
             }else{
-                //habilita dado ataque y deshabilita dado movimiento
-                decisionJugadorStone();
-                gestionarElementosPoderesContraStoneContrincantes();
+                turnoDadoMovimiento();
+                gestionarTurnoDadoMovimiento(posicionActual);
             }
-
-        }else{
-            turnoDadoMovimiento();
-            gestionarTurnoDadoMovimiento(posicionActual);
+            //Cambiar turnonuevo jugador en turno
+            cambiarTurno();
         }
-        //Cambiar turnonuevo jugador en turno
-        cambiarTurno();
+
     }
 
 
@@ -535,7 +537,7 @@ public class tableroPartidaController implements Initializable,Observador {
             } else if (i == 100) {
                 EjeXYCasilla ejeCasilla = new EjeXYCasilla(i, 1130, 555);
                 coordenadasCasilla.add(ejeCasilla);
-                EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1130, 530);
+                EjeXYCasilla ejeCasillaF = new EjeXYCasilla(i, 1077, 525);
                 coordenadasCasillaFicha.add(ejeCasillaF);
             } else {
 
@@ -1427,8 +1429,9 @@ public class tableroPartidaController implements Initializable,Observador {
 
             if(existeAgua){
                 String infoPoderAgua =  mc.poderAgua();
-                dialogoPoderAgua(infoPoderAgua);
-                if(!mc.stoneVencido(jugadorTurno.getNombre())){
+
+                if(!mc.stoneVencidoParaAgua(jugadorTurno.getNombre())){
+                    dialogoPoderAgua(infoPoderAgua);
                     poderesAtacan = null;
                     elementosAtacan = null;
                     turnoDadoAtaque();
@@ -2069,13 +2072,14 @@ public class tableroPartidaController implements Initializable,Observador {
                 if(ganador==false){
                     if(casillasExtras==0){
                         nombreGanadorJuego=jugadorTurno.getNombre();
-                        dialogoZorvanGanador();
+                        terminaJuego = true;
                         ganador=true;
                         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                         nuevaPosicion = 99;
                         mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
                         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                        dialogoZorvanGanador();
                     }else{
                         dialogoZorvan(casillasExtras);
                         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);

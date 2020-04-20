@@ -52,6 +52,10 @@ public class Manager {
         return casillas;
     }
 
+    public CasillaStoneAdapter generarCasillaStone(){
+        return ((CasillaStoneAdapter)stone.clone());
+    }
+
     private ArrayList<Casilla> incluirQuerubines(ArrayList<Casilla> casillas) {
         Random rand = new Random();
         for (int i = 0; i < 8; i++) {

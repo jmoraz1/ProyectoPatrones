@@ -308,6 +308,30 @@ public class MainController implements IMainController{
                     if (((CasillaStoneAdapter) c).getStone().getVida() > 0){
                         return false;
                     } else {
+                        ((CasillaStoneAdapter) c).getStone().setVida(100);
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return  false;
+    }
+
+    public boolean stoneVencidoParaAgua(String jugador) {
+        Ficha f = partida.obtenerJugador(jugador).ficha;
+        ArrayList<Ficha> af = new ArrayList<>();
+
+        for (Casilla c: partida.casillas) {
+            af = c.getFichas();
+            for (Ficha ficha:af) {
+                if ((ficha.equals(f)==true) && (c instanceof CasillaStoneAdapter)){
+
+                    if (((CasillaStoneAdapter) c).getStone().getVida() > 0){
+                        return false;
+                    } else {
+
                         return true;
                     }
                 }
@@ -463,7 +487,7 @@ public class MainController implements IMainController{
         return 0;
     }
 
-    public String poderRoca(String jugador){
+    public String poderRoca(String jugador) throws IOException {
         //cambiar string
         String s = "Un jugador ha colocado un stone en la casilla de "+jugador;
             Jugador j = partida.obtenerJugador(jugador);
@@ -473,7 +497,7 @@ public class MainController implements IMainController{
         return s;
     }
 
-    private CasillaStoneAdapter generarStone(Ficha ficha) {
+    private CasillaStoneAdapter generarStone(Ficha ficha) throws IOException {
         Personaje[] p = ficha.getPersonajes();
         Elemento uno= p[0].getElemento();
         Elemento dos=p[1].getElemento();
@@ -562,6 +586,7 @@ public class MainController implements IMainController{
 
         Stone s = new Stone(60, elementoNuevoStone);
         CasillaStoneAdapter csa= new CasillaStoneAdapter(s);
+        csa.setFicha(ficha);
         return csa;
     }
 }
