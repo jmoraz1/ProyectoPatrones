@@ -1433,7 +1433,11 @@ public class tableroPartidaController implements Initializable,Observador {
                     elementosAtacan = null;
                     turnoDadoAtaque();
                     tirarDadoAtaque();
-                    decisionJugadorStone();
+                    if(jugadorTurno.equals("Computadora")){
+                        decisionComputadoraStone();
+                    }else{
+                        decisionJugadorStone();
+                    }
                     gestionarElementosPoderesContraStoneContrincantes();
                 }else{
                     dialogoPoderAguaStoneVencido();
