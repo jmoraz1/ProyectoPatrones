@@ -1997,6 +1997,32 @@ public class tableroPartidaController implements Initializable,Observador {
         alert.showAndWait();
     }
 
+    public void dialogoStoneYaMuerto() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Alerta");
+
+        GridPane gP = new GridPane();
+        Text txt = new Text("Stone: " +
+                "\n-¡Es tu día de suerte!" +
+                "\nYa me han vencido." +
+                "\nPuedes avanzar. Suerte contra tus adversarios");
+        txt.setFont(Font.font("Matura MT Script Capitals", 20));
+        txt.setFill(Color.rgb(58,54,21));
+        gP.add(txt, 0,0);
+
+        ImageView imgZorvan = new ImageView();
+        Image imgZ = new Image("/imgs/stone.jpeg");
+        imgZorvan.setImage(imgZ);
+        imgZorvan.setFitHeight(300);
+        imgZorvan.setFitWidth(300);
+        gP.add(imgZorvan, 1, 0);
+        alert.getDialogPane().setContent(gP);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(500, 380);
+
+        alert.showAndWait();
+    }
+
     //Levanta diálogo para indicar cuántas casillas el jugador debe avanzar según resultado dado
     public void dialogoMoverse(int resultadoDado) throws IOException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -2069,6 +2095,8 @@ public class tableroPartidaController implements Initializable,Observador {
                     dialogoStone();
                     //no se puede usar obtener turno porque mueve al jugador
                     mc.partida.turno.setInabilitado(true);
+                }else{
+                    dialogoStoneYaMuerto();
                 }
 
                 //para validar si el jugador no puede moverse hasta matar al stone
