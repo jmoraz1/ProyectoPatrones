@@ -207,10 +207,6 @@ public class tableroPartidaController implements Initializable,Observador {
         ActionEvent event=new ActionEvent();
         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
         dialogoTurnoComputadora();
-//        if(posicionActual==0){
-//            mc.moverFicha(posicionActual,96,jugadorTurno.ficha);
-//        }
-//            para probar lo de Zorvan, se pone la compu en al posicion 96
         gestionarTurno(event);
     }
 
@@ -2117,9 +2113,10 @@ public class tableroPartidaController implements Initializable,Observador {
                         dialogoZorvan(casillasExtras);
                         int posicionActual=mc.obtenerPosicionJugador(jugadorTurno.ficha);
                         nuevaPosicion = mc.movimientoZorvan(casillasExtras);
-                        mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
+
                         fichaJugadorIv.setLayoutY(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutY());
                         fichaJugadorIv.setLayoutX(coordenadasCasillaFicha.get(nuevaPosicion).getLayoutX());
+                        mc.moverFicha(posicionActual,nuevaPosicion,jugadorTurno.ficha);
 
                     }
 
