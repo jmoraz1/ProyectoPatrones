@@ -1505,7 +1505,7 @@ public class tableroPartidaController implements Initializable,Observador {
                 //Columna 0
 
                 int indexArray = 0;
-                String[] arrayNombreJugadores = new String[cantidadJugadores - 1];
+                String[] arrayNombreJugadores = new String[cantidadJugadores];
                 for (Jugador j : partida.jugadores) {
                     if (j.getNombre() != jugadorTurno.getNombre()) {
                         arrayNombreJugadores[indexArray] = j.getNombre();
@@ -1548,7 +1548,7 @@ public class tableroPartidaController implements Initializable,Observador {
                     if (cantidadJugadores == 4) {
                         cbJ3 = new CheckBox(arrayNombreJugadores[2]);
                         cbJ3.setFont(Font.font("Matura MT Script Capitals", 30));
-                        gP.add(cbJ3, 0, 2);
+                        gP.add(cbJ3, 0, 3);
                         if(!jugadorTurno.getNombre().equals("Computadora")){
                             EventHandler eValidacionJugador4 = new EventHandler<ActionEvent>() {
                                 @Override
